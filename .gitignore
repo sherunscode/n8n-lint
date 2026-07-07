@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+*.log
+*.tsbuildinfo
+
+# Local planning/proof artifacts, not public repo content.
+STRATEGY.md
+RESEARCH.md
+docs/BUILD_LOOP_STATUS.md
+docs/ERL-*-schema-source-decision.md

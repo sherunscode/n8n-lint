@@ -1,0 +1,34 @@
+name: Feature request
+description: Suggest a scoped improvement for n8n-lint.
+title: "feat: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What workflow validation gap should this close?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the smallest useful behavior change.
+    validations:
+      required: true
+  - type: input
+    id: n8n_version
+    attributes:
+      label: n8n version or version range
+      placeholder: "2.29.x"
+    validations:
+      required: false
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Link docs, fixtures, or command output that prove the need.
+    validations:
+      required: false

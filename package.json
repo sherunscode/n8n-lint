@@ -1,0 +1,27 @@
+{
+  "name": "n8n-lint-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "tsc -b packages/core packages/cli",
+    "typecheck": "tsc -b packages/core packages/cli",
+    "generate:bundled-schema": "node scripts/generate-bundled-schema.mjs",
+    "check:example": "node packages/cli/dist/bin.js check examples/passing-workflow.json",
+    "check:bundled-schema": "node scripts/check-bundled-schema.mjs",
+    "test:core": "node scripts/check-core-validation.mjs",
+    "test:cli": "node scripts/check-cli-fixtures.mjs",
+    "test": "npm run test:core && npm run test:cli",
+    "audit:prod": "npm audit --omit=dev --audit-level=high",
+    "quality": "npm run build && npm run check:example && npm run check:bundled-schema && npm test && npm run audit:prod",
+    "benchmark:zie619": "node scripts/benchmark-zie619.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "n8n-nodes-base": "2.29.6",
+    "typescript": "^5.5.0"
+  }
+}

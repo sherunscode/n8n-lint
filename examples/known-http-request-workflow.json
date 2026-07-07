@@ -1,0 +1,29 @@
+{
+  "name": "Known HTTP Request fixture",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://example.com",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "id": "fixture-http-request",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "fixture-http-header-auth",
+          "name": "Fixture HTTP Header Auth"
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "active": false,
+  "settings": {}
+}

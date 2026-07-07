@@ -1,0 +1,19 @@
+{
+  "name": "Unknown node type fixture",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "fixture-unknown-node",
+      "name": "Unknown Node",
+      "type": "n8n-nodes-base.notARealNode",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    }
+  ],
+  "connections": {},
+  "active": false,
+  "settings": {}
+}

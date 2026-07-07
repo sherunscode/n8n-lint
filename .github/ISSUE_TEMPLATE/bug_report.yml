@@ -1,0 +1,47 @@
+name: Bug report
+description: Report a reproducible n8n-lint failure.
+title: "bug: "
+labels:
+  - bug
+body:
+  - type: input
+    id: n8n_lint_version
+    attributes:
+      label: n8n-lint version
+      placeholder: "0.0.0"
+    validations:
+      required: true
+  - type: input
+    id: n8n_version
+    attributes:
+      label: n8n version
+      placeholder: "2.29.7"
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command
+      description: Paste the exact command and redacted output.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: Include a minimal workflow JSON when possible. Remove credentials and secrets.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
