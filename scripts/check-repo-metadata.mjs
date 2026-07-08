@@ -46,6 +46,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:animated-demo") &&
     packageJson.scripts.quality.includes("npm run check:social-preview") &&
     packageJson.scripts.quality.includes("npm run check:architecture-diagram") &&
+    packageJson.scripts.quality.includes("npm run check:last-verified-badges") &&
     packageJson.scripts.quality.includes("npm run check:audit-report") &&
     packageJson.scripts.quality.includes("npm run check:status-docs") &&
     packageJson.scripts.quality.includes("npm run check:security") &&
@@ -54,7 +55,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:claims") &&
     packageJson.scripts.quality.includes("npm run check:links") &&
     packageJson.scripts.quality.includes("npm run check:exit-codes"),
-  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, community readiness, release readiness, live REST boundary, launch content, benchmark report, GitHub Action, strategy checklist, README demo, animated demo, social preview, architecture diagram, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
+  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, community readiness, release readiness, live REST boundary, launch content, benchmark report, GitHub Action, strategy checklist, README demo, animated demo, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
 );
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 
@@ -68,6 +69,7 @@ await expectFile("docs/assets/readme-failure-demo.svg");
 await expectFile("docs/assets/animated-failure-demo.svg");
 await expectFile("docs/assets/social-preview.svg");
 await expectFile("docs/assets/architecture.svg");
+await expectFile("docs/assets/last-verified-badges.svg");
 await expectFile("examples/failing-nested-dead-parameter.json");
 await expectFile("scripts/smoke-packed-install.mjs");
 await expectFile("packages/core/schema/bundled-n8n-package-config.json");
@@ -86,6 +88,7 @@ await expectFile("scripts/check-readme-demo.mjs");
 await expectFile("scripts/check-animated-demo.mjs");
 await expectFile("scripts/check-social-preview.mjs");
 await expectFile("scripts/check-architecture-diagram.mjs");
+await expectFile("scripts/check-last-verified-badges.mjs");
 await expectFile("scripts/check-audit-report.mjs");
 await expectFile("scripts/check-status-docs.mjs");
 await expectFile("scripts/check-security-hygiene.mjs");
@@ -115,6 +118,7 @@ console.log(
         "docs/assets/animated-failure-demo.svg",
         "docs/assets/social-preview.svg",
         "docs/assets/architecture.svg",
+        "docs/assets/last-verified-badges.svg",
         "examples/failing-nested-dead-parameter.json",
         "scripts/smoke-packed-install.mjs",
         "packages/core/schema/bundled-n8n-package-config.json",
@@ -133,6 +137,7 @@ console.log(
         "scripts/check-animated-demo.mjs",
         "scripts/check-social-preview.mjs",
         "scripts/check-architecture-diagram.mjs",
+        "scripts/check-last-verified-badges.mjs",
         "scripts/check-audit-report.mjs",
         "scripts/check-status-docs.mjs",
         "scripts/check-security-hygiene.mjs",

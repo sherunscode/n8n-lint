@@ -96,3 +96,7 @@ n8n-lint badge examples/badge-last-verified-red.json --kind last-verified --as-o
 The composite GitHub Action runs the same badge command against its temporary
 JSON check result and includes the rendered Markdown badge in
 `GITHUB_STEP_SUMMARY`.
+
+`docs/assets/last-verified-badges.svg` is a generated visual proof of the
+green, yellow, and red states. `npm run check:last-verified-badges` regenerates
+those state badges from the built CLI and fails if the committed asset is stale.

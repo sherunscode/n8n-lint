@@ -62,6 +62,9 @@ REST claims.
 - Architecture diagram asset `docs/assets/architecture.svg` is generated from
   package metadata, bundled schema config, and tool metadata, then checked by
   `npm run check:architecture-diagram`.
+- Last-verified badge-state visual `docs/assets/last-verified-badges.svg` is
+  generated from real CLI badge SVG output for green, yellow, and red decay
+  states, then checked by `npm run check:last-verified-badges`.
 - Launch content pack and drafts are evidence-mapped, owner-gated,
   real-growth-only, benchmark-aligned, and checked by
   `npm run check:launch-content`.
@@ -81,9 +84,10 @@ REST claims.
   `check:release-readiness`, `check:live-rest-boundary`,
   `check:launch-content`, `check:benchmark-report`, `check:github-action`,
   `check:strategy-checklist`, `check:readme-demo`, `check:animated-demo`,
-  `check:social-preview`, `check:architecture-diagram`, `check:audit-report`,
-  `check:status-docs`, `check:metadata`, `check:security`, `check:docs`,
-  `check:pack`, `check:claims`, `check:links`,
+  `check:social-preview`, `check:architecture-diagram`,
+  `check:last-verified-badges`, `check:audit-report`, `check:status-docs`,
+  `check:metadata`, `check:security`, `check:docs`, `check:pack`,
+  `check:claims`, `check:links`,
   `check:exit-codes`, core fixture tests, CLI fixture tests, production
   dependency audit, and packed-install smoke.
 - Package dry-runs reviewed:
@@ -158,6 +162,9 @@ REST claims.
 - `npm run check:architecture-diagram` now enforces that the architecture SVG is
   generated from package metadata, bundled schema config, and tool metadata
   while preserving the live REST non-claim boundary.
+- `npm run check:last-verified-badges` now enforces that the badge-state SVG is
+  generated from real CLI last-verified badge output for green, yellow, and red
+  decay states.
 - `npm run check:audit-report` now enforces that this audit report retains the
   conditional/no-go verdicts, current package dry-run counts, quality gate list,
   owner-gated remaining items, and README demo proof.
@@ -207,6 +214,8 @@ Current checked behavior:
   non-claim.
 - `docs/assets/architecture.svg` provides a generated architecture diagram for
   the README.
+- `docs/assets/last-verified-badges.svg` provides generated green/yellow/red
+  last-verified badge-state proof for the README.
 - `docs/badge-output.md` documents badge formats and status rules.
 - `docs/schema-matrix.md` documents pinned schema artifacts and matrix behavior.
 - `docs/repair.md` documents diff-only repair behavior and apply confirmation
@@ -265,7 +274,7 @@ These are intentionally not complete:
 - Arbitrary custom nested parameter semantics beyond bundled structured
   collection/fixedCollection/filter metadata.
 - Additional video/GIF captures beyond the checked README, animated demo, social
-  preview, and architecture SVG assets.
+  preview, architecture SVG, and last-verified badge-state SVG assets.
 - Public X, Reddit, HN, or n8n forum launch posts.
 - Broader repair transforms for credential renames, node rewrites, trigger
   rewiring, and nested parameter-shape changes.

@@ -46,11 +46,15 @@ output and checked by `npm run check:animated-demo`.
   benchmark, schema config, and repo metadata.
 - Architecture visual: `docs/assets/architecture.svg` is generated from the
   package metadata, schema config, and tool metadata.
+- Badge-state visual: `docs/assets/last-verified-badges.svg` is generated from
+  real CLI badge SVG output for green, yellow, and red decay states.
 - Not claimed yet: npm registry install, live REST schema validation, workflow
   execution, arbitrary custom nested parameter semantics, hosted SaaS, or
   marketplace.
 
 ![Generated n8n-lint architecture diagram](docs/assets/architecture.svg)
+
+![Generated n8n-lint last-verified badge decay states](docs/assets/last-verified-badges.svg)
 
 ## What Works Now
 
@@ -229,6 +233,8 @@ npm run check:strategy-checklist
 npm run check:readme-demo
 npm run check:animated-demo
 npm run check:social-preview
+npm run check:architecture-diagram
+npm run check:last-verified-badges
 npm run check:audit-report
 npm run check:status-docs
 npm run check:metadata
@@ -317,6 +323,10 @@ metadata while preserving npm and live REST non-claim boundaries.
 `npm run check:architecture-diagram` proves the README architecture diagram is
 generated from package metadata, schema config, and tool metadata while
 preserving the live REST non-claim boundary.
+
+`npm run check:last-verified-badges` proves the README badge-state visual is
+generated from real CLI `badge --kind last-verified --format svg` output for
+green, yellow, and red decay states.
 
 `npm run check:audit-report` proves the deep-audit report keeps the current
 verdicts, package dry-run counts, quality gate list, remaining gates, and README

@@ -60,6 +60,7 @@ if (strategy === undefined) {
     "Naming is consistent end-to-end",
     "README has a checked real failing validation demo",
     "Demo SVG assets are tiny",
+    "README badge states",
     "At least one example `workflow.json` fixture is committed",
     "GitHub Action demo path exists through `/examples`",
     "All demo assets are hosted in-repo",

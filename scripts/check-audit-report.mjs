@@ -24,6 +24,7 @@ const requiredQualityGates = [
   "check:animated-demo",
   "check:social-preview",
   "check:architecture-diagram",
+  "check:last-verified-badges",
   "check:audit-report",
   "check:status-docs",
   "check:metadata",
@@ -49,6 +50,8 @@ expect(audit.includes("docs/assets/social-preview.svg"), "audit must mention the
 expect(audit.includes("npm run check:social-preview"), "audit must mention the social preview checker");
 expect(audit.includes("docs/assets/architecture.svg"), "audit must mention the checked architecture diagram asset");
 expect(audit.includes("npm run check:architecture-diagram"), "audit must mention the architecture diagram checker");
+expect(audit.includes("docs/assets/last-verified-badges.svg"), "audit must mention the checked badge-state asset");
+expect(audit.includes("npm run check:last-verified-badges"), "audit must mention the badge-state checker");
 expect(audit.includes("npm run check:release-readiness"), "audit must mention the release-readiness checker");
 expect(audit.includes("npm run check:cli-output"), "audit must mention the CLI output checker");
 expect(audit.includes("final JSON summary"), "audit must mention final JSON summary proof");
@@ -79,9 +82,9 @@ for (const pack of [runPack("packages/core"), runPack("packages/cli")]) {
 expect(
   hasPhrase(
     audit,
-    "Additional video/GIF captures beyond the checked README, animated demo, social preview, and architecture SVG assets."
+    "Additional video/GIF captures beyond the checked README, animated demo, social preview, architecture SVG, and last-verified badge-state SVG assets."
   ),
-  "remaining gates must distinguish extra visual launch assets from the checked README, animated demo, social preview, and architecture SVGs"
+  "remaining gates must distinguish extra visual launch assets from the checked README, animated demo, social preview, architecture SVG, and last-verified badge-state SVGs"
 );
 
 for (const remainingGate of [
@@ -112,6 +115,7 @@ console.log(
         "animated demo proof",
         "social preview proof",
         "architecture diagram proof",
+        "last-verified badge visual proof",
         "live REST boundary proof",
         "launch content proof",
         "benchmark report proof",
