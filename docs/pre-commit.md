@@ -12,6 +12,11 @@ After that, every commit runs:
 npm run quality
 ```
 
+The hook captures quality output and stays silent when the gate succeeds. If the
+gate fails, it replays the captured output to stderr and exits with the original
+failure code. `npm run check:precommit` proves the hook is tracked executable,
+quiet on success, and loud on failure.
+
 The hook is intentionally local. Do not bypass it for changes that touch CLI
 behavior, fixtures, schema artifact generation, or package metadata.
 

@@ -1,4 +1,14 @@
 #!/bin/sh
-set -eu
+set -u
 
-npm run quality
+log_file="${TMPDIR:-/tmp}/n8n-lint-pre-commit-$$.log"
+
+if npm run quality >"$log_file" 2>&1; then
+  rm -f "$log_file"
+  exit 0
+else
+  status=$?
+  cat "$log_file" >&2
+  rm -f "$log_file"
+  exit "$status"
+fi

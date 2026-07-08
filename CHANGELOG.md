@@ -34,6 +34,8 @@
   so runtime schema loading and artifact generation cannot drift apart.
 - Added an executable type-hygiene gate for strict TypeScript settings and the
   validation core's no-`any`/no-suppression rule.
+- Added an executable pre-commit hook contract gate for quiet success output,
+  loud failure output, exit-code propagation, and executable hook mode.
 - Added a reproducible `Zie619/n8n-workflows` benchmark report with exact
   pass/fail and skipped-file counts.
 - Refreshed the benchmark report after nested parameter-key validation changed

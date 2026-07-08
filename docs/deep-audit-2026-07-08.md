@@ -85,6 +85,8 @@ REST claims.
   dependency reconciled against that config.
 - `npm run check:type-hygiene` now enforces strict TypeScript settings and
   blocks `any` or TypeScript suppression directives in the validation core.
+- `npm run check:precommit` now enforces the local Git hook's executable mode,
+  quiet success path, failure exit-code propagation, and failure-output replay.
 - Stale-claim scan found no old benchmark numbers, fake-growth language,
   invalid old GitHub owner path, or public-report placeholders.
 - `git diff --check` passed.

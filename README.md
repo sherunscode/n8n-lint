@@ -193,6 +193,7 @@ npm run check:example
 npm run check:bundled-schema
 npm run check:schema-config
 npm run check:type-hygiene
+npm run check:precommit
 npm run check:metadata
 npm run check:security
 npm run check:docs
@@ -223,6 +224,10 @@ runtime source or generator script.
 
 `npm run check:type-hygiene` proves strict TypeScript settings are enabled and
 blocks `any`, `@ts-ignore`, and `@ts-expect-error` in `packages/core/src`.
+
+`npm run check:precommit` proves the local Git hook is executable, quiet on
+success, preserves failure exit codes, and replays captured quality output only
+when the hook fails.
 
 `npm run check:security` proves local secret/config paths are ignored, scans
 tracked public files for common token patterns, and verifies the CLI does not
