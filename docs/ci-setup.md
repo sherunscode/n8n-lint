@@ -17,12 +17,12 @@ npm run quality
 validation, bundled-schema verification, metadata verification, security
 hygiene verification, schema-config verification, type-hygiene verification,
 pre-commit hook contract verification, community-readiness verification,
-release-readiness verification, README demo verification, social-preview
-verification, audit-report verification, status-doc verification, README/CLI
-docs-contract verification, package-content verification, claims hygiene
-verification, Markdown link verification, fixture tests, the executable
-exit-code contract, the production dependency audit, and the packed-install
-smoke test.
+release-readiness verification, README demo verification, animated-demo
+verification, social-preview verification, audit-report verification, status-doc
+verification, README/CLI docs-contract verification, package-content
+verification, claims hygiene verification, Markdown link verification, fixture
+tests, the executable exit-code contract, the production dependency audit, and
+the packed-install smoke test.
 
 The public workflow is `.github/workflows/ci.yml`.
 

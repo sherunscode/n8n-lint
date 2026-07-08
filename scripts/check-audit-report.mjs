@@ -15,6 +15,7 @@ const requiredQualityGates = [
   "check:community",
   "check:release-readiness",
   "check:readme-demo",
+  "check:animated-demo",
   "check:social-preview",
   "check:audit-report",
   "check:status-docs",
@@ -35,6 +36,8 @@ expect(
 );
 expect(audit.includes("docs/assets/readme-failure-demo.svg"), "audit must mention the checked README demo asset");
 expect(audit.includes("npm run check:readme-demo"), "audit must mention the README demo checker");
+expect(audit.includes("docs/assets/animated-failure-demo.svg"), "audit must mention the checked animated demo asset");
+expect(audit.includes("npm run check:animated-demo"), "audit must mention the animated demo checker");
 expect(audit.includes("docs/assets/social-preview.svg"), "audit must mention the checked social preview asset");
 expect(audit.includes("npm run check:social-preview"), "audit must mention the social preview checker");
 expect(audit.includes("npm run check:release-readiness"), "audit must mention the release-readiness checker");
@@ -55,8 +58,11 @@ for (const pack of [runPack("packages/core"), runPack("packages/cli")]) {
 }
 
 expect(
-  hasPhrase(audit, "Additional animated demos/GIFs beyond the checked README and social preview SVG assets."),
-  "remaining gates must distinguish extra visual launch assets from the checked README and social preview SVGs"
+  hasPhrase(
+    audit,
+    "Additional video/GIF captures beyond the checked README, animated demo, and social preview SVG assets."
+  ),
+  "remaining gates must distinguish extra visual launch assets from the checked README, animated demo, and social preview SVGs"
 );
 
 for (const remainingGate of [
@@ -84,6 +90,7 @@ console.log(
         "current package dry-run counts",
         "owner-gated remaining items",
         "README demo proof",
+        "animated demo proof",
         "social preview proof"
       ]
     },

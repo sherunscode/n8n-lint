@@ -46,6 +46,9 @@ REST claims.
   only on verified repo, CI, package, and benchmark proof.
 - README embeds `docs/assets/readme-failure-demo.svg`, generated from real CLI
   failure output and checked by `npm run check:readme-demo`.
+- Animated failure demo asset `docs/assets/animated-failure-demo.svg` is
+  generated from real CLI failure output and checked by
+  `npm run check:animated-demo`.
 - Launch/social preview asset `docs/assets/social-preview.svg` is generated
   from the current benchmark report, bundled schema config, and canonical repo
   metadata, then checked by `npm run check:social-preview`.
@@ -59,11 +62,11 @@ REST claims.
 - `npm run quality` passed: build, ESLint, Prettier format check, example
   check, bundled-schema check, `check:schema-config`, `check:type-hygiene`,
   `check:precommit`, `check:community`, `check:release-readiness`,
-  `check:readme-demo`, `check:social-preview`, `check:audit-report`,
-  `check:status-docs`, `check:metadata`, `check:security`, `check:docs`,
-  `check:pack`, `check:claims`, `check:links`, `check:exit-codes`, core
-  fixture tests, CLI fixture tests, production dependency audit, and
-  packed-install smoke.
+  `check:readme-demo`, `check:animated-demo`, `check:social-preview`,
+  `check:audit-report`, `check:status-docs`, `check:metadata`,
+  `check:security`, `check:docs`, `check:pack`, `check:claims`, `check:links`,
+  `check:exit-codes`, core fixture tests, CLI fixture tests, production
+  dependency audit, and packed-install smoke.
 - Package dry-runs reviewed:
   - `@n8nproof/core@0.0.0`: 12 files, 205.9 kB package, includes `dist`,
     `schema`, package metadata, README, and LICENSE only.
@@ -103,6 +106,9 @@ REST claims.
   and rollback/support documentation.
 - `npm run check:readme-demo` now enforces that the README SVG demo is generated
   from a real failing CLI command and matches the current output.
+- `npm run check:animated-demo` now enforces that the animated failure demo SVG
+  is generated from a real failing CLI command, includes the dead-parameter
+  failure, and preserves the live REST non-claim warning.
 - `npm run check:social-preview` now enforces that the launch/social preview SVG
   is generated from the current benchmark report, bundled schema config, and
   canonical repo metadata while preserving npm and live REST non-claim
@@ -197,8 +203,8 @@ These are intentionally not complete:
 - Live REST schema validation.
 - Arbitrary custom nested parameter semantics beyond bundled structured
   collection/fixedCollection/filter metadata.
-- Additional animated demos/GIFs beyond the checked README and social preview
-  SVG assets.
+- Additional video/GIF captures beyond the checked README, animated demo, and
+  social preview SVG assets.
 - Public X, Reddit, HN, or n8n forum launch posts.
 - Broader repair transforms for credential renames, node rewrites, trigger
   rewiring, and nested parameter-shape changes.

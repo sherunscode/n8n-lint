@@ -37,6 +37,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:community") &&
     packageJson.scripts.quality.includes("npm run check:release-readiness") &&
     packageJson.scripts.quality.includes("npm run check:readme-demo") &&
+    packageJson.scripts.quality.includes("npm run check:animated-demo") &&
     packageJson.scripts.quality.includes("npm run check:social-preview") &&
     packageJson.scripts.quality.includes("npm run check:audit-report") &&
     packageJson.scripts.quality.includes("npm run check:status-docs") &&
@@ -46,7 +47,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:claims") &&
     packageJson.scripts.quality.includes("npm run check:links") &&
     packageJson.scripts.quality.includes("npm run check:exit-codes"),
-  "package.json quality gate must include lint, format, schema config, type hygiene, pre-commit, community readiness, release readiness, README demo, social preview, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
+  "package.json quality gate must include lint, format, schema config, type hygiene, pre-commit, community readiness, release readiness, README demo, animated demo, social preview, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
 );
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 
@@ -57,6 +58,7 @@ await expectFile("docs/ci-setup.md");
 await expectFile("eslint.config.js");
 await expectFile("examples/pre-commit-setup/.pre-commit-config.yaml");
 await expectFile("docs/assets/readme-failure-demo.svg");
+await expectFile("docs/assets/animated-failure-demo.svg");
 await expectFile("docs/assets/social-preview.svg");
 await expectFile("examples/failing-nested-dead-parameter.json");
 await expectFile("scripts/smoke-packed-install.mjs");
@@ -67,6 +69,7 @@ await expectFile("scripts/check-precommit-hook.mjs");
 await expectFile("scripts/check-community-readiness.mjs");
 await expectFile("scripts/check-release-readiness.mjs");
 await expectFile("scripts/check-readme-demo.mjs");
+await expectFile("scripts/check-animated-demo.mjs");
 await expectFile("scripts/check-social-preview.mjs");
 await expectFile("scripts/check-audit-report.mjs");
 await expectFile("scripts/check-status-docs.mjs");
@@ -94,6 +97,7 @@ console.log(
         "eslint.config.js",
         "examples/pre-commit-setup/.pre-commit-config.yaml",
         "docs/assets/readme-failure-demo.svg",
+        "docs/assets/animated-failure-demo.svg",
         "docs/assets/social-preview.svg",
         "examples/failing-nested-dead-parameter.json",
         "scripts/smoke-packed-install.mjs",
@@ -104,6 +108,7 @@ console.log(
         "scripts/check-community-readiness.mjs",
         "scripts/check-release-readiness.mjs",
         "scripts/check-readme-demo.mjs",
+        "scripts/check-animated-demo.mjs",
         "scripts/check-social-preview.mjs",
         "scripts/check-audit-report.mjs",
         "scripts/check-status-docs.mjs",
