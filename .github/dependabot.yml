@@ -11,6 +11,17 @@ updates:
     groups:
       npm-development:
         dependency-type: development
+    ignore:
+      # This package is the pinned schema-generator input. Updating it requires
+      # regenerating packages/core/schema/bundled-n8n-package.json and updating
+      # the documented n8n selection proof in the same reviewed change.
+      - dependency-name: n8n-nodes-base
+      - dependency-name: typescript
+        update-types:
+          - version-update:semver-major
+      - dependency-name: "@types/node"
+        update-types:
+          - version-update:semver-major
 
   - package-ecosystem: github-actions
     directory: /
