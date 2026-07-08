@@ -8,6 +8,9 @@ types, and schema drift that static template collections do not catch.
 
 This repository is still a local MVP. It is not published to npm yet, has not
 run a public benchmark yet, and does not claim live REST schema validation yet.
+Today the verified paths are a source checkout and a packed local tarball
+install; registry-backed `npx n8n-lint` usage will only be documented after npm
+publication.
 
 ## What Works Now
 
@@ -20,8 +23,11 @@ run a public benchmark yet, and does not claim live REST schema validation yet.
 - JSON output mode for CI tooling.
 - Local quality gates for build, fixtures, tests, and production dependency
   audit.
+- Packed-package install smoke test for the publishable core and CLI workspaces.
 
 ## Quickstart
+
+From a fresh checkout:
 
 ```bash
 npm ci
@@ -54,6 +60,30 @@ Local development currently runs the built CLI directly:
 ```bash
 node packages/cli/dist/bin.js check examples/failing-unknown-node.json
 node packages/cli/dist/bin.js check examples/failing-unknown-credential.json --json
+```
+
+Before publish, test the install shape from packed local packages:
+
+```bash
+PACK_DIR="$(mktemp -d)"
+npm run build
+npm pack --workspace packages/core --pack-destination "$PACK_DIR"
+npm pack --workspace packages/cli --pack-destination "$PACK_DIR"
+
+SMOKE_DIR="$(mktemp -d)"
+cp examples/known-http-request-workflow.json "$SMOKE_DIR/workflow.json"
+cd "$SMOKE_DIR"
+npm init -y
+npm install "$PACK_DIR"/n8nproof-core-0.0.0.tgz "$PACK_DIR"/n8n-lint-0.0.0.tgz
+npx n8n-lint check workflow.json
+```
+
+Expected result:
+
+```text
+PASS workflow.json
+Schema source: bundled-n8n-package
+WARN schema_source.warning: Bundled n8n package metadata is loaded from a compact checked-in artifact; this is not live REST validation.
 ```
 
 ## Developer Checks
@@ -126,5 +156,6 @@ Not MVP scope:
 - Hosted SaaS or dashboard.
 - Marketplace.
 - npm publish without owner approval and clean-machine verification.
+- Registry-backed `npx n8n-lint` instructions before npm publication.
 - Live REST schema validation without endpoint proof from a running n8n
   instance.
