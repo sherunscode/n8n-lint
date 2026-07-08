@@ -208,6 +208,7 @@ npm run check:precommit
 npm run check:community
 npm run check:release-readiness
 npm run check:live-rest-boundary
+npm run check:launch-content
 npm run check:readme-demo
 npm run check:animated-demo
 npm run check:social-preview
@@ -259,6 +260,10 @@ live REST claims remain owner-gated.
 locked: public CLI help exposes only the verified local sources, the internal
 placeholder still fails closed or warns, API-key material is not echoed, and the
 docs keep live REST schema validation unclaimed until endpoint proof exists.
+
+`npm run check:launch-content` proves launch copy remains owner-gated,
+real-growth-only, evidence-mapped, aligned to the benchmark report, and free of
+unsupported npm, `npx`, workflow-execution, live REST, and engagement claims.
 
 `npm run check:readme-demo` proves the README demo asset was generated from a
 real failing CLI command and still matches the current output.

@@ -37,6 +37,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:community") &&
     packageJson.scripts.quality.includes("npm run check:release-readiness") &&
     packageJson.scripts.quality.includes("npm run check:live-rest-boundary") &&
+    packageJson.scripts.quality.includes("npm run check:launch-content") &&
     packageJson.scripts.quality.includes("npm run check:readme-demo") &&
     packageJson.scripts.quality.includes("npm run check:animated-demo") &&
     packageJson.scripts.quality.includes("npm run check:social-preview") &&
@@ -48,7 +49,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:claims") &&
     packageJson.scripts.quality.includes("npm run check:links") &&
     packageJson.scripts.quality.includes("npm run check:exit-codes"),
-  "package.json quality gate must include lint, format, schema config, type hygiene, pre-commit, community readiness, release readiness, live REST boundary, README demo, animated demo, social preview, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
+  "package.json quality gate must include lint, format, schema config, type hygiene, pre-commit, community readiness, release readiness, live REST boundary, launch content, README demo, animated demo, social preview, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
 );
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 
@@ -70,6 +71,7 @@ await expectFile("scripts/check-precommit-hook.mjs");
 await expectFile("scripts/check-community-readiness.mjs");
 await expectFile("scripts/check-release-readiness.mjs");
 await expectFile("scripts/check-live-rest-boundary.mjs");
+await expectFile("scripts/check-launch-content.mjs");
 await expectFile("scripts/check-readme-demo.mjs");
 await expectFile("scripts/check-animated-demo.mjs");
 await expectFile("scripts/check-social-preview.mjs");
@@ -110,6 +112,7 @@ console.log(
         "scripts/check-community-readiness.mjs",
         "scripts/check-release-readiness.mjs",
         "scripts/check-live-rest-boundary.mjs",
+        "scripts/check-launch-content.mjs",
         "scripts/check-readme-demo.mjs",
         "scripts/check-animated-demo.mjs",
         "scripts/check-social-preview.mjs",

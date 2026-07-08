@@ -52,6 +52,9 @@ REST claims.
 - Launch/social preview asset `docs/assets/social-preview.svg` is generated
   from the current benchmark report, bundled schema config, and canonical repo
   metadata, then checked by `npm run check:social-preview`.
+- Launch content pack and drafts are evidence-mapped, owner-gated,
+  real-growth-only, benchmark-aligned, and checked by
+  `npm run check:launch-content`.
 - Architecture and support/rollback docs exist for the current MVP.
 - Dependabot is configured for npm and GitHub Actions.
 - CodeQL is configured for JavaScript/TypeScript analysis.
@@ -62,9 +65,10 @@ REST claims.
 - `npm run quality` passed: build, ESLint, Prettier format check, example
   check, bundled-schema check, `check:schema-config`, `check:type-hygiene`,
   `check:precommit`, `check:community`, `check:release-readiness`,
-  `check:live-rest-boundary`, `check:readme-demo`, `check:animated-demo`,
-  `check:social-preview`, `check:audit-report`, `check:status-docs`, `check:metadata`,
-  `check:security`, `check:docs`, `check:pack`, `check:claims`, `check:links`,
+  `check:live-rest-boundary`, `check:launch-content`, `check:readme-demo`,
+  `check:animated-demo`, `check:social-preview`, `check:audit-report`,
+  `check:status-docs`, `check:metadata`, `check:security`, `check:docs`,
+  `check:pack`, `check:claims`, `check:links`,
   `check:exit-codes`, core fixture tests, CLI fixture tests, production
   dependency audit, and packed-install smoke.
 - Package dry-runs reviewed:
@@ -109,6 +113,9 @@ REST claims.
   the internal placeholder stays unimplemented, API-key material is not echoed,
   and docs keep live REST schema validation unclaimed until endpoint proof
   exists.
+- `npm run check:launch-content` now enforces that launch copy is owner-gated,
+  real-growth-only, evidence-mapped, benchmark-aligned, and free of unsupported
+  npm, `npx`, workflow-execution, live REST, and engagement claims.
 - `npm run check:readme-demo` now enforces that the README SVG demo is generated
   from a real failing CLI command and matches the current output.
 - `npm run check:animated-demo` now enforces that the animated failure demo SVG

@@ -43,6 +43,8 @@
 - Added an executable live REST boundary gate that keeps live validation
   unclaimed, blocks public CLI exposure, and proves the internal placeholder
   does not echo API-key material.
+- Added an executable launch-content gate that ties public copy to owner gates,
+  real-growth rules, benchmark proof, and current non-claims.
 - Added a generated README failure-demo SVG plus an executable demo gate that
   proves it still matches real CLI output.
 - Added a generated animated failure-demo SVG plus an executable demo gate that
