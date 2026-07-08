@@ -38,6 +38,8 @@ CLI and checked by `npm run check:readme-demo`.
   and `n8n-nodes-base@2.30.0`, plus matrix mode.
 - Benchmark: `docs/benchmark-zie619-report.md` records the reproducible
   `Zie619/n8n-workflows` run and exact source commit.
+- Launch visual: `docs/assets/social-preview.svg` is generated from the checked
+  benchmark, schema config, and repo metadata.
 - Not claimed yet: npm registry install, live REST schema validation, workflow
   execution, arbitrary custom nested parameter semantics, hosted SaaS, or
   marketplace.
@@ -202,6 +204,7 @@ npm run check:precommit
 npm run check:community
 npm run check:release-readiness
 npm run check:readme-demo
+npm run check:social-preview
 npm run check:audit-report
 npm run check:status-docs
 npm run check:metadata
@@ -248,6 +251,10 @@ live REST claims remain owner-gated.
 
 `npm run check:readme-demo` proves the README demo asset was generated from a
 real failing CLI command and still matches the current output.
+
+`npm run check:social-preview` proves the launch/social preview SVG is generated
+from the current benchmark report, bundled schema config, and canonical repo
+metadata while preserving npm and live REST non-claim boundaries.
 
 `npm run check:audit-report` proves the deep-audit report keeps the current
 verdicts, package dry-run counts, quality gate list, remaining gates, and README

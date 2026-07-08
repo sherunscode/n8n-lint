@@ -42,6 +42,8 @@
   owner-gated publish/tag/release/posting language, and rollback/support docs.
 - Added a generated README failure-demo SVG plus an executable demo gate that
   proves it still matches real CLI output.
+- Added a generated social-preview SVG plus an executable visual proof gate that
+  ties it to the current benchmark, schema config, and repo metadata.
 - Added an executable deep-audit report gate that catches stale package counts,
   missing quality gates, and missing owner-gated release blockers.
 - Added an executable status-doc gate that keeps local build-loop status notes

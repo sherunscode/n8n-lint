@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">n8n-lint social preview</title>
+  <desc id="desc">Evidence-backed social preview for the She Runs Code n8n-lint repository.</desc>
+  <rect width="1200" height="630" fill="#f8fafc"/>
+  <rect x="0" y="0" width="1200" height="630" fill="#101827"/>
+  <rect x="44" y="44" width="1112" height="542" rx="24" fill="#f8fafc"/>
+  <rect x="72" y="72" width="1056" height="486" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="96" y="122" fill="#0f172a" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700">She Runs Code</text>
+  <text x="96" y="190" fill="#111827" font-family="Inter, Arial, sans-serif" font-size="78" font-weight="800">n8n-lint</text>
+  <text x="96" y="238" fill="#334155" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="500">Validate n8n workflow JSON before it reaches production.</text>
+  <rect x="96" y="282" width="1008" height="118" rx="14" fill="#e2e8f0"/>
+  <text x="122" y="328" fill="#0f172a" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700">2,066 workflow inputs checked</text>
+  <text x="122" y="370" fill="#334155" font-family="Inter, Arial, sans-serif" font-size="24">762 passed / 1,304 failed / 11 skipped in the checked benchmark</text>
+  <rect x="96" y="430" width="300" height="72" rx="14" fill="#0f766e"/>
+  <text x="114" y="458" fill="#dbeafe" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700">BUNDLED SCHEMA</text>
+  <text x="114" y="483" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">n8n-nodes-base@2.29.6</text>
+  <rect x="414" y="430" width="350" height="72" rx="14" fill="#1d4ed8"/>
+  <text x="432" y="458" fill="#dbeafe" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700">REPO</text>
+  <text x="432" y="483" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">github.com/sherunscode/n8n-lint</text>
+  <rect x="782" y="430" width="322" height="72" rx="14" fill="#b45309"/>
+  <text x="800" y="458" fill="#dbeafe" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700">BOUNDARY</text>
+  <text x="800" y="483" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">no npm / no live REST claim</text>
+  <text x="96" y="535" fill="#64748b" font-family="Consolas, Menlo, monospace" font-size="18">benchmark 94007c1445d9 | source de5675d75899</text>
+</svg>

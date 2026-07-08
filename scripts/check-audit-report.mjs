@@ -15,6 +15,7 @@ const requiredQualityGates = [
   "check:community",
   "check:release-readiness",
   "check:readme-demo",
+  "check:social-preview",
   "check:audit-report",
   "check:status-docs",
   "check:metadata",
@@ -34,6 +35,8 @@ expect(
 );
 expect(audit.includes("docs/assets/readme-failure-demo.svg"), "audit must mention the checked README demo asset");
 expect(audit.includes("npm run check:readme-demo"), "audit must mention the README demo checker");
+expect(audit.includes("docs/assets/social-preview.svg"), "audit must mention the checked social preview asset");
+expect(audit.includes("npm run check:social-preview"), "audit must mention the social preview checker");
 expect(audit.includes("npm run check:release-readiness"), "audit must mention the release-readiness checker");
 expect(audit.includes("npm run check:claims"), "audit must mention the claims checker");
 
@@ -52,8 +55,8 @@ for (const pack of [runPack("packages/core"), runPack("packages/cli")]) {
 }
 
 expect(
-  audit.includes("Additional screenshots/GIFs and social preview image."),
-  "remaining gates must distinguish extra visual launch assets from the checked README SVG"
+  hasPhrase(audit, "Additional animated demos/GIFs beyond the checked README and social preview SVG assets."),
+  "remaining gates must distinguish extra visual launch assets from the checked README and social preview SVGs"
 );
 
 for (const remainingGate of [
@@ -80,7 +83,8 @@ console.log(
         "quality gate list",
         "current package dry-run counts",
         "owner-gated remaining items",
-        "README demo proof"
+        "README demo proof",
+        "social preview proof"
       ]
     },
     null,
@@ -127,4 +131,12 @@ function expect(condition, message) {
   if (!condition) {
     failures.push(message);
   }
+}
+
+function hasPhrase(text, phrase) {
+  return normalizeWhitespace(text).includes(normalizeWhitespace(phrase));
+}
+
+function normalizeWhitespace(text) {
+  return text.replace(/\s+/g, " ").trim();
 }
