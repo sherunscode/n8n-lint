@@ -169,6 +169,10 @@ REST claims.
   proof SVG is generated from real colored pass and fail CLI commands, includes
   dead-parameter line-level detail, and preserves the live REST non-claim
   warning.
+- `npm run check:matrix-demo` now enforces that the matrix compatibility proof
+  SVG is generated from real matrix CLI and JSON output, including the
+  `clearWarning` difference that fails under `n8n-nodes-base@2.29.6` and
+  passes under `n8n-nodes-base@2.30.0`.
 - `npm run check:social-preview` now enforces that the launch/social preview SVG
   is generated from the current benchmark report, bundled schema config, and
   canonical repo metadata while preserving npm and live REST non-claim
@@ -232,6 +236,8 @@ Current checked behavior:
   output proof for the README.
 - `docs/assets/precommit-rejection-demo.svg` provides generated pre-commit
   rejection proof for the README.
+- `docs/assets/matrix-compatibility-demo.svg` provides generated matrix
+  compatibility proof for the README and `docs/schema-matrix.md`.
 - `docs/assets/last-verified-badges.svg` provides generated green/yellow/red
   last-verified badge-state proof for the README.
 - `docs/badge-output.md` documents badge formats and status rules.
@@ -292,8 +298,8 @@ These are intentionally not complete:
 - Arbitrary custom nested parameter semantics beyond bundled structured
   collection/fixedCollection/filter metadata.
 - Additional video/GIF captures beyond the checked README, animated demo,
-  terminal output, pre-commit rejection, social preview, architecture SVG, and
-  last-verified badge-state SVG assets.
+  terminal output, pre-commit rejection, matrix compatibility, social preview,
+  architecture SVG, and last-verified badge-state SVG assets.
 - Public X, Reddit, HN, or n8n forum launch posts.
 - Broader repair transforms for credential renames, node rewrites, trigger
   rewiring, and nested parameter-shape changes.

@@ -44,6 +44,7 @@ for (const phrase of [
   "Use `docs/assets/animated-failure-demo.svg` only after `npm run check:animated-demo`",
   "Use `docs/assets/terminal-output-demo.svg` only after `npm run check:terminal-output-demo`",
   "Use `docs/assets/precommit-rejection-demo.svg` only after `npm run check:precommit-rejection-demo`",
+  "Use `docs/assets/matrix-compatibility-demo.svg` only after `npm run check:matrix-demo`",
   "Run `npm run check:benchmark-report` before publishing benchmark-number claims.",
   "Do not mention stars, followers, installs, traffic, or engagement unless a current source is attached.",
   "Run `npm run check:launch-content` before approving any launch copy changes."
@@ -51,7 +52,23 @@ for (const phrase of [
   expect(hasPhrase(launchContentPack, phrase), `launch content pack must include: ${phrase}`);
 }
 
-for (const evidenceId of ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9", "E10", "E11", "E12", "E13", "E14"]) {
+for (const evidenceId of [
+  "E1",
+  "E2",
+  "E3",
+  "E4",
+  "E5",
+  "E6",
+  "E7",
+  "E8",
+  "E9",
+  "E10",
+  "E11",
+  "E12",
+  "E13",
+  "E14",
+  "E15"
+]) {
   expect(
     new RegExp(`\\| ${evidenceId}\\s+\\|`).test(launchContentPack),
     `launch content pack must include ${evidenceId}`

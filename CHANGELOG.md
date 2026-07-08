@@ -65,6 +65,9 @@
   it still matches real colored pass and fail CLI output.
 - Added a generated pre-commit rejection SVG plus an executable demo gate that
   proves the repo hook rejects an actual temporary Git commit on quality failure.
+- Added a generated matrix compatibility SVG plus an executable demo gate that
+  proves real matrix CLI and JSON output fail under `n8n-nodes-base@2.29.6` and
+  pass under `n8n-nodes-base@2.30.0` for the checked fixture.
 - Added a generated social-preview SVG plus an executable visual proof gate that
   ties it to the current benchmark, schema config, and repo metadata.
 - Added a generated architecture SVG plus an executable visual proof gate that

@@ -111,6 +111,13 @@ expect(
   ),
   "launch content pack must require pre-commit rejection demo freshness before use"
 );
+expect(
+  hasPhrase(
+    launchContentPack,
+    "Use `docs/assets/matrix-compatibility-demo.svg` only after `npm run check:matrix-demo`"
+  ),
+  "launch content pack must require matrix demo freshness before use"
+);
 expect(hasPhrase(launchDrafts, "These drafts are not posted."), "launch drafts must remain explicitly unposted");
 expect(
   hasPhrase(launchDrafts, "Do not add npm install claims until `n8n-lint` is published"),
@@ -152,6 +159,7 @@ console.log(
         "animated demo freshness gate",
         "terminal output demo freshness gate",
         "pre-commit rejection demo freshness gate",
+        "matrix demo freshness gate",
         "launch visual freshness gate",
         "support and rollback plan"
       ]
