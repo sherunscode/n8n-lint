@@ -39,6 +39,7 @@ REST claims.
 - GitHub Actions annotation output is implemented with `check --format github`.
 - `tool.json`, issue-template routing, CI setup docs, and a pre-commit framework
   example exist without claiming npm publication.
+- A composite GitHub Action exists at `action.yml` and is dogfooded by CI.
 - Owner-review launch drafts exist under `docs/launch-drafts.md` and are based
   only on verified repo, CI, package, and benchmark proof.
 - Architecture and support/rollback docs exist for the current MVP.
@@ -53,7 +54,7 @@ REST claims.
 - Package dry-runs reviewed:
   - `@n8nproof/core@0.0.0`: 11 files, 57.2 kB package, includes `dist` and
     compact schema artifacts only.
-  - `n8n-lint@0.0.0`: 6 files, 15.5 kB package, includes `dist` only plus
+  - `n8n-lint@0.0.0`: 6 files, 15.6 kB package, includes `dist` only plus
     package metadata, README, and LICENSE.
 - Fresh temp-project tarball install passed with `npx n8n-lint check
   workflow.json`.
@@ -75,6 +76,7 @@ Current checked behavior:
 - Stable `--json` output mode.
 - GitHub annotation output with native `::error`, `::warning`, and `::notice`
   commands.
+- Composite GitHub Action path that runs `check --format github`.
 - Batch human and JSON output with stable summary counts.
 - Local badge generation from checked JSON output.
 - Matrix human and JSON output with per-version summaries and compatibility

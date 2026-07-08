@@ -29,11 +29,13 @@ Verified:
   parameters and requires `--apply --confirm` before mutation.
 - Machine-readable `tool.json`, issue-template routing, CI setup docs, and a
   pre-commit framework example exist without claiming npm publication.
+- Composite GitHub Action exists at `action.yml` and is dogfooded by CI.
 
 Still gated or unproven:
 
 - npm publication and registry-backed `npx n8n-lint` docs.
 - Owner-side GitHub mutations such as tag pushes and releases.
+- GitHub Action Marketplace listing.
 - Live REST schema validation from a running n8n instance.
 - Deep nested parameter-shape validation beyond top-level bundled metadata.
 - Hosted SaaS, dashboard, MCP server, marketplace, or a second product.
@@ -44,7 +46,7 @@ Close these before claiming V1 publicly:
 
 1. Resolve the npm publish approval path and publish only after owner approval.
 2. Keep public GitHub hardening current: pushed `main`, repo topics, green CI,
-   CodeQL, README visibility, and evidence-backed docs.
+   CodeQL, action dogfooding, README visibility, and evidence-backed docs.
 3. Keep launch copy tied to checked-in command output, benchmark files, and
    release artifacts.
 

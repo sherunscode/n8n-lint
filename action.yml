@@ -1,0 +1,36 @@
+name: n8n-lint
+description: Validate n8n workflow JSON with artifact-backed schema checks.
+author: She Runs Code
+
+inputs:
+  paths:
+    description: Workflow JSON path, directory, or glob. Multiple values may be separated by spaces.
+    required: true
+  source:
+    description: Schema source to use.
+    required: false
+    default: bundled-n8n-package
+  n8n-version:
+    description: Pinned bundled n8n-nodes-base version or matrix.
+    required: false
+    default: 2.29.6
+
+runs:
+  using: composite
+  steps:
+    - name: Build n8n-lint action runtime
+      shell: bash
+      run: |
+        cd "$GITHUB_ACTION_PATH"
+        npm ci
+        npm run build
+
+    - name: Check n8n workflows
+      shell: bash
+      env:
+        N8N_LINT_PATHS: ${{ inputs.paths }}
+        N8N_LINT_SOURCE: ${{ inputs.source }}
+        N8N_LINT_VERSION: ${{ inputs.n8n-version }}
+      run: |
+        cd "$GITHUB_WORKSPACE"
+        node "$GITHUB_ACTION_PATH/packages/cli/dist/bin.js" check $N8N_LINT_PATHS --source "$N8N_LINT_SOURCE" --n8n-version "$N8N_LINT_VERSION" --format github

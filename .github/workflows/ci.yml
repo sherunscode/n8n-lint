@@ -34,5 +34,10 @@ jobs:
       - name: Test
         run: npm test
 
+      - name: Dogfood GitHub Action
+        uses: ./
+        with:
+          paths: examples/known-http-request-workflow.json
+
       - name: Audit shipping dependencies
         run: npm run audit:prod

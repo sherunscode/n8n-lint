@@ -38,6 +38,17 @@
       ]
     }
   ],
+  "githubAction": {
+    "name": "n8n-lint",
+    "usage": "uses: sherunscode/n8n-lint@<ref>",
+    "inputs": [
+      "paths",
+      "source",
+      "n8n-version"
+    ],
+    "outputFormat": "github-annotations",
+    "releaseBoundary": "Use a commit SHA or owner-approved semver tag; GitHub Marketplace listing is not claimed."
+  },
   "verifiedClaims": [
     "workflow structure validation",
     "bundled node type validation",

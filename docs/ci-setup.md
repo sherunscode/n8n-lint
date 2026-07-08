@@ -19,6 +19,35 @@ npm run audit:prod
 
 The public workflow is `.github/workflows/ci.yml`.
 
+## Composite GitHub Action
+
+The repo ships a composite action at `action.yml`. It builds the action runtime
+from the checked-out action repository, then runs the CLI with
+`--format github`.
+
+Until an owner-approved semver tag exists, pin a commit SHA for external use
+rather than relying on a moving branch:
+
+```yaml
+name: n8n workflow check
+
+on:
+  pull_request:
+
+jobs:
+  n8n-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - uses: sherunscode/n8n-lint@<commit-sha>
+        with:
+          paths: "workflows/**/*.json"
+```
+
+The project CI dogfoods the action against
+`examples/known-http-request-workflow.json`. Marketplace listing and semver tag
+usage remain release gates.
+
 ## GitHub Annotation Output
 
 Use `--format github` when running inside GitHub Actions to emit native

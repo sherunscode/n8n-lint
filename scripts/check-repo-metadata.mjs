@@ -21,6 +21,7 @@ expect(
 );
 
 await expectFile(".github/ISSUE_TEMPLATE/config.yml");
+await expectFile("action.yml");
 await expectFile("docs/ci-setup.md");
 await expectFile("examples/pre-commit-setup/.pre-commit-config.yaml");
 
@@ -35,6 +36,7 @@ console.log(
       checked: [
         "tool.json",
         ".github/ISSUE_TEMPLATE/config.yml",
+        "action.yml",
         "docs/ci-setup.md",
         "examples/pre-commit-setup/.pre-commit-config.yaml"
       ]

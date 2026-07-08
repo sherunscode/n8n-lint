@@ -25,5 +25,7 @@
 - Added GitHub Actions annotation output via `check --format github`.
 - Added `tool.json`, issue-template routing, CI setup docs, and a pre-commit
   framework example.
+- Added a composite GitHub Action and CI dogfood step without claiming
+  Marketplace release.
 - Added publishable package metadata, package README files, and an owner-gated
   npm release checklist.

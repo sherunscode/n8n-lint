@@ -55,6 +55,7 @@ will only be documented after npm publication.
 - Local badge generation from real `check --json` output in markdown, JSON, or
   static SVG format.
 - Human-gated repair patches for schema-proven unknown top-level parameters.
+- Composite GitHub Action in `action.yml`, dogfooded by this repo's CI.
 - Local quality gates for build, fixtures, tests, and production dependency
   audit.
 - Packed-package install smoke test for the publishable core and CLI workspaces.
@@ -136,7 +137,7 @@ See `docs/json-output.md` for the current `--json` output contract.
 See `docs/batch-check-design.md` for batch mode behavior, skipped-file rules,
 and exit codes.
 See `docs/ci-setup.md` for GitHub Actions annotation output and current CI
-boundaries.
+boundaries, including the composite action.
 See `docs/badge-output.md` for local badge generation from checked output.
 See `docs/schema-matrix.md` for pinned schema artifacts and matrix behavior.
 See `docs/repair.md` for human-gated repair boundaries.
@@ -280,6 +281,8 @@ MVP scope:
 - Batch checking for repositories with multiple workflow JSON files.
 - Local static badge generation from real check results.
 - Human-gated repair patches for schema-proven unknown top-level parameters.
+- Composite GitHub Action, with semver tags and Marketplace listing still
+  release-gated.
 - Honest docs and benchmark harness.
 
 Not MVP scope:
