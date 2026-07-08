@@ -16,7 +16,7 @@ Verified:
 - Local quality gates prove build, fixtures, tests, and production dependency
   audit status.
 - Packed-package install smoke has proven the source checkout and local tarball
-  path.
+  path, and `npm run smoke:pack` now enforces it in quality checks.
 - The real `Zie619/n8n-workflows` benchmark report exists under `docs/`.
 - Release readiness is prepared, with npm publish still behind an owner gate.
 - Batch mode accepts multiple files, directories, and globs, with skipped

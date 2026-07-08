@@ -181,6 +181,7 @@ npm run check:example
 npm run check:bundled-schema
 npm test
 npm run audit:prod
+npm run smoke:pack
 ```
 
 Run everything:
@@ -193,6 +194,9 @@ npm run quality
 shipping dependency gate stays clean. The pinned `n8n-nodes-base` package is a
 dev-time generator input only; it is not a runtime dependency of the core or CLI
 packages.
+
+`npm run smoke:pack` packs `@n8nproof/core` and `n8n-lint`, installs both
+tarballs into a fresh temp project, and runs `npx n8n-lint check workflow.json`.
 
 ## Release Gate
 

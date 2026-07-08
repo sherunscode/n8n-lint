@@ -24,6 +24,7 @@ await expectFile(".github/ISSUE_TEMPLATE/config.yml");
 await expectFile("action.yml");
 await expectFile("docs/ci-setup.md");
 await expectFile("examples/pre-commit-setup/.pre-commit-config.yaml");
+await expectFile("scripts/smoke-packed-install.mjs");
 
 if (failures.length > 0) {
   throw new Error(`metadata check failed:\n${failures.map((failure) => `- ${failure}`).join("\n")}`);
@@ -38,7 +39,8 @@ console.log(
         ".github/ISSUE_TEMPLATE/config.yml",
         "action.yml",
         "docs/ci-setup.md",
-        "examples/pre-commit-setup/.pre-commit-config.yaml"
+        "examples/pre-commit-setup/.pre-commit-config.yaml",
+        "scripts/smoke-packed-install.mjs"
       ]
     },
     null,

@@ -39,6 +39,7 @@ Run from `C:\dev\Stars`:
 ```powershell
 npm ci
 npm run quality
+npm run smoke:pack
 npm pack --workspace packages/core --dry-run
 npm pack --workspace packages/cli --dry-run
 ```
@@ -62,7 +63,16 @@ command should fail with exit code `2` because `--confirm` was not supplied.
 
 ## Fresh Install Smoke
 
-Create tarballs in a temp directory and install both into a fresh temp project:
+The automated smoke command is the primary fresh-install proof:
+
+```powershell
+npm run smoke:pack
+```
+
+It creates tarballs in a temp directory, installs both into a fresh temp project,
+and runs `npx n8n-lint check workflow.json`.
+
+Manual equivalent:
 
 ```powershell
 $packDir = Join-Path $env:TEMP ("n8n-lint-pack-" + [guid]::NewGuid())
