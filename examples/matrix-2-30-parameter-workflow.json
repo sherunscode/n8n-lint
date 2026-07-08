@@ -1,0 +1,21 @@
+{
+  "name": "Matrix 2.30 parameter fixture",
+  "nodes": [
+    {
+      "parameters": {
+        "clearWarning": true
+      },
+      "id": "fixture-data-table",
+      "name": "Data Table",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    }
+  ],
+  "connections": {},
+  "active": false,
+  "settings": {}
+}

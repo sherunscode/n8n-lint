@@ -31,6 +31,8 @@ REST claims.
   skipped ordinary JSON files counted separately.
 - Badge generation is implemented from real `check --json` output in markdown,
   JSON, and static SVG formats.
+- Multi-version schema matrix is implemented for pinned bundled artifacts:
+  `n8n-nodes-base@2.29.6` and `n8n-nodes-base@2.30.0`.
 - Architecture and support/rollback docs exist for the current MVP.
 - Dependabot is configured for npm and GitHub Actions.
 - CodeQL is configured for JavaScript/TypeScript analysis.
@@ -41,9 +43,9 @@ REST claims.
 - `npm run quality` passed: build, example check, bundled-schema check, core
   fixture tests, CLI fixture tests, and production dependency audit.
 - Package dry-runs reviewed:
-  - `@n8nproof/core@0.0.0`: 10 files, 32.8 kB package, includes `dist` and
-    compact schema only.
-  - `n8n-lint@0.0.0`: 6 files, 10.0 kB package, includes `dist` only plus
+  - `@n8nproof/core@0.0.0`: 11 files, 57.2 kB package, includes `dist` and
+    compact schema artifacts only.
+  - `n8n-lint@0.0.0`: 6 files, 11.9 kB package, includes `dist` only plus
     package metadata, README, and LICENSE.
 - Fresh temp-project tarball install passed with `npx n8n-lint check
   workflow.json`.
@@ -65,9 +67,12 @@ Current checked behavior:
 - Stable `--json` output mode.
 - Batch human and JSON output with stable summary counts.
 - Local badge generation from checked JSON output.
+- Matrix human and JSON output with per-version summaries and compatibility
+  differences.
 - `docs/json-output.md` documents the current JSON output contract.
 - `docs/batch-check-design.md` documents batch behavior and proof gates.
 - `docs/badge-output.md` documents badge formats and status rules.
+- `docs/schema-matrix.md` documents pinned schema artifacts and matrix behavior.
 
 Fixture coverage includes:
 
@@ -79,6 +84,7 @@ Fixture coverage includes:
 - `examples/failing-stale-trigger-shape.json`
 - `examples/not-a-workflow.json`
 - `examples/badge-batch-result.json`
+- `examples/matrix-2-30-parameter-workflow.json`
 
 ## Benchmark Proof
 
@@ -112,7 +118,7 @@ These are intentionally not complete:
 - Deep nested parameter-shape validation beyond top-level bundled metadata.
 - README GIF/screenshots and social preview image.
 - Public X, Reddit, HN, or n8n forum launch posts.
-- Remaining V1 backlog: multi-version matrix and human-gated auto-repair.
+- Remaining V1 backlog: human-gated auto-repair.
 
 ## Requirement Decision
 

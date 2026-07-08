@@ -17,7 +17,8 @@ tests, and packaging.
 
 1. The CLI reads one workflow JSON file, or resolves a batch of files from
    explicit paths, directories, and simple globs.
-2. The selected schema source loads a schema snapshot.
+2. The selected schema source loads one schema snapshot, or matrix mode loads
+   all pinned bundled snapshots.
 3. The core validator checks structure, node type names, credential type names,
    top-level node parameter names, and trigger graph/type-version shape.
 4. The CLI prints human or JSON output.
@@ -29,9 +30,16 @@ tests, and packaging.
 
 | Source | Status | Purpose |
 |---|---|---|
-| `bundled-n8n-package` | Current default | Uses compact metadata generated from `n8n-nodes-base@2.29.6`. |
+| `bundled-n8n-package` | Current default | Uses compact metadata generated from pinned `n8n-nodes-base` packages. |
 | `local-placeholder` | Test/adapter path | Structure-only validation with an explicit warning. |
 | `live-rest` | Research lane | Exists as a non-claiming placeholder until endpoint proof exists. |
+
+Pinned bundled artifacts:
+
+| Selector | Package | Artifact |
+|---|---|---|
+| `2.29.6` | `n8n-nodes-base@2.29.6` | `packages/core/schema/bundled-n8n-package.json` |
+| `2.30.0` | `n8n-nodes-base@2.30.0` | `packages/core/schema/bundled-n8n-package-2.30.0.json` |
 
 The bundled artifact stores compact metadata only:
 
@@ -65,6 +73,6 @@ This keeps the product honest:
 
 ## Future Boundaries
 
-Multi-version schema matrices and human-gated repair are V1+ work. They should
-build on the same core validator and batch summary shape instead of creating
-separate validation logic.
+Human-gated repair is V1+ work. It should build on the same core validator,
+matrix result, and batch summary shape instead of creating separate validation
+logic.

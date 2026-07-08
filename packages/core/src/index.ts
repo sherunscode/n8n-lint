@@ -5,7 +5,9 @@ import {
 } from "./schema-source.js";
 
 export type {
+  BundledN8nPackageSelection,
   BundledN8nPackageSchemaSourceConfig,
+  BundledN8nPackageVersion,
   LiveRestSchemaSourceConfig,
   SchemaEntityKind,
   SchemaEntityMetadata,
@@ -15,10 +17,14 @@ export type {
   SchemaSourceKind
 } from "./schema-source.js";
 export {
+  bundledN8nPackageSelections,
   bundledN8nPackageSelection,
+  bundledN8nPackageVersions,
   createBundledN8nPackageSchemaSource,
+  defaultBundledN8nPackageVersion,
   createLiveRestSchemaSource,
-  createLocalPlaceholderSchemaSource
+  createLocalPlaceholderSchemaSource,
+  isBundledN8nPackageVersion
 } from "./schema-source.js";
 
 export type ValidationSeverity = "error" | "warning";

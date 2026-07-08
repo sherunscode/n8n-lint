@@ -106,6 +106,41 @@ const checks = [
     args: [cliPath, "badge", "examples/badge-batch-result.json", "--format=svg", "--label", "n8n proof"],
     exitCode: 0,
     stdoutIncludes: ['<svg xmlns="http://www.w3.org/2000/svg"', "n8n proof", "1 passing"]
+  },
+  {
+    name: "explicit 2.30 schema accepts 2.30-only parameter",
+    args: [cliPath, "check", "examples/matrix-2-30-parameter-workflow.json", "--n8n-version=2.30.0"],
+    exitCode: 0,
+    stdoutIncludes: ["PASS examples/matrix-2-30-parameter-workflow.json"]
+  },
+  {
+    name: "default 2.29 schema rejects 2.30-only parameter",
+    args: [cliPath, "check", "examples/matrix-2-30-parameter-workflow.json"],
+    exitCode: 1,
+    stderrIncludes: ["workflow.node_parameter_unknown", "clearWarning"]
+  },
+  {
+    name: "matrix mode reports real version compatibility difference",
+    args: [cliPath, "check", "examples/matrix-2-30-parameter-workflow.json", "--n8n-version=matrix"],
+    exitCode: 1,
+    stdoutIncludes: [
+      "MATRIX n8n-nodes-base@2.29.6: FAIL",
+      "MATRIX n8n-nodes-base@2.30.0: PASS",
+      "DIFF examples/matrix-2-30-parameter-workflow.json: 2.29.6=failed, 2.30.0=passed",
+      "Matrix summary: 2 versions, 1 compatibility differences"
+    ]
+  },
+  {
+    name: "matrix json includes per-version summaries and differences",
+    args: [cliPath, "check", "examples/matrix-2-30-parameter-workflow.json", "--n8n-version=matrix", "--json"],
+    exitCode: 1,
+    stdoutIncludes: [
+      '"packageVersion": "2.29.6"',
+      '"packageVersion": "2.30.0"',
+      '"differences"',
+      '"2.29.6": "failed"',
+      '"2.30.0": "passed"'
+    ]
   }
 ];
 

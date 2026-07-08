@@ -2,9 +2,15 @@
 import { readdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
+  bundledN8nPackageVersions,
   createBundledN8nPackageSchemaSource,
   createLocalPlaceholderSchemaSource,
+  defaultBundledN8nPackageVersion,
+  isBundledN8nPackageVersion,
   validateWorkflow,
+  type BundledN8nPackageSelection,
+  type BundledN8nPackageVersion,
+  type SchemaPackageInfo,
   type SchemaSource,
   type SchemaSourceKind,
   type ValidationIssue
@@ -13,6 +19,7 @@ import {
 type CliSchemaSource = Extract<SchemaSourceKind, "bundled-n8n-package" | "local-placeholder">;
 type BatchStatus = "passed" | "failed" | "skipped" | "error";
 type BadgeFormat = "markdown" | "json" | "svg";
+type N8nVersionSelection = BundledN8nPackageVersion | "matrix";
 
 interface ParsedArgs {
   command?: string;
@@ -23,6 +30,7 @@ interface ParsedArgs {
   format: BadgeFormat;
   outputPath?: string;
   label: string;
+  n8nVersion: N8nVersionSelection;
 }
 
 interface BatchFileResult {
@@ -43,6 +51,37 @@ interface BatchSummary {
   errors: number;
 }
 
+interface BatchRunResult {
+  ok: boolean;
+  checkedAt: string;
+  source: SchemaSourceKind;
+  packageInfo?: SchemaPackageInfo;
+  selection?: BundledN8nPackageSelection;
+  summary: BatchSummary;
+  results: BatchFileResult[];
+}
+
+interface MatrixRunResult {
+  ok: boolean;
+  checkedAt: string;
+  source: "bundled-n8n-package";
+  versions: Array<{
+    packageVersion: BundledN8nPackageVersion;
+    ok: boolean;
+    packageInfo?: SchemaPackageInfo;
+    selection?: BundledN8nPackageSelection;
+    summary: BatchSummary;
+    results: BatchFileResult[];
+  }>;
+  differences: MatrixDifference[];
+}
+
+interface MatrixDifference {
+  filePath: string;
+  statusByVersion: Record<string, BatchStatus | "missing">;
+  errorSignaturesByVersion: Record<string, string[]>;
+}
+
 let parsed: ParsedArgs;
 try {
   parsed = parseArgs(process.argv.slice(2));
@@ -56,21 +95,35 @@ if (parsed.help) {
   printHelp();
   process.exitCode = 0;
 } else if (parsed.command === "check" && parsed.inputs.length > 0) {
-  const schemaSource = createSchemaSource(parsed.source);
-  const shouldUseBatch = parsed.inputs.length > 1 || (await inputRequiresBatch(parsed.inputs[0] as string));
-
-  if (shouldUseBatch) {
-    try {
-      const result = await runBatch(parsed.inputs, schemaSource);
-      printBatchResult(result, parsed.json);
+  if (parsed.n8nVersion === "matrix") {
+    if (parsed.source !== "bundled-n8n-package") {
+      console.error("--n8n-version matrix requires --source bundled-n8n-package.");
+      process.exitCode = 2;
+    } else {
+      const result = await runMatrix(parsed.inputs);
+      printMatrixResult(result, parsed.json);
       process.exitCode = result.ok ? 0 : 1;
-    } catch (error) {
-      console.error(error instanceof Error ? error.message : String(error));
-      process.exitCode = 1;
     }
+  } else if (parsed.source !== "bundled-n8n-package" && parsed.n8nVersion !== defaultBundledN8nPackageVersion) {
+    console.error("--n8n-version only applies to --source bundled-n8n-package.");
+    process.exitCode = 2;
   } else {
-    const filePath = parsed.inputs[0] as string;
-    process.exitCode = await runSingleFile(filePath, schemaSource, parsed.json);
+    const schemaSource = createSchemaSource(parsed.source, parsed.n8nVersion);
+    const shouldUseBatch = parsed.inputs.length > 1 || (await inputRequiresBatch(parsed.inputs[0] as string));
+
+    if (shouldUseBatch) {
+      try {
+        const result = await runBatch(parsed.inputs, schemaSource);
+        printBatchResult(result, parsed.json);
+        process.exitCode = result.ok ? 0 : 1;
+      } catch (error) {
+        console.error(error instanceof Error ? error.message : String(error));
+        process.exitCode = 1;
+      }
+    } else {
+      const filePath = parsed.inputs[0] as string;
+      process.exitCode = await runSingleFile(filePath, schemaSource, parsed.json);
+    }
   }
 } else if (parsed.command === "badge" && parsed.inputs.length === 1) {
   process.exitCode = await runBadge(parsed.inputs[0] as string, parsed);
@@ -86,7 +139,8 @@ function parseArgs(args: string[]): ParsedArgs {
     json: false,
     help: false,
     format: "markdown",
-    label: "n8n-lint"
+    label: "n8n-lint",
+    n8nVersion: defaultBundledN8nPackageVersion
   };
 
   for (let index = 0; index < args.length; index += 1) {
@@ -105,6 +159,22 @@ function parseArgs(args: string[]): ParsedArgs {
       if (parsedArgs.command === "badge") {
         parsedArgs.format = "json";
       }
+      continue;
+    }
+
+    if (arg === "--n8n-version") {
+      const n8nVersion = args[index + 1];
+      if (n8nVersion === undefined) {
+        throw new Error("--n8n-version requires a pinned version or matrix.");
+      }
+
+      parsedArgs.n8nVersion = parseN8nVersionSelection(n8nVersion);
+      index += 1;
+      continue;
+    }
+
+    if (arg.startsWith("--n8n-version=")) {
+      parsedArgs.n8nVersion = parseN8nVersionSelection(arg.slice("--n8n-version=".length));
       continue;
     }
 
@@ -207,6 +277,18 @@ function parseArgs(args: string[]): ParsedArgs {
   return parsedArgs;
 }
 
+function parseN8nVersionSelection(value: string): N8nVersionSelection {
+  if (value === "matrix") {
+    return value;
+  }
+
+  if (isBundledN8nPackageVersion(value)) {
+    return value;
+  }
+
+  throw new Error(`--n8n-version must be one of ${bundledN8nPackageVersions.join(", ")} or matrix.`);
+}
+
 async function inputRequiresBatch(input: string): Promise<boolean> {
   if (hasGlobCharacters(input)) {
     return true;
@@ -276,13 +358,7 @@ async function runBadge(resultPath: string, options: ParsedArgs): Promise<number
 async function runBatch(
   inputs: string[],
   schemaSource: SchemaSource
-): Promise<{
-  ok: boolean;
-  checkedAt: string;
-  source: SchemaSourceKind;
-  summary: BatchSummary;
-  results: BatchFileResult[];
-}> {
+): Promise<BatchRunResult> {
   const resolved = await resolveBatchInputs(inputs);
   const sourceSnapshot = await schemaSource.load();
   const results: BatchFileResult[] = [];
@@ -305,6 +381,8 @@ async function runBatch(
     ok: summary.failed === 0 && summary.errors === 0,
     checkedAt: new Date().toISOString(),
     source: sourceSnapshot.source,
+    ...(sourceSnapshot.packageInfo === undefined ? {} : { packageInfo: sourceSnapshot.packageInfo }),
+    ...(sourceSnapshot.selection === undefined ? {} : { selection: sourceSnapshot.selection }),
     summary,
     results
   };
@@ -343,16 +421,7 @@ async function checkBatchFile(filePath: string, schemaSource: SchemaSource): Pro
   }
 }
 
-function printBatchResult(
-  result: {
-    ok: boolean;
-    checkedAt: string;
-    source: SchemaSourceKind;
-    summary: BatchSummary;
-    results: BatchFileResult[];
-  },
-  json: boolean
-): void {
+function printBatchResult(result: BatchRunResult, json: boolean): void {
   if (json) {
     console.log(JSON.stringify(result, null, 2));
     return;
@@ -383,6 +452,106 @@ function printBatchResult(
 
   const { passed, failed, skipped, errors } = result.summary;
   console.log(`Summary: ${passed} passed, ${failed} failed, ${skipped} skipped, ${errors} errors`);
+}
+
+async function runMatrix(inputs: string[]): Promise<MatrixRunResult> {
+  const versions = [];
+  for (const packageVersion of bundledN8nPackageVersions) {
+    const result = await runBatch(inputs, createBundledN8nPackageSchemaSource({ packageVersion }));
+    versions.push({
+      packageVersion,
+      ok: result.ok,
+      ...(result.packageInfo === undefined ? {} : { packageInfo: result.packageInfo }),
+      ...(result.selection === undefined ? {} : { selection: result.selection }),
+      summary: result.summary,
+      results: result.results
+    });
+  }
+
+  return {
+    ok: versions.every((version) => version.ok),
+    checkedAt: new Date().toISOString(),
+    source: "bundled-n8n-package",
+    versions,
+    differences: collectMatrixDifferences(versions)
+  };
+}
+
+function printMatrixResult(result: MatrixRunResult, json: boolean): void {
+  if (json) {
+    console.log(JSON.stringify(result, null, 2));
+    return;
+  }
+
+  for (const version of result.versions) {
+    const packageLabel = version.packageInfo
+      ? `${version.packageInfo.name}@${version.packageInfo.version}`
+      : `n8n-nodes-base@${version.packageVersion}`;
+    console.log(`MATRIX ${packageLabel}: ${version.ok ? "PASS" : "FAIL"}`);
+    const { passed, failed, skipped, errors } = version.summary;
+    console.log(`  Summary: ${passed} passed, ${failed} failed, ${skipped} skipped, ${errors} errors`);
+  }
+
+  for (const difference of result.differences) {
+    const statusSummary = Object.entries(difference.statusByVersion)
+      .map(([version, status]) => `${version}=${status}`)
+      .join(", ");
+    console.log(`DIFF ${difference.filePath}: ${statusSummary}`);
+  }
+
+  console.log(
+    `Matrix summary: ${result.versions.length} versions, ${result.differences.length} compatibility differences`
+  );
+}
+
+function collectMatrixDifferences(versions: MatrixRunResult["versions"]): MatrixDifference[] {
+  const filePaths = new Set<string>();
+  for (const version of versions) {
+    for (const fileResult of version.results) {
+      filePaths.add(fileResult.filePath);
+    }
+  }
+
+  const differences: MatrixDifference[] = [];
+  for (const filePath of [...filePaths].sort((left, right) => left.localeCompare(right))) {
+    const statusByVersion: Record<string, BatchStatus | "missing"> = {};
+    const errorSignaturesByVersion: Record<string, string[]> = {};
+
+    for (const version of versions) {
+      const fileResult = version.results.find((candidate) => candidate.filePath === filePath);
+      statusByVersion[version.packageVersion] = fileResult?.status ?? "missing";
+      errorSignaturesByVersion[version.packageVersion] = readErrorSignatures(fileResult);
+    }
+
+    const statusSignatures = new Set(Object.values(statusByVersion));
+    const errorSignatures = new Set(
+      Object.values(errorSignaturesByVersion).map((signatures) => signatures.join("|"))
+    );
+    if (statusSignatures.size > 1 || errorSignatures.size > 1) {
+      differences.push({
+        filePath,
+        statusByVersion,
+        errorSignaturesByVersion
+      });
+    }
+  }
+
+  return differences;
+}
+
+function readErrorSignatures(fileResult: BatchFileResult | undefined): string[] {
+  if (fileResult === undefined) {
+    return [];
+  }
+
+  if (fileResult.status === "error") {
+    return [`input_error:${fileResult.error ?? "unknown"}`];
+  }
+
+  return (fileResult.issues ?? [])
+    .filter((issue) => issue.severity === "error")
+    .map((issue) => `${issue.code}:${issue.path}`)
+    .sort((left, right) => left.localeCompare(right));
 }
 
 async function resolveBatchInputs(inputs: string[]): Promise<{
@@ -708,19 +877,19 @@ function summarizeBatch(results: BatchFileResult[]): BatchSummary {
   return summary;
 }
 
-function createSchemaSource(source: CliSchemaSource): SchemaSource {
+function createSchemaSource(source: CliSchemaSource, packageVersion: BundledN8nPackageVersion): SchemaSource {
   if (source === "local-placeholder") {
     return createLocalPlaceholderSchemaSource();
   }
 
-  return createBundledN8nPackageSchemaSource();
+  return createBundledN8nPackageSchemaSource({ packageVersion });
 }
 
 function printHelp(): void {
   console.log(
     [
       "Usage:",
-      "  n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--json]",
+      "  n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0|matrix] [--json]",
       "  n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]"
     ].join("\n")
   );

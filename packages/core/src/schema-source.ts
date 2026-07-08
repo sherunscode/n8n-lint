@@ -26,6 +26,7 @@ export interface SchemaEntityMetadata {
 export interface SchemaSnapshot {
   source: SchemaSourceKind;
   fetchedAt: string;
+  selection?: BundledN8nPackageSelection;
   packageInfo?: SchemaPackageInfo;
   nodeTypes: readonly string[];
   credentialTypes: readonly string[];
@@ -49,24 +50,51 @@ export interface LiveRestSchemaSourceConfig {
 
 export interface BundledN8nPackageSchemaSourceConfig {
   artifactPath?: string;
+  packageVersion?: BundledN8nPackageVersion;
 }
 
 const defaultN8nNodesPackage = "n8n-nodes-base";
 const nodeMetadataFile = "dist/types/nodes.json";
 const credentialMetadataFile = "dist/types/credentials.json";
+export const bundledN8nPackageVersions = ["2.29.6", "2.30.0"] as const;
+export type BundledN8nPackageVersion = (typeof bundledN8nPackageVersions)[number];
+export const defaultBundledN8nPackageVersion: BundledN8nPackageVersion = "2.29.6";
 const defaultBundledSchemaArtifactPath = join(
   dirname(fileURLToPath(import.meta.url)),
   "../schema/bundled-n8n-package.json"
 );
+const bundledSchemaArtifactPaths: Record<BundledN8nPackageVersion, string> = {
+  "2.29.6": defaultBundledSchemaArtifactPath,
+  "2.30.0": join(dirname(fileURLToPath(import.meta.url)), "../schema/bundled-n8n-package-2.30.0.json")
+};
 
-export const bundledN8nPackageSelection = {
-  referencePackage: "n8n@2.29.7",
-  packageName: defaultN8nNodesPackage,
-  packageVersion: "2.29.6",
-  workflowPackageVersion: "2.29.2",
-  reason:
-    "Pinned to the n8n-nodes-base dependency selected by n8n@2.29.7, instead of the stale-looking n8n-nodes-base latest dist-tag."
-} as const;
+export interface BundledN8nPackageSelection {
+  referencePackage: string;
+  packageName: string;
+  packageVersion: BundledN8nPackageVersion;
+  workflowPackageVersion: string;
+  reason: string;
+}
+
+export const bundledN8nPackageSelections: Record<BundledN8nPackageVersion, BundledN8nPackageSelection> = {
+  "2.29.6": {
+    referencePackage: "n8n@2.29.7",
+    packageName: defaultN8nNodesPackage,
+    packageVersion: "2.29.6",
+    workflowPackageVersion: "2.29.2",
+    reason:
+      "Pinned to the n8n-nodes-base dependency selected by n8n@2.29.7, instead of the stale-looking n8n-nodes-base latest dist-tag."
+  },
+  "2.30.0": {
+    referencePackage: "n8n@2.30.0",
+    packageName: defaultN8nNodesPackage,
+    packageVersion: "2.30.0",
+    workflowPackageVersion: "2.30.0",
+    reason: "Pinned to the n8n-nodes-base dependency selected by n8n@2.30.0."
+  }
+};
+
+export const bundledN8nPackageSelection = bundledN8nPackageSelections[defaultBundledN8nPackageVersion];
 
 export function createLocalPlaceholderSchemaSource(): SchemaSource {
   return {
@@ -90,7 +118,9 @@ export function createLocalPlaceholderSchemaSource(): SchemaSource {
 }
 
 export function createBundledN8nPackageSchemaSource(config: BundledN8nPackageSchemaSourceConfig = {}): SchemaSource {
-  const artifactPath = config.artifactPath ?? defaultBundledSchemaArtifactPath;
+  const artifactPath =
+    config.artifactPath ??
+    bundledSchemaArtifactPaths[config.packageVersion ?? defaultBundledN8nPackageVersion];
 
   return {
     kind: "bundled-n8n-package",
@@ -113,6 +143,7 @@ export function createBundledN8nPackageSchemaSource(config: BundledN8nPackageSch
       return {
         source: "bundled-n8n-package",
         fetchedAt: artifact.generatedAt,
+        selection: artifact.selection,
         packageInfo,
         nodeTypes: nodes.map((definition) => definition.name),
         credentialTypes: credentials.map((definition) => definition.name),
@@ -157,11 +188,15 @@ export function createLiveRestSchemaSource(config: LiveRestSchemaSourceConfig): 
   };
 }
 
+export function isBundledN8nPackageVersion(value: string): value is BundledN8nPackageVersion {
+  return bundledN8nPackageVersions.includes(value as BundledN8nPackageVersion);
+}
+
 interface BundledSchemaArtifact {
   schemaVersion: 1 | 2;
   generatedAt: string;
   package: SchemaPackageInfo;
-  selection: typeof bundledN8nPackageSelection;
+  selection: BundledN8nPackageSelection;
   nodeTypes: string[];
   credentialTypes: string[];
   nodeParameterNames: Record<string, string[]>;
@@ -193,15 +228,63 @@ async function readBundledSchemaArtifact(filePath: string): Promise<BundledSchem
   }
 
   return {
-    schemaVersion: 1,
+    schemaVersion: parsed.schemaVersion,
     generatedAt: parsed.generatedAt,
     package: packageInfo,
-    selection: bundledN8nPackageSelection,
+    selection: readArtifactSelection(parsed.selection, packageInfo, filePath),
     nodeTypes,
     credentialTypes,
     nodeParameterNames,
     triggerNodeTypes
   };
+}
+
+function readArtifactSelection(
+  value: unknown,
+  packageInfo: SchemaPackageInfo,
+  filePath: string
+): BundledN8nPackageSelection {
+  if (!isRecord(value)) {
+    return inferArtifactSelection(packageInfo, filePath);
+  }
+
+  const referencePackage = readNonEmptySelectionString(value.referencePackage, "referencePackage", filePath);
+  const packageName = readNonEmptySelectionString(value.packageName, "packageName", filePath);
+  const packageVersion = readNonEmptySelectionString(value.packageVersion, "packageVersion", filePath);
+  const workflowPackageVersion = readNonEmptySelectionString(
+    value.workflowPackageVersion,
+    "workflowPackageVersion",
+    filePath
+  );
+  const reason = readNonEmptySelectionString(value.reason, "reason", filePath);
+
+  if (!isBundledN8nPackageVersion(packageVersion)) {
+    throw new Error(`Bundled n8n schema artifact has unsupported packageVersion ${packageVersion} at ${filePath}.`);
+  }
+
+  return {
+    referencePackage,
+    packageName,
+    packageVersion,
+    workflowPackageVersion,
+    reason
+  };
+}
+
+function inferArtifactSelection(packageInfo: SchemaPackageInfo, filePath: string): BundledN8nPackageSelection {
+  if (!isBundledN8nPackageVersion(packageInfo.version)) {
+    throw new Error(`Bundled n8n schema artifact is missing selection metadata at ${filePath}.`);
+  }
+
+  return bundledN8nPackageSelections[packageInfo.version];
+}
+
+function readNonEmptySelectionString(value: unknown, label: string, filePath: string): string {
+  if (typeof value !== "string" || value.trim() === "") {
+    throw new Error(`Bundled n8n schema artifact selection.${label} is invalid at ${filePath}.`);
+  }
+
+  return value.trim();
 }
 
 function readArtifactPackageInfo(value: unknown, filePath: string): SchemaPackageInfo {

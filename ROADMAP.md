@@ -22,6 +22,8 @@ Verified:
   ordinary JSON files reported separately.
 - Badge generation emits markdown, JSON, or static SVG from real `check --json`
   output without adding a hosted badge service.
+- Multi-version matrix checks pinned bundled artifacts for
+  `n8n-nodes-base@2.29.6` and `n8n-nodes-base@2.30.0`.
 
 Still gated or unproven:
 
@@ -36,8 +38,8 @@ Still gated or unproven:
 Close these before claiming V1 publicly:
 
 1. Resolve the npm publish approval path and publish only after owner approval.
-2. Resolve public GitHub hardening: owner-approved push, repo topics, green CI,
-   and README visibility.
+2. Keep public GitHub hardening current: pushed `main`, repo topics, green CI,
+   CodeQL, README visibility, and evidence-backed docs.
 3. Keep launch copy tied to checked-in command output, benchmark files, and
    release artifacts.
 
@@ -79,21 +81,23 @@ Gate:
   is explicitly approved.
 - `npm run test:cli` proves markdown, JSON, and SVG badge output.
 
-### V1.3 Multi-Version Schema Matrix
+### V1.3 Multi-Version Schema Matrix - Done Locally
 
 Goal: check workflows against more than one pinned n8n schema artifact.
 
 Scope:
 
-- Generate compact artifacts for explicitly pinned n8n package versions.
-- Add a CLI selector for one version or a matrix of versions.
-- Report compatibility differences without claiming live REST coverage.
+- Generates compact artifacts for explicitly pinned n8n package versions.
+- Adds a CLI selector for one version or a matrix of versions.
+- Reports compatibility differences without claiming live REST coverage.
 
 Gate:
 
-- Each artifact has reproducible generation proof.
-- Fixture coverage proves node and credential type differences across at least
-  two pinned versions.
+- Each artifact has reproducible generation proof through
+  `npm run generate:bundled-schema` and `npm run check:bundled-schema`.
+- Fixture coverage proves a top-level parameter difference across two pinned
+  versions: `dataTable.clearWarning` is absent from 2.29.6 and present in
+  2.30.0.
 
 ### V1.4 Human-Gated Auto-Repair
 

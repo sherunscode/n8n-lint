@@ -1,21 +1,21 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-08T05:53:41.384Z",
+  "generatedAt": "2026-07-08T05:54:09.080Z",
   "source": "bundled-n8n-package",
   "package": {
     "name": "n8n-nodes-base",
-    "version": "2.29.6",
+    "version": "2.30.0",
     "metadataFiles": {
       "nodes": "dist/types/nodes.json",
       "credentials": "dist/types/credentials.json"
     }
   },
   "selection": {
-    "referencePackage": "n8n@2.29.7",
+    "referencePackage": "n8n@2.30.0",
     "packageName": "n8n-nodes-base",
-    "packageVersion": "2.29.6",
-    "workflowPackageVersion": "2.29.2",
-    "reason": "Pinned to the n8n-nodes-base dependency selected by n8n@2.29.7, instead of the stale-looking n8n-nodes-base latest dist-tag."
+    "packageVersion": "2.30.0",
+    "workflowPackageVersion": "2.30.0",
+    "reason": "Pinned to the n8n-nodes-base dependency selected by n8n@2.30.0."
   },
   "nodeTypes": [
     "n8n-nodes-base.actionNetwork",
@@ -2024,6 +2024,7 @@
       "warehouseId"
     ],
     "n8n-nodes-base.dataTable": [
+      "clearWarning",
       "columns",
       "dataTableId",
       "deleteWarning",
@@ -2411,6 +2412,7 @@
       "executeOnce"
     ],
     "n8n-nodes-base.executeWorkflow": [
+      "eachModeDeprecationNotice",
       "executeWorkflowNotice",
       "mode",
       "operation",
@@ -4336,6 +4338,7 @@
       "dataMode",
       "dataProperty",
       "dataStartRow",
+      "driveTarget",
       "fieldsUi",
       "filters",
       "hasHeaders",
@@ -4350,10 +4353,12 @@
       "range",
       "rawData",
       "resource",
+      "resourceTarget",
       "returnAll",
       "selectRange",
       "table",
       "useRange",
+      "userTarget",
       "valueToMatchOn",
       "workbook",
       "worksheet"
@@ -4510,7 +4515,10 @@
       "authentication",
       "bucketId",
       "channelId",
+      "channelMessageCreateServicePrincipalNotice",
+      "channelMessageGetAllServicePrincipalNotice",
       "chatId",
+      "chatMessageServicePrincipalNotice",
       "contentType",
       "defineForm",
       "formFields",
@@ -4540,6 +4548,7 @@
       "authentication",
       "channelId",
       "chatId",
+      "chatTriggerServicePrincipalNotice",
       "event",
       "teamId",
       "watchAllChannels",
@@ -4560,7 +4569,8 @@
       "taskId",
       "taskListId",
       "title",
-      "updateFields"
+      "updateFields",
+      "userTarget"
     ],
     "n8n-nodes-base.mindee": [
       "apiVersion",

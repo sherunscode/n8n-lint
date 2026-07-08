@@ -2,9 +2,10 @@
 
 Core validation library used by `n8n-lint`.
 
-This package loads the checked-in compact n8n schema artifact and validates n8n
+This package loads checked-in compact n8n schema artifacts and validates n8n
 workflow JSON structure, node type names, credential type names, top-level node
-parameter names, and trigger graph/type-version shape. It does not execute
+parameter names, and trigger graph/type-version shape. Current pinned artifacts
+cover `n8n-nodes-base@2.29.6` and `n8n-nodes-base@2.30.0`. It does not execute
 workflows and does not claim live REST validation.
 
 After npm publication, install the CLI package for normal use:

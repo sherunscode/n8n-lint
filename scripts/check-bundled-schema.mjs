@@ -3,12 +3,23 @@ import { readFile } from "node:fs/promises";
 
 import {
   bundledN8nPackageSelection,
+  bundledN8nPackageVersions,
   createBundledN8nPackageSchemaSource
 } from "../packages/core/dist/index.js";
 
 const fixtureUrl = new URL("../examples/known-http-request-workflow.json", import.meta.url);
 const fixture = JSON.parse(await readFile(fixtureUrl, "utf8"));
+const matrixFixtureUrl = new URL("../examples/matrix-2-30-parameter-workflow.json", import.meta.url);
+const matrixFixture = JSON.parse(await readFile(matrixFixtureUrl, "utf8"));
 const snapshot = await createBundledN8nPackageSchemaSource().load();
+const matrixSnapshots = Object.fromEntries(
+  await Promise.all(
+    bundledN8nPackageVersions.map(async (packageVersion) => [
+      packageVersion,
+      await createBundledN8nPackageSchemaSource({ packageVersion }).load()
+    ])
+  )
+);
 
 const fixtureNodeTypes = collectFixtureNodeTypes(fixture);
 const fixtureCredentialTypes = collectFixtureCredentialTypes(fixture);
@@ -19,7 +30,30 @@ const missingCredentialTypes = fixtureCredentialTypes.filter(
 const missingFixtureParameters = collectFixtureParameters(fixture).filter(
   ({ nodeType, parameterName }) => !snapshot.nodeParameterNames[nodeType]?.includes(parameterName)
 );
+const matrixFixtureParameters = collectFixtureParameters(matrixFixture);
 const versionMismatch = snapshot.packageInfo?.version !== bundledN8nPackageSelection.packageVersion;
+const matrixVersionFailures = bundledN8nPackageVersions
+  .map((packageVersion) => {
+    const packageInfo = matrixSnapshots[packageVersion]?.packageInfo;
+    return packageInfo?.version === packageVersion
+      ? undefined
+      : `Expected matrix artifact ${packageVersion}, loaded ${packageInfo?.name ?? "unknown"}@${packageInfo?.version ?? "unknown"}`;
+  })
+  .filter((failure) => failure !== undefined);
+const matrixDifferenceFailures = [
+  ...matrixFixtureParameters
+    .filter(
+      ({ nodeType, parameterName }) =>
+        matrixSnapshots["2.29.6"]?.nodeParameterNames[nodeType]?.includes(parameterName)
+    )
+    .map(({ nodeType, parameterName }) => `Expected ${nodeType}.${parameterName} to be absent from 2.29.6`),
+  ...matrixFixtureParameters
+    .filter(
+      ({ nodeType, parameterName }) =>
+        !matrixSnapshots["2.30.0"]?.nodeParameterNames[nodeType]?.includes(parameterName)
+    )
+    .map(({ nodeType, parameterName }) => `Expected ${nodeType}.${parameterName} to be present in 2.30.0`)
+];
 const failures = [
   ...missingNodeTypes.map((nodeType) => `Missing node type ${nodeType}`),
   ...missingCredentialTypes.map((credentialType) => `Missing credential type ${credentialType}`),
@@ -30,7 +64,9 @@ const failures = [
     ? [
         `Expected ${bundledN8nPackageSelection.packageName}@${bundledN8nPackageSelection.packageVersion}, loaded ${snapshot.packageInfo?.name ?? "unknown"}@${snapshot.packageInfo?.version ?? "unknown"}`
       ]
-    : [])
+    : []),
+  ...matrixVersionFailures,
+  ...matrixDifferenceFailures
 ];
 
 const result = {
@@ -42,11 +78,28 @@ const result = {
   credentialTypes: snapshot.credentialTypes.length,
   parameterizedNodeTypes: Object.keys(snapshot.nodeParameterNames).length,
   triggerNodeTypes: snapshot.triggerNodeTypes.length,
+  matrixArtifacts: Object.fromEntries(
+    Object.entries(matrixSnapshots).map(([packageVersion, matrixSnapshot]) => [
+      packageVersion,
+      {
+        package: matrixSnapshot.packageInfo,
+        nodeTypes: matrixSnapshot.nodeTypes.length,
+        credentialTypes: matrixSnapshot.credentialTypes.length,
+        parameterizedNodeTypes: Object.keys(matrixSnapshot.nodeParameterNames).length,
+        triggerNodeTypes: matrixSnapshot.triggerNodeTypes.length
+      }
+    ])
+  ),
   fixture: {
     path: "examples/known-http-request-workflow.json",
     nodeTypes: fixtureNodeTypes,
     credentialTypes: fixtureCredentialTypes,
     parameters: collectFixtureParameters(fixture)
+  },
+  matrixFixture: {
+    path: "examples/matrix-2-30-parameter-workflow.json",
+    parameters: matrixFixtureParameters,
+    expectedDifference: "clearWarning is absent from 2.29.6 and present in 2.30.0"
   },
   failures
 };

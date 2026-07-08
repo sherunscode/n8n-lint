@@ -3,6 +3,8 @@
 `n8n-lint check <workflow.json> --json` emits one JSON object to stdout and
 uses the process exit code as the CI gate. When `check` receives multiple
 inputs, a directory, or a glob, it emits the batch JSON object documented below.
+When `--n8n-version=matrix` is used, it emits the matrix JSON object documented
+below.
 
 This contract documents the current local MVP. It does not claim npm registry
 installation, live REST schema validation, workflow execution, or hosted
@@ -136,3 +138,70 @@ Batch statuses:
 
 Skipped files do not fail the run. Failed workflows and read/parse/input errors
 produce exit code `1`.
+
+## Matrix JSON
+
+Matrix mode runs every pinned bundled schema artifact and reports per-version
+results plus compatibility differences:
+
+```json
+{
+  "ok": false,
+  "checkedAt": "2026-07-08T00:00:00.000Z",
+  "source": "bundled-n8n-package",
+  "versions": [
+    {
+      "packageVersion": "2.29.6",
+      "ok": false,
+      "packageInfo": {
+        "name": "n8n-nodes-base",
+        "version": "2.29.6"
+      },
+      "summary": {
+        "totalFiles": 1,
+        "workflows": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0,
+        "errors": 0
+      },
+      "results": []
+    },
+    {
+      "packageVersion": "2.30.0",
+      "ok": true,
+      "packageInfo": {
+        "name": "n8n-nodes-base",
+        "version": "2.30.0"
+      },
+      "summary": {
+        "totalFiles": 1,
+        "workflows": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "results": []
+    }
+  ],
+  "differences": [
+    {
+      "filePath": "examples/matrix-2-30-parameter-workflow.json",
+      "statusByVersion": {
+        "2.29.6": "failed",
+        "2.30.0": "passed"
+      },
+      "errorSignaturesByVersion": {
+        "2.29.6": [
+          "workflow.node_parameter_unknown:$.nodes[0].parameters.clearWarning"
+        ],
+        "2.30.0": []
+      }
+    }
+  ]
+}
+```
+
+Matrix `ok` is `true` only when every pinned version passes. `differences`
+contains files whose status or error signatures differ across versions.

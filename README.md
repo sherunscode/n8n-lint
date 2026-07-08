@@ -28,6 +28,8 @@ will only be documented after npm publication.
 - Current validation: workflow structure, bundled n8n node type names, bundled
   credential type names, top-level node parameter names, and trigger
   graph/type-version shape.
+- Current schema selectors: pinned bundled artifacts for `n8n-nodes-base@2.29.6`
+  and `n8n-nodes-base@2.30.0`, plus matrix mode.
 - Benchmark: `docs/benchmark-zie619-report.md` records the reproducible
   `Zie619/n8n-workflows` run and exact source commit.
 - Not claimed yet: npm registry install, live REST schema validation, workflow
@@ -39,11 +41,14 @@ will only be documented after npm publication.
 - Workflow structure validation.
 - Compact bundled schema artifact generated from `n8n-nodes-base@2.29.6`, the
   package selected by the current `n8n@2.29.7` dependency set.
+- Second pinned compact schema artifact generated from `n8n-nodes-base@2.30.0`,
+  the package selected by `n8n@2.30.0`.
 - Unknown node type detection.
 - Unknown or renamed credential type detection.
 - Unknown or dead top-level node parameter detection.
 - Stale trigger graph/type-version shape detection.
 - JSON output mode for CI tooling.
+- Multi-version schema selector and matrix compatibility report.
 - Batch checks for multiple files, directories, and simple globs, with skipped
   ordinary JSON files reported separately.
 - Local badge generation from real `check --json` output in markdown, JSON, or
@@ -75,7 +80,7 @@ WARN schema_source.warning: Bundled n8n package metadata is loaded from a compac
 ## CLI
 
 ```bash
-n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--json]
+n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0|matrix] [--json]
 n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]
 ```
 
@@ -83,7 +88,7 @@ n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lin
 
 ```text
 Usage:
-  n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--json]
+  n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0|matrix] [--json]
   n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]
 ```
 
@@ -91,6 +96,9 @@ Usage:
 |---|---:|---|
 | `--source bundled-n8n-package` | yes | Uses the checked-in compact schema artifact. |
 | `--source local-placeholder` | no | Structure-only validation for adapter testing. |
+| `--n8n-version 2.29.6` | yes | Uses the default pinned bundled artifact. |
+| `--n8n-version 2.30.0` | no | Uses the second pinned bundled artifact. |
+| `--n8n-version matrix` | no | Runs all pinned bundled artifacts and reports compatibility differences. |
 | `--json` | no | Emits a stable JSON result object and exits non-zero on validation errors. |
 
 Local development currently runs the built CLI directly:
@@ -99,6 +107,7 @@ Local development currently runs the built CLI directly:
 node packages/cli/dist/bin.js check examples/failing-unknown-node.json
 node packages/cli/dist/bin.js check examples/failing-unknown-credential.json --json
 node packages/cli/dist/bin.js check "examples/*.json"
+node packages/cli/dist/bin.js check examples/matrix-2-30-parameter-workflow.json --n8n-version=matrix
 ```
 
 Failure example:
@@ -120,6 +129,7 @@ See `docs/json-output.md` for the current `--json` output contract.
 See `docs/batch-check-design.md` for batch mode behavior, skipped-file rules,
 and exit codes.
 See `docs/badge-output.md` for local badge generation from checked output.
+See `docs/schema-matrix.md` for pinned schema artifacts and matrix behavior.
 
 Badge example:
 
@@ -191,10 +201,11 @@ n8n package version:
 npm run generate:bundled-schema
 ```
 
-The generated file is `packages/core/schema/bundled-n8n-package.json`. It
-stores node and credential type names, top-level node parameter names, and
-trigger node type names. It does not bundle n8n runtime code, integration
-clients, credentials, or workflow data.
+The generated files are `packages/core/schema/bundled-n8n-package.json` and
+`packages/core/schema/bundled-n8n-package-2.30.0.json`. They store node and
+credential type names, top-level node parameter names, and trigger node type
+names. They do not bundle n8n runtime code, integration clients, credentials,
+or workflow data.
 
 ## Pre-Commit
 
@@ -211,6 +222,8 @@ See `docs/pre-commit.md`.
 - `docs/json-output.md`: stable JSON output contract for CI tooling.
 - `docs/batch-check-design.md`: batch-check behavior and V1.1 proof gates.
 - `docs/badge-output.md`: local badge generation from real check results.
+- `docs/schema-matrix.md`: pinned schema artifacts and matrix compatibility
+  reporting.
 - `docs/support-rollback.md`: first-48-hours support and rollback plan for an
   owner-approved launch.
 
@@ -250,6 +263,7 @@ MVP scope:
 - GitHub Action quality gate.
 - Fixture-backed validation behavior for structure, node types, credential
   types, dead top-level parameters, and stale trigger shape.
+- Pinned two-version schema matrix for bundled metadata.
 - Batch checking for repositories with multiple workflow JSON files.
 - Local static badge generation from real check results.
 - Honest docs and benchmark harness.

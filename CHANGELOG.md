@@ -16,5 +16,7 @@
   skipped-file accounting for ordinary JSON files.
 - Added local badge generation from real `check --json` output in markdown,
   JSON, and static SVG formats.
+- Added pinned two-version schema matrix support for `n8n-nodes-base@2.29.6`
+  and `n8n-nodes-base@2.30.0`.
 - Added publishable package metadata, package README files, and an owner-gated
   npm release checklist.
