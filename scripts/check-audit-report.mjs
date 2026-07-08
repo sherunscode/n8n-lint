@@ -27,6 +27,7 @@ const requiredQualityGates = [
   "check:animated-demo",
   "check:terminal-output-demo",
   "check:matrix-demo",
+  "check:matrix-gif",
   "check:social-preview",
   "check:architecture-diagram",
   "check:last-verified-badges",
@@ -57,6 +58,8 @@ expect(audit.includes("docs/assets/precommit-rejection-demo.svg"), "audit must m
 expect(audit.includes("npm run check:precommit-rejection-demo"), "audit must mention the pre-commit rejection checker");
 expect(audit.includes("docs/assets/matrix-compatibility-demo.svg"), "audit must mention the checked matrix asset");
 expect(audit.includes("npm run check:matrix-demo"), "audit must mention the matrix demo checker");
+expect(audit.includes("docs/assets/matrix-compatibility-demo.gif"), "audit must mention the checked matrix GIF asset");
+expect(audit.includes("npm run check:matrix-gif"), "audit must mention the matrix GIF checker");
 expect(audit.includes("docs/assets/social-preview.svg"), "audit must mention the checked social preview asset");
 expect(audit.includes("npm run check:social-preview"), "audit must mention the social preview checker");
 expect(audit.includes("docs/assets/architecture.svg"), "audit must mention the checked architecture diagram asset");
@@ -99,9 +102,9 @@ for (const pack of [runPack("packages/core"), runPack("packages/cli")]) {
 expect(
   hasPhrase(
     audit,
-    "Additional video/GIF captures beyond the checked README, animated demo, terminal output, pre-commit rejection, matrix compatibility, social preview, architecture SVG, and last-verified badge-state SVG assets."
+    "Additional video captures beyond the checked README, animated demo, terminal output, pre-commit rejection, matrix compatibility SVG/GIF, social preview, architecture SVG, and last-verified badge-state SVG assets."
   ),
-  "remaining gates must distinguish extra visual launch assets from the checked README, animated demo, terminal output, pre-commit rejection, matrix compatibility, social preview, architecture SVG, and last-verified badge-state SVGs"
+  "remaining gates must distinguish extra video launch assets from the checked README, animated demo, terminal output, pre-commit rejection, matrix compatibility SVG/GIF, social preview, architecture SVG, and last-verified badge-state SVGs"
 );
 
 for (const remainingGate of [
@@ -133,6 +136,7 @@ console.log(
         "terminal output proof",
         "pre-commit rejection proof",
         "matrix compatibility proof",
+        "matrix GIF proof",
         "social preview proof",
         "architecture diagram proof",
         "last-verified badge visual proof",

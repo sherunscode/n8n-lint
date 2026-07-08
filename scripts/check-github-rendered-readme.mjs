@@ -11,7 +11,10 @@ const failures = [];
 const localHead = git(["rev-parse", "HEAD"]);
 const publicCommit = await fetchPublicMainCommit();
 const sameCommit = publicCommit === localHead;
-const readme = sameCommit ? await readFile("README.md", "utf8") : await fetchText(rawUrl(publicCommit, "README.md"));
+const localReadmeScopeClean = sameCommit && git(["status", "--porcelain", "--", "README.md", "docs/assets"]) === "";
+const readme = localReadmeScopeClean
+  ? await readFile("README.md", "utf8")
+  : await fetchText(rawUrl(publicCommit, "README.md"));
 const pageHtml = await fetchText(repositoryUrl);
 const readmeWithoutFences = stripCodeFences(readme);
 const imageTargets = extractMarkdownImages(readmeWithoutFences).filter(isLocalTarget);
@@ -76,7 +79,7 @@ console.log(
       repository: repositoryUrl,
       publicCommit,
       localHead,
-      scope: sameCommit ? "local-head-is-public-main" : "public-main-rendered-page",
+      scope: localReadmeScopeClean ? "local-head-is-public-main" : "public-main-rendered-page",
       checked: [
         "GitHub repository page HTTP 200",
         "rendered README body",

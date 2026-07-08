@@ -63,6 +63,9 @@ REST claims.
   generated from an actual temporary Git commit rejected by the repo's real
   `.githooks/pre-commit` hook and checked by
   `npm run check:precommit-rejection-demo`.
+- Matrix compatibility GIF `docs/assets/matrix-compatibility-demo.gif` is
+  generated from real matrix CLI and JSON output and checked by
+  `npm run check:matrix-gif`.
 - Launch/social preview asset `docs/assets/social-preview.svg` is generated
   from the current benchmark report, bundled schema config, and canonical repo
   metadata, then checked by `npm run check:social-preview`.
@@ -92,8 +95,8 @@ REST claims.
   `check:launch-content`, `check:benchmark-report`, `check:github-action`,
   `check:strategy-checklist`, `check:github-rendered-readme`,
   `check:github-profile`, `check:readme-demo`, `check:animated-demo`,
-  `check:terminal-output-demo`, `check:matrix-demo`, `check:social-preview`,
-  `check:architecture-diagram`, `check:last-verified-badges`, `check:audit-report`, `check:status-docs`,
+  `check:terminal-output-demo`, `check:matrix-demo`, `check:matrix-gif`,
+  `check:social-preview`, `check:architecture-diagram`, `check:last-verified-badges`, `check:audit-report`, `check:status-docs`,
   `check:metadata`, `check:security`, `check:docs`, `check:pack`,
   `check:claims`, `check:links`,
   `check:exit-codes`, core fixture tests, CLI fixture tests, production
@@ -184,6 +187,10 @@ REST claims.
   SVG is generated from real matrix CLI and JSON output, including the
   `clearWarning` difference that fails under `n8n-nodes-base@2.29.6` and
   passes under `n8n-nodes-base@2.30.0`.
+- `npm run check:matrix-gif` now enforces that the animated matrix GIF is
+  generated from real matrix CLI and JSON output, including the `clearWarning`
+  difference that fails under `n8n-nodes-base@2.29.6` and passes under
+  `n8n-nodes-base@2.30.0`.
 - `npm run check:social-preview` now enforces that the launch/social preview SVG
   is generated from the current benchmark report, bundled schema config, and
   canonical repo metadata while preserving npm and live REST non-claim
@@ -255,6 +262,8 @@ Current checked behavior:
   rejection proof for the README.
 - `docs/assets/matrix-compatibility-demo.svg` provides generated matrix
   compatibility proof for the README and `docs/schema-matrix.md`.
+- `docs/assets/matrix-compatibility-demo.gif` provides animated matrix
+  compatibility proof for the README and `docs/schema-matrix.md`.
 - `docs/assets/last-verified-badges.svg` provides generated green/yellow/red
   last-verified badge-state proof for the README.
 - `docs/badge-output.md` documents badge formats and status rules.
@@ -314,8 +323,8 @@ These are intentionally not complete:
 - Live REST schema validation.
 - Arbitrary custom nested parameter semantics beyond bundled structured
   collection/fixedCollection/filter metadata.
-- Additional video/GIF captures beyond the checked README, animated demo,
-  terminal output, pre-commit rejection, matrix compatibility, social preview,
+- Additional video captures beyond the checked README, animated demo, terminal
+  output, pre-commit rejection, matrix compatibility SVG/GIF, social preview,
   architecture SVG, and last-verified badge-state SVG assets.
 - Public X, Reddit, HN, or n8n forum launch posts.
 - Broader repair transforms for credential renames, node rewrites, trigger
