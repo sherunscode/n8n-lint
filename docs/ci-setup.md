@@ -14,8 +14,9 @@ npm run quality
 ```
 
 `npm run quality` currently runs build, ESLint, Prettier format check, example
-validation, bundled-schema verification, metadata verification, fixture tests,
-the production dependency audit, and the packed-install smoke test.
+validation, bundled-schema verification, metadata verification, security
+hygiene verification, fixture tests, the production dependency audit, and the
+packed-install smoke test.
 
 The public workflow is `.github/workflows/ci.yml`.
 

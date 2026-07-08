@@ -14,8 +14,8 @@ Verified:
   trigger graph/type-version shapes.
 - CLI output truthfully labels `bundled-n8n-package` or `local-placeholder`.
 - GitHub Actions annotation output is available through `--format github`.
-- Local quality gates prove build, lint, format, fixtures, tests, and
-  production dependency audit status.
+- Local quality gates prove build, lint, format, fixtures, metadata, security
+  hygiene, tests, and production dependency audit status.
 - Packed-package install smoke has proven the source checkout and local tarball
   path, and `npm run smoke:pack` now enforces it in quality checks.
 - The real `Zie619/n8n-workflows` benchmark report exists under `docs/`.

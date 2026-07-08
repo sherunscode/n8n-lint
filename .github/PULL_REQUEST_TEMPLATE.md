@@ -4,11 +4,7 @@
 
 ## Verification
 
-- [ ] `npm run build`
-- [ ] `npm run check:example`
-- [ ] `npm run check:bundled-schema`
-- [ ] `npm test`
-- [ ] `npm run audit:prod`
+- [ ] `npm run quality`
 
 ## Notes
 

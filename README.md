@@ -61,8 +61,8 @@ will only be documented after npm publication.
   static SVG format.
 - Human-gated repair patches for schema-proven unknown top-level parameters.
 - Composite GitHub Action in `action.yml`, dogfooded by this repo's CI.
-- Local quality gates for build, lint, format, fixtures, tests, and production
-  dependency audit.
+- Local quality gates for build, lint, format, fixtures, metadata, security
+  hygiene, tests, and production dependency audit.
 - Packed-package install smoke test for the publishable core and CLI workspaces.
 - Reproducible `Zie619/n8n-workflows` benchmark report with exact pass/fail and
   skipped-file counts.
@@ -185,6 +185,8 @@ npm run lint
 npm run format:check
 npm run check:example
 npm run check:bundled-schema
+npm run check:metadata
+npm run check:security
 npm test
 npm run audit:prod
 npm run smoke:pack
@@ -200,6 +202,10 @@ npm run quality
 shipping dependency gate stays clean. The pinned `n8n-nodes-base` package is a
 dev-time generator input only; it is not a runtime dependency of the core or CLI
 packages.
+
+`npm run check:security` proves local secret/config paths are ignored, scans
+tracked public files for common token patterns, and verifies the CLI does not
+accept a bare API key option.
 
 `npm run smoke:pack` packs `@n8nproof/core` and `n8n-lint`, installs both
 tarballs into a fresh temp project, and runs `npx n8n-lint check workflow.json`.
