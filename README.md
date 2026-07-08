@@ -258,6 +258,7 @@ npm run check:launch-content
 npm run check:benchmark-report
 npm run check:github-action
 npm run check:strategy-checklist
+npm run check:github-rendered-readme
 npm run check:readme-demo
 npm run check:animated-demo
 npm run check:terminal-output-demo
@@ -344,6 +345,11 @@ dogfood step, tool metadata, and Marketplace boundary stay aligned.
 `npm run check:strategy-checklist` checks the local strategy checklist when
 present, keeps executable repo proof aligned, and leaves owner-gated release
 steps, external UI checks, and future live REST work unchecked.
+
+`npm run check:github-rendered-readme` proves the actual public GitHub-rendered
+README page loads, renders the README body, resolves checked image assets from
+the public commit, resolves local README links on GitHub, and does not expose
+escaped raw image/SVG markup.
 
 `npm run check:readme-demo` proves the README demo asset was generated from a
 real failing CLI command and still matches the current output.

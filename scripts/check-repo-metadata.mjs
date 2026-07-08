@@ -43,6 +43,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:benchmark-report") &&
     packageJson.scripts.quality.includes("npm run check:github-action") &&
     packageJson.scripts.quality.includes("npm run check:strategy-checklist") &&
+    packageJson.scripts.quality.includes("npm run check:github-rendered-readme") &&
     packageJson.scripts.quality.includes("npm run check:readme-demo") &&
     packageJson.scripts.quality.includes("npm run check:animated-demo") &&
     packageJson.scripts.quality.includes("npm run check:terminal-output-demo") &&
@@ -58,7 +59,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:claims") &&
     packageJson.scripts.quality.includes("npm run check:links") &&
     packageJson.scripts.quality.includes("npm run check:exit-codes"),
-  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, release readiness, live REST boundary, launch content, benchmark report, GitHub Action, strategy checklist, README demo, animated demo, terminal output demo, matrix demo, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
+  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, release readiness, live REST boundary, launch content, benchmark report, GitHub Action, strategy checklist, GitHub-rendered README, README demo, animated demo, terminal output demo, matrix demo, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
 );
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 
@@ -92,6 +93,7 @@ await expectFile("scripts/check-launch-content.mjs");
 await expectFile("scripts/check-benchmark-report.mjs");
 await expectFile("scripts/check-github-action.mjs");
 await expectFile("scripts/check-strategy-checklist.mjs");
+await expectFile("scripts/check-github-rendered-readme.mjs");
 await expectFile("scripts/check-readme-demo.mjs");
 await expectFile("scripts/check-animated-demo.mjs");
 await expectFile("scripts/check-terminal-output-demo.mjs");
@@ -148,6 +150,7 @@ console.log(
         "scripts/check-benchmark-report.mjs",
         "scripts/check-github-action.mjs",
         "scripts/check-strategy-checklist.mjs",
+        "scripts/check-github-rendered-readme.mjs",
         "scripts/check-readme-demo.mjs",
         "scripts/check-animated-demo.mjs",
         "scripts/check-terminal-output-demo.mjs",

@@ -41,6 +41,7 @@ if (strategy === undefined) {
     "npm audit --omit=dev --audit-level=high",
     "Package size sanity check",
     "Lint (`eslint`) and format (`prettier`) both run clean",
+    "README loads and renders correctly on GitHub",
     "README opens with a one-paragraph",
     "README states in the first screen what n8n-lint does NOT do",
     "Source-checkout and packed-tarball first-run commands",
@@ -101,7 +102,6 @@ if (strategy === undefined) {
 
   for (const phrase of [
     "`npx n8n-lint check workflow.json` works on a clean machine",
-    "README loads and renders correctly on GitHub",
     "Screenshot of the GitHub PR merge-gate",
     "Video or GIF demonstrates the multi-version matrix result",
     "Tool fails closed on TLS/certificate errors",

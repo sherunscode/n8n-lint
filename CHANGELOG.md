@@ -60,6 +60,9 @@
 - Added an executable strategy-checklist gate that reconciles `STRATEGY.md`
   checklist status against repo proof while keeping owner/external/future gates
   unchecked.
+- Added an executable GitHub-rendered README gate that checks the public repo
+  page, rendered README body, image assets, and local links against public
+  `main`.
 - Added a generated README failure-demo SVG plus an executable demo gate that
   proves it still matches real CLI output.
 - Added a generated animated failure-demo SVG plus an executable demo gate that

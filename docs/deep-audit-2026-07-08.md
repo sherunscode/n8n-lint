@@ -90,7 +90,8 @@ REST claims.
   `check:cli-output`, `check:precommit`, `check:community`,
   `check:precommit-rejection-demo`, `check:release-readiness`, `check:live-rest-boundary`,
   `check:launch-content`, `check:benchmark-report`, `check:github-action`,
-  `check:strategy-checklist`, `check:readme-demo`, `check:animated-demo`,
+  `check:strategy-checklist`, `check:github-rendered-readme`,
+  `check:readme-demo`, `check:animated-demo`,
   `check:terminal-output-demo`, `check:matrix-demo`, `check:social-preview`,
   `check:architecture-diagram`, `check:last-verified-badges`, `check:audit-report`, `check:status-docs`,
   `check:metadata`, `check:security`, `check:docs`, `check:pack`,
@@ -163,6 +164,9 @@ REST claims.
   repo-proven checklist boxes as complete, including final human/JSON summary
   proof, and leaves owner-gated, external UI, and future live REST/release
   checklist boxes unchecked.
+- `npm run check:github-rendered-readme` now verifies the public
+  GitHub-rendered repo page, README body, checked image assets, local README
+  links, and absence of escaped raw image/SVG markup against public `main`.
 - `npm run check:readme-demo` now enforces that the README SVG demo is generated
   from a real failing CLI command and matches the current output.
 - `npm run check:animated-demo` now enforces that the animated failure demo SVG
@@ -235,6 +239,8 @@ Current checked behavior:
   non-claim.
 - `docs/live-rest-threat-model.md` documents future live REST threat handling
   and implementation gates without claiming live REST is built.
+- The public GitHub-rendered README page is checked by
+  `npm run check:github-rendered-readme`.
 - `docs/assets/architecture.svg` provides a generated architecture diagram for
   the README.
 - `docs/assets/terminal-output-demo.svg` provides generated pass/fail terminal
