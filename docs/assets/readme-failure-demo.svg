@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="254" viewBox="0 0 1040 254" role="img" aria-labelledby="title desc">
+  <title id="title">n8n-lint failure demo</title>
+  <desc id="desc">Actual n8n-lint CLI output for a workflow with a dead parameter.</desc>
+  <rect width="100%" height="100%" rx="14" fill="#0f172a"/>
+  <rect x="0" y="0" width="100%" height="42" rx="14" fill="#111827"/>
+  <circle cx="28" cy="22" r="6" fill="#ef4444"/>
+  <circle cx="48" cy="22" r="6" fill="#f59e0b"/>
+  <circle cx="68" cy="22" r="6" fill="#22c55e"/>
+  <g font-family="Consolas, Menlo, Monaco, 'Liberation Mono', monospace">
+  <text x="92" y="27" fill="#94a3b8" font-size="13">verified CLI failure output</text>
+  <text x="28" y="72" fill="#67e8f9" font-size="15">$ node packages/cli/dist/bin.js check examples/failing-dead-parameter.json</text>
+  <text x="28" y="94" fill="#f87171" font-size="15">FAIL examples/failing-dead-parameter.json</text>
+  <text x="28" y="116" fill="#e5e7eb" font-size="15">Schema source: bundled-n8n-package</text>
+  <text x="28" y="138" fill="#f87171" font-size="15">ERROR workflow.node_parameter_unknown $.nodes[0].parameters.notARealParameter: Unknown or dead parameter</text>
+  <text x="28" y="160" fill="#e5e7eb" font-size="15">  &quot;notARealParameter&quot; for node type &quot;n8n-nodes-base.httpRequest&quot;.</text>
+  <text x="28" y="182" fill="#facc15" font-size="15">WARNING schema_source.warning $: Bundled n8n package metadata is loaded from a compact checked-in artifact; this</text>
+  <text x="28" y="204" fill="#e5e7eb" font-size="15">  is not live REST validation.</text>
+  </g>
+</svg>

@@ -44,6 +44,8 @@ REST claims.
   summary, and is dogfooded by CI.
 - Owner-review launch drafts exist under `docs/launch-drafts.md` and are based
   only on verified repo, CI, package, and benchmark proof.
+- README embeds `docs/assets/readme-failure-demo.svg`, generated from real CLI
+  failure output and checked by `npm run check:readme-demo`.
 - Architecture and support/rollback docs exist for the current MVP.
 - Dependabot is configured for npm and GitHub Actions.
 - CodeQL is configured for JavaScript/TypeScript analysis.
@@ -54,10 +56,10 @@ REST claims.
 - `npm run quality` passed: build, ESLint, Prettier format check, example
   check, bundled-schema check, schema-config check, type-hygiene check,
   pre-commit hook contract check, community-readiness check, release-readiness
-  check, metadata check, security hygiene check, README/CLI docs-contract check,
-  package-content check, claims hygiene check, Markdown link check, executable
-  exit-code check, core fixture tests, CLI fixture tests, production dependency
-  audit, and packed-install smoke.
+  check, README demo check, metadata check, security hygiene check, README/CLI
+  docs-contract check, package-content check, claims hygiene check, Markdown
+  link check, executable exit-code check, core fixture tests, CLI fixture tests,
+  production dependency audit, and packed-install smoke.
 - Package dry-runs reviewed:
   - `@n8nproof/core@0.0.0`: 11 files, 204.4 kB package, includes `dist` and
     compact schema artifacts only.
@@ -95,6 +97,8 @@ REST claims.
 - `npm run check:release-readiness` now enforces package-version alignment,
   pre-release npm boundaries, owner-gated publish/tag/release/posting language,
   and rollback/support documentation.
+- `npm run check:readme-demo` now enforces that the README SVG demo is generated
+  from a real failing CLI command and matches the current output.
 - Stale-claim scan found no old benchmark numbers, fake-growth language,
   invalid old GitHub owner path, or public-report placeholders.
 - `git diff --check` passed.
