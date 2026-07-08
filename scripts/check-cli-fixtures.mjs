@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
-import { dirname } from "node:path";
+import { copyFileSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const cliPath = "packages/cli/dist/bin.js";
@@ -141,6 +143,34 @@ const checks = [
       '"2.29.6": "failed"',
       '"2.30.0": "passed"'
     ]
+  },
+  {
+    name: "repair emits a diff without mutating the workflow",
+    args: [cliPath, "repair", "examples/failing-dead-parameter.json"],
+    exitCode: 0,
+    stdoutIncludes: [
+      "--- examples/failing-dead-parameter.json",
+      "+++ examples/failing-dead-parameter.json",
+      '-        "notARealParameter": true'
+    ]
+  },
+  {
+    name: "repair json reports conservative change model",
+    args: [cliPath, "repair", "examples/failing-dead-parameter.json", "--json"],
+    exitCode: 0,
+    stdoutIncludes: ['"ok": true', '"code": "remove_unknown_parameter"', '"path": "$.nodes[0].parameters.notARealParameter"']
+  },
+  {
+    name: "repair keeps non-repairable stale trigger failures blocked",
+    args: [cliPath, "repair", "examples/failing-stale-trigger-shape.json"],
+    exitCode: 1,
+    stderrIncludes: ["No repairable issues found."]
+  },
+  {
+    name: "repair apply requires explicit confirmation",
+    args: [cliPath, "repair", "examples/failing-dead-parameter.json", "--apply"],
+    exitCode: 2,
+    stderrIncludes: ["repair --apply requires --confirm."]
   }
 ];
 
@@ -167,11 +197,33 @@ for (const check of checks) {
   }
 }
 
+const tempRepairDirectory = mkdtempSync(join(tmpdir(), "n8n-lint-repair-"));
+try {
+  const tempWorkflowPath = join(tempRepairDirectory, "workflow.json");
+  copyFileSync(join(repoRoot, "examples/failing-dead-parameter.json"), tempWorkflowPath);
+
+  const result = spawnSync(process.execPath, [cliPath, "repair", tempWorkflowPath, "--apply", "--confirm"], {
+    cwd: repoRoot,
+    encoding: "utf8"
+  });
+
+  if (result.status !== 0) {
+    throw new Error(`repair apply temp copy: expected exit 0, received ${result.status}`);
+  }
+
+  const repaired = readFileSync(tempWorkflowPath, "utf8");
+  if (repaired.includes("notARealParameter")) {
+    throw new Error("repair apply temp copy: repaired file still contains notARealParameter");
+  }
+} finally {
+  rmSync(tempRepairDirectory, { recursive: true, force: true });
+}
+
 console.log(
   JSON.stringify(
     {
       ok: true,
-      checks: checks.map((check) => check.name)
+      checks: [...checks.map((check) => check.name), "repair apply mutates only a temp copy with confirmation"]
     },
     null,
     2

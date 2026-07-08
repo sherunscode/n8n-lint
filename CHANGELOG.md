@@ -18,5 +18,7 @@
   JSON, and static SVG formats.
 - Added pinned two-version schema matrix support for `n8n-nodes-base@2.29.6`
   and `n8n-nodes-base@2.30.0`.
+- Added human-gated repair patches for schema-proven unknown top-level
+  parameters, with mutation blocked unless `--apply --confirm` is supplied.
 - Added publishable package metadata, package README files, and an owner-gated
   npm release checklist.

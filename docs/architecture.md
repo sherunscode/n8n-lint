@@ -24,7 +24,10 @@ tests, and packaging.
 4. The CLI prints human or JSON output.
 5. Optional badge generation consumes real `check --json` output and renders
    markdown, JSON, or static SVG.
-6. The process exit code becomes the CI/pre-commit gate.
+6. Optional repair mode uses validator issues to emit a patch for safe,
+   schema-proven fixes. It does not mutate files unless `--apply --confirm` is
+   passed.
+7. The process exit code becomes the CI/pre-commit gate.
 
 ## Schema Sources
 
@@ -71,8 +74,10 @@ This keeps the product honest:
 - JSON output is documented in `docs/json-output.md`.
 - Exit codes are documented there as the automation contract.
 
-## Future Boundaries
+## Repair Boundary
 
-Human-gated repair is V1+ work. It should build on the same core validator,
-matrix result, and batch summary shape instead of creating separate validation
-logic.
+Human-gated repair builds on the same core validator instead of creating
+separate detection logic. The current repair transform removes only
+schema-proven unknown top-level node parameters. It does not rename credentials,
+rewrite node types, rewire triggers, infer nested parameter shapes, use live
+REST schema data, or call model APIs.

@@ -31,6 +31,8 @@ interface ParsedArgs {
   outputPath?: string;
   label: string;
   n8nVersion: N8nVersionSelection;
+  apply: boolean;
+  confirm: boolean;
 }
 
 interface BatchFileResult {
@@ -82,6 +84,12 @@ interface MatrixDifference {
   errorSignaturesByVersion: Record<string, string[]>;
 }
 
+interface RepairChange {
+  code: "remove_unknown_parameter";
+  path: string;
+  message: string;
+}
+
 let parsed: ParsedArgs;
 try {
   parsed = parseArgs(process.argv.slice(2));
@@ -125,6 +133,14 @@ if (parsed.help) {
       process.exitCode = await runSingleFile(filePath, schemaSource, parsed.json);
     }
   }
+} else if (parsed.command === "repair" && parsed.inputs.length === 1) {
+  if (parsed.n8nVersion === "matrix") {
+    console.error("repair does not support --n8n-version matrix; choose one pinned version.");
+    process.exitCode = 2;
+  } else {
+    const schemaSource = createSchemaSource(parsed.source, parsed.n8nVersion);
+    process.exitCode = await runRepair(parsed.inputs[0] as string, schemaSource, parsed);
+  }
 } else if (parsed.command === "badge" && parsed.inputs.length === 1) {
   process.exitCode = await runBadge(parsed.inputs[0] as string, parsed);
 } else {
@@ -140,7 +156,9 @@ function parseArgs(args: string[]): ParsedArgs {
     help: false,
     format: "markdown",
     label: "n8n-lint",
-    n8nVersion: defaultBundledN8nPackageVersion
+    n8nVersion: defaultBundledN8nPackageVersion,
+    apply: false,
+    confirm: false
   };
 
   for (let index = 0; index < args.length; index += 1) {
@@ -159,6 +177,16 @@ function parseArgs(args: string[]): ParsedArgs {
       if (parsedArgs.command === "badge") {
         parsedArgs.format = "json";
       }
+      continue;
+    }
+
+    if (arg === "--apply") {
+      parsedArgs.apply = true;
+      continue;
+    }
+
+    if (arg === "--confirm") {
+      parsedArgs.confirm = true;
       continue;
     }
 
@@ -353,6 +381,159 @@ async function runBadge(resultPath: string, options: ParsedArgs): Promise<number
     console.error(error instanceof Error ? error.message : String(error));
     return 1;
   }
+}
+
+async function runRepair(filePath: string, schemaSource: SchemaSource, options: ParsedArgs): Promise<number> {
+  if (options.apply && !options.confirm) {
+    console.error("repair --apply requires --confirm.");
+    return 2;
+  }
+
+  try {
+    const raw = await readFile(filePath, "utf8");
+    const workflow = JSON.parse(raw) as unknown;
+    const validation = await validateWorkflow(workflow, schemaSource);
+    const repair = buildRepair(workflow, validation.issues);
+
+    if (repair.changes.length === 0) {
+      const message = validation.ok ? "No repair needed." : "No repairable issues found.";
+      if (options.json) {
+        console.log(
+          JSON.stringify(
+            {
+              ok: validation.ok,
+              filePath,
+              applied: false,
+              changes: [],
+              message,
+              issues: validation.issues.filter((issue) => issue.severity === "error")
+            },
+            null,
+            2
+          )
+        );
+      } else if (validation.ok) {
+        console.log(`PASS ${filePath}`);
+        console.log(message);
+      } else {
+        console.error(`FAIL ${filePath}`);
+        console.error(message);
+      }
+
+      return validation.ok ? 0 : 1;
+    }
+
+    const repairedText = `${JSON.stringify(repair.workflow, null, 2)}\n`;
+    const repairedValidation = await validateWorkflow(repair.workflow, schemaSource);
+    const patch = createWholeFilePatch(displayPath(filePath), raw, repairedText);
+
+    if (options.apply) {
+      await writeFile(filePath, repairedText, "utf8");
+    } else if (options.outputPath !== undefined) {
+      await writeFile(options.outputPath, patch, "utf8");
+    }
+
+    if (options.json) {
+      console.log(
+        JSON.stringify(
+          {
+            ok: repairedValidation.ok,
+            filePath,
+            applied: options.apply,
+            outputPath: options.apply ? undefined : options.outputPath,
+            changes: repair.changes,
+            remainingIssues: repairedValidation.issues.filter((issue) => issue.severity === "error")
+          },
+          null,
+          2
+        )
+      );
+    } else if (options.apply) {
+      console.log(`APPLIED ${filePath}`);
+      console.log(`Changes: ${repair.changes.length}`);
+    } else if (options.outputPath !== undefined) {
+      console.log(`PATCH ${options.outputPath}`);
+      console.log(`Changes: ${repair.changes.length}`);
+    } else {
+      console.log(patch.trimEnd());
+    }
+
+    return repairedValidation.ok ? 0 : 1;
+  } catch (error) {
+    console.error(`FAIL ${filePath}`);
+    console.error(error instanceof Error ? error.message : String(error));
+    return 1;
+  }
+}
+
+function buildRepair(workflow: unknown, issues: readonly ValidationIssue[]): {
+  workflow: unknown;
+  changes: RepairChange[];
+} {
+  const repaired = cloneJson(workflow);
+  const changes: RepairChange[] = [];
+
+  for (const issue of issues) {
+    if (issue.severity !== "error" || issue.code !== "workflow.node_parameter_unknown") {
+      continue;
+    }
+
+    const target = parseNodeParameterPath(issue.path);
+    if (target === undefined || !isRecord(repaired) || !Array.isArray(repaired.nodes)) {
+      continue;
+    }
+
+    const node = repaired.nodes[target.nodeIndex];
+    if (!isRecord(node) || !isRecord(node.parameters) || !(target.parameterName in node.parameters)) {
+      continue;
+    }
+
+    delete node.parameters[target.parameterName];
+    changes.push({
+      code: "remove_unknown_parameter",
+      path: issue.path,
+      message: `Remove unknown top-level parameter "${target.parameterName}".`
+    });
+  }
+
+  return {
+    workflow: repaired,
+    changes
+  };
+}
+
+function parseNodeParameterPath(pathExpression: string): { nodeIndex: number; parameterName: string } | undefined {
+  const match = /^\$\.nodes\[(\d+)\]\.parameters\.([A-Za-z0-9_$-]+)$/.exec(pathExpression);
+  if (match === null) {
+    return undefined;
+  }
+
+  return {
+    nodeIndex: Number.parseInt(match[1] as string, 10),
+    parameterName: match[2] as string
+  };
+}
+
+function cloneJson(value: unknown): unknown {
+  return JSON.parse(JSON.stringify(value)) as unknown;
+}
+
+function createWholeFilePatch(filePath: string, beforeText: string, afterText: string): string {
+  const beforeLines = splitPatchLines(beforeText);
+  const afterLines = splitPatchLines(afterText);
+  return [
+    `--- ${filePath}`,
+    `+++ ${filePath}`,
+    `@@ -1,${beforeLines.length} +1,${afterLines.length} @@`,
+    ...beforeLines.map((line) => `-${line}`),
+    ...afterLines.map((line) => `+${line}`)
+  ].join("\n") + "\n";
+}
+
+function splitPatchLines(value: string): string[] {
+  const normalized = value.replace(/\r\n/g, "\n");
+  const withoutFinalNewline = normalized.endsWith("\n") ? normalized.slice(0, -1) : normalized;
+  return withoutFinalNewline.length === 0 ? [] : withoutFinalNewline.split("\n");
 }
 
 async function runBatch(
@@ -890,6 +1071,7 @@ function printHelp(): void {
     [
       "Usage:",
       "  n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0|matrix] [--json]",
+      "  n8n-lint repair <workflow.json> [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0] [--output fix.patch] [--apply --confirm] [--json]",
       "  n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]"
     ].join("\n")
   );

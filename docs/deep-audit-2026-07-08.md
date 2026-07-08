@@ -33,6 +33,9 @@ REST claims.
   JSON, and static SVG formats.
 - Multi-version schema matrix is implemented for pinned bundled artifacts:
   `n8n-nodes-base@2.29.6` and `n8n-nodes-base@2.30.0`.
+- Human-gated repair mode is implemented for schema-proven unknown top-level
+  parameters, emits patches by default, and requires `--apply --confirm` before
+  mutating workflow files.
 - Architecture and support/rollback docs exist for the current MVP.
 - Dependabot is configured for npm and GitHub Actions.
 - CodeQL is configured for JavaScript/TypeScript analysis.
@@ -45,7 +48,7 @@ REST claims.
 - Package dry-runs reviewed:
   - `@n8nproof/core@0.0.0`: 11 files, 57.2 kB package, includes `dist` and
     compact schema artifacts only.
-  - `n8n-lint@0.0.0`: 6 files, 11.9 kB package, includes `dist` only plus
+  - `n8n-lint@0.0.0`: 6 files, 14.0 kB package, includes `dist` only plus
     package metadata, README, and LICENSE.
 - Fresh temp-project tarball install passed with `npx n8n-lint check
   workflow.json`.
@@ -69,10 +72,14 @@ Current checked behavior:
 - Local badge generation from checked JSON output.
 - Matrix human and JSON output with per-version summaries and compatibility
   differences.
+- Repair human and JSON output for schema-proven unknown top-level parameters,
+  with non-repairable failures kept blocked.
 - `docs/json-output.md` documents the current JSON output contract.
 - `docs/batch-check-design.md` documents batch behavior and proof gates.
 - `docs/badge-output.md` documents badge formats and status rules.
 - `docs/schema-matrix.md` documents pinned schema artifacts and matrix behavior.
+- `docs/repair.md` documents diff-only repair behavior and apply confirmation
+  rules.
 
 Fixture coverage includes:
 
@@ -118,7 +125,8 @@ These are intentionally not complete:
 - Deep nested parameter-shape validation beyond top-level bundled metadata.
 - README GIF/screenshots and social preview image.
 - Public X, Reddit, HN, or n8n forum launch posts.
-- Remaining V1 backlog: human-gated auto-repair.
+- Broader repair transforms for credential renames, node rewrites, trigger
+  rewiring, and nested parameter-shape changes.
 
 ## Requirement Decision
 

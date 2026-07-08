@@ -24,6 +24,8 @@ Verified:
   output without adding a hosted badge service.
 - Multi-version matrix checks pinned bundled artifacts for
   `n8n-nodes-base@2.29.6` and `n8n-nodes-base@2.30.0`.
+- Repair mode emits human-gated patches for schema-proven unknown top-level
+  parameters and requires `--apply --confirm` before mutation.
 
 Still gated or unproven:
 
@@ -99,22 +101,23 @@ Gate:
   versions: `dataTable.clearWarning` is absent from 2.29.6 and present in
   2.30.0.
 
-### V1.4 Human-Gated Auto-Repair
+### V1.4 Human-Gated Auto-Repair - Done Locally
 
 Goal: help users fix obvious drift while keeping humans in control.
 
 Scope:
 
-- Start with diff-only suggestions and patch files.
-- Limit transforms to evidence-backed rename maps or safe structural fixes.
-- Never mutate workflow files by default.
-- Require explicit user confirmation before applying changes.
+- Starts with diff-only suggestions and patch files.
+- Limits the first transform to removing schema-proven unknown top-level
+  parameters.
+- Never mutates workflow files by default.
+- Requires `--apply --confirm` before applying changes.
 
 Gate:
 
-- Rename evidence is backed by package metadata, fixtures, or benchmark failure
-  analysis.
-- Suggested patches round-trip through tests and keep workflow JSON valid.
+- Fixture coverage proves diff output, JSON output, non-repairable failure
+  handling, confirmation gating, and temp-copy apply behavior.
+- Suggested patches round-trip through validation and keep workflow JSON valid.
 
 ## Validation Research Lane
 

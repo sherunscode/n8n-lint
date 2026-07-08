@@ -4,7 +4,8 @@
 uses the process exit code as the CI gate. When `check` receives multiple
 inputs, a directory, or a glob, it emits the batch JSON object documented below.
 When `--n8n-version=matrix` is used, it emits the matrix JSON object documented
-below.
+below. `n8n-lint repair <workflow.json> --json` emits the repair JSON object
+documented below.
 
 This contract documents the current local MVP. It does not claim npm registry
 installation, live REST schema validation, workflow execution, or hosted
@@ -205,3 +206,35 @@ results plus compatibility differences:
 
 Matrix `ok` is `true` only when every pinned version passes. `differences`
 contains files whose status or error signatures differ across versions.
+
+## Repair JSON
+
+Repair mode emits a conservative change model. It is diff-only by default; the
+`applied` field is `true` only when the caller used `--apply --confirm`.
+
+```json
+{
+  "ok": true,
+  "filePath": "examples/failing-dead-parameter.json",
+  "applied": false,
+  "changes": [
+    {
+      "code": "remove_unknown_parameter",
+      "path": "$.nodes[0].parameters.notARealParameter",
+      "message": "Remove unknown top-level parameter \"notARealParameter\"."
+    }
+  ],
+  "remainingIssues": []
+}
+```
+
+Current repair codes:
+
+| Code | Meaning |
+|---|---|
+| `remove_unknown_parameter` | Remove a top-level node parameter that the selected bundled schema artifact does not recognize for that node type. |
+
+Repair exits `0` only when the repaired workflow validates with no remaining
+errors. It exits `1` when no repairable changes exist for a failing workflow or
+when remaining validation errors persist. It exits `2` for usage errors such as
+`--apply` without `--confirm`.

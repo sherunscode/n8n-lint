@@ -53,6 +53,7 @@ will only be documented after npm publication.
   ordinary JSON files reported separately.
 - Local badge generation from real `check --json` output in markdown, JSON, or
   static SVG format.
+- Human-gated repair patches for schema-proven unknown top-level parameters.
 - Local quality gates for build, fixtures, tests, and production dependency
   audit.
 - Packed-package install smoke test for the publishable core and CLI workspaces.
@@ -81,6 +82,7 @@ WARN schema_source.warning: Bundled n8n package metadata is loaded from a compac
 
 ```bash
 n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0|matrix] [--json]
+n8n-lint repair <workflow.json> [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0] [--output fix.patch] [--apply --confirm] [--json]
 n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]
 ```
 
@@ -89,6 +91,7 @@ n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lin
 ```text
 Usage:
   n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0|matrix] [--json]
+  n8n-lint repair <workflow.json> [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0] [--output fix.patch] [--apply --confirm] [--json]
   n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]
 ```
 
@@ -108,6 +111,7 @@ node packages/cli/dist/bin.js check examples/failing-unknown-node.json
 node packages/cli/dist/bin.js check examples/failing-unknown-credential.json --json
 node packages/cli/dist/bin.js check "examples/*.json"
 node packages/cli/dist/bin.js check examples/matrix-2-30-parameter-workflow.json --n8n-version=matrix
+node packages/cli/dist/bin.js repair examples/failing-dead-parameter.json
 ```
 
 Failure example:
@@ -130,6 +134,7 @@ See `docs/batch-check-design.md` for batch mode behavior, skipped-file rules,
 and exit codes.
 See `docs/badge-output.md` for local badge generation from checked output.
 See `docs/schema-matrix.md` for pinned schema artifacts and matrix behavior.
+See `docs/repair.md` for human-gated repair boundaries.
 
 Badge example:
 
@@ -224,6 +229,7 @@ See `docs/pre-commit.md`.
 - `docs/badge-output.md`: local badge generation from real check results.
 - `docs/schema-matrix.md`: pinned schema artifacts and matrix compatibility
   reporting.
+- `docs/repair.md`: diff-only repair behavior and apply confirmation rules.
 - `docs/support-rollback.md`: first-48-hours support and rollback plan for an
   owner-approved launch.
 
@@ -266,6 +272,7 @@ MVP scope:
 - Pinned two-version schema matrix for bundled metadata.
 - Batch checking for repositories with multiple workflow JSON files.
 - Local static badge generation from real check results.
+- Human-gated repair patches for schema-proven unknown top-level parameters.
 - Honest docs and benchmark harness.
 
 Not MVP scope:

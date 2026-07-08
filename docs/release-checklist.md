@@ -50,6 +50,16 @@ The CLI package should include only `dist`, `package.json`, `README.md`, and
 `LICENSE`. No `.env`, logs, local reports, `node_modules`, or strategy/research
 documents belong in either tarball.
 
+Before release, run the repair fixture path and confirm it stays human-gated:
+
+```powershell
+node packages/cli/dist/bin.js repair examples/failing-dead-parameter.json
+node packages/cli/dist/bin.js repair examples/failing-dead-parameter.json --apply
+```
+
+The first command should print a patch without mutating the fixture. The second
+command should fail with exit code `2` because `--confirm` was not supplied.
+
 ## Fresh Install Smoke
 
 Create tarballs in a temp directory and install both into a fresh temp project:
