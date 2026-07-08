@@ -22,6 +22,9 @@
 - Added an executable package-content gate that fails if publishable tarballs
   include unexpected files, forbidden paths, bundled dependencies, or size
   regressions.
+- Added an executable claims hygiene gate that blocks old owner paths,
+  placeholder launch URLs, and present-tense live REST claims outside the
+  strategy-history boundary.
 - Added a reproducible `Zie619/n8n-workflows` benchmark report with exact
   pass/fail and skipped-file counts.
 - Refreshed the benchmark report after nested parameter-key validation changed

@@ -33,8 +33,9 @@ expect(
     packageJson.scripts.quality.includes("npm run format:check") &&
     packageJson.scripts.quality.includes("npm run check:security") &&
     packageJson.scripts.quality.includes("npm run check:docs") &&
-    packageJson.scripts.quality.includes("npm run check:pack"),
-  "package.json quality gate must include lint, format, security hygiene, docs contract, and package content checks"
+    packageJson.scripts.quality.includes("npm run check:pack") &&
+    packageJson.scripts.quality.includes("npm run check:claims"),
+  "package.json quality gate must include lint, format, security hygiene, docs contract, package content, and claims hygiene checks"
 );
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 
@@ -49,6 +50,7 @@ await expectFile("scripts/smoke-packed-install.mjs");
 await expectFile("scripts/check-security-hygiene.mjs");
 await expectFile("scripts/check-docs-contract.mjs");
 await expectFile("scripts/check-package-contents.mjs");
+await expectFile("scripts/check-claims-hygiene.mjs");
 
 if (failures.length > 0) {
   throw new Error(`metadata check failed:\n${failures.map((failure) => `- ${failure}`).join("\n")}`);
@@ -70,7 +72,8 @@ console.log(
         "scripts/smoke-packed-install.mjs",
         "scripts/check-security-hygiene.mjs",
         "scripts/check-docs-contract.mjs",
-        "scripts/check-package-contents.mjs"
+        "scripts/check-package-contents.mjs",
+        "scripts/check-claims-hygiene.mjs"
       ]
     },
     null,
