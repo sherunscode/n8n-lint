@@ -11,6 +11,7 @@ const qualityScript = packageJson.scripts?.quality ?? "";
 const requiredQualityGates = [
   "check:schema-config",
   "check:type-hygiene",
+  "check:cli-output",
   "check:precommit",
   "check:community",
   "check:release-readiness",
@@ -46,6 +47,7 @@ expect(audit.includes("npm run check:animated-demo"), "audit must mention the an
 expect(audit.includes("docs/assets/social-preview.svg"), "audit must mention the checked social preview asset");
 expect(audit.includes("npm run check:social-preview"), "audit must mention the social preview checker");
 expect(audit.includes("npm run check:release-readiness"), "audit must mention the release-readiness checker");
+expect(audit.includes("npm run check:cli-output"), "audit must mention the CLI output checker");
 expect(audit.includes("npm run check:live-rest-boundary"), "audit must mention the live REST boundary checker");
 expect(audit.includes("npm run check:launch-content"), "audit must mention the launch-content checker");
 expect(audit.includes("npm run check:benchmark-report"), "audit must mention the benchmark-report checker");
@@ -106,7 +108,8 @@ console.log(
         "launch content proof",
         "benchmark report proof",
         "GitHub Action proof",
-        "strategy checklist proof"
+        "strategy checklist proof",
+        "CLI output proof"
       ]
     },
     null,

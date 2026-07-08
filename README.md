@@ -204,6 +204,7 @@ npm run check:example
 npm run check:bundled-schema
 npm run check:schema-config
 npm run check:type-hygiene
+npm run check:cli-output
 npm run check:precommit
 npm run check:community
 npm run check:release-readiness
@@ -247,6 +248,11 @@ runtime source or generator script.
 
 `npm run check:type-hygiene` proves strict TypeScript settings are enabled and
 blocks `any`, `@ts-ignore`, and `@ts-expect-error` in `packages/core/src`.
+
+`npm run check:cli-output` proves interactive human output uses consistent
+status colors, `NO_COLOR` and piped output stay plain, JSON remains
+machine-readable, GitHub annotations stay uncolored, and batch summaries remain
+the final human output line.
 
 `npm run check:precommit` proves the local Git hook is executable, quiet on
 success, preserves failure exit codes, and replays captured quality output only

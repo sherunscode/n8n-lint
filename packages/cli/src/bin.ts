@@ -93,6 +93,16 @@ interface RepairChange {
   message: string;
 }
 
+type ColorRole = "pass" | "fail" | "warn" | "error" | "skip";
+
+const ansiByRole: Record<ColorRole, string> = {
+  pass: "32",
+  fail: "31",
+  warn: "33",
+  error: "31",
+  skip: "36"
+};
+
 let parsed: ParsedArgs;
 try {
   parsed = parseArgs(process.argv.slice(2));
@@ -340,6 +350,31 @@ function readCheckFormat(options: ParsedArgs): CheckFormat | undefined {
   return options.format === "github" ? "github" : "human";
 }
 
+function statusText(role: ColorRole, text: string, stream: NodeJS.WriteStream = process.stdout): string {
+  if (!colorEnabled(stream)) {
+    return text;
+  }
+
+  return `\u001B[${ansiByRole[role]}m${text}\u001B[0m`;
+}
+
+function issueStatusText(severity: ValidationIssue["severity"], stream: NodeJS.WriteStream = process.stdout): string {
+  return severity === "warning" ? statusText("warn", "WARNING", stream) : statusText("error", "ERROR", stream);
+}
+
+function colorEnabled(stream: NodeJS.WriteStream): boolean {
+  if (process.env.NO_COLOR !== undefined) {
+    return false;
+  }
+
+  const forceColor = process.env.FORCE_COLOR;
+  if (forceColor !== undefined && forceColor !== "" && forceColor !== "0" && forceColor.toLowerCase() !== "false") {
+    return true;
+  }
+
+  return stream.isTTY;
+}
+
 function parseN8nVersionSelection(value: string): N8nVersionSelection {
   if (value === "matrix") {
     return value;
@@ -382,18 +417,18 @@ async function runSingleFile(filePath: string, schemaSource: SchemaSource, forma
     }
 
     if (validation.ok) {
-      console.log(`PASS ${filePath}`);
+      console.log(`${statusText("pass", "PASS")} ${filePath}`);
       console.log(`Schema source: ${validation.source}`);
       for (const issue of validation.issues.filter((item) => item.severity === "warning")) {
-        console.log(`WARN ${issue.code}: ${issue.message}`);
+        console.log(`${statusText("warn", "WARN")} ${issue.code}: ${issue.message}`);
       }
       return 0;
     }
 
-    console.error(`FAIL ${filePath}`);
+    console.error(`${statusText("fail", "FAIL", process.stderr)} ${filePath}`);
     console.error(`Schema source: ${validation.source}`);
     for (const issue of validation.issues) {
-      console.error(`${issue.severity.toUpperCase()} ${issue.code} ${issue.path}: ${issue.message}`);
+      console.error(`${issueStatusText(issue.severity, process.stderr)} ${issue.code} ${issue.path}: ${issue.message}`);
     }
     return 1;
   } catch (error) {
@@ -408,7 +443,7 @@ async function runSingleFile(filePath: string, schemaSource: SchemaSource, forma
       return 1;
     }
 
-    console.error(`FAIL ${filePath}`);
+    console.error(`${statusText("fail", "FAIL", process.stderr)} ${filePath}`);
     console.error(error instanceof Error ? error.message : String(error));
     return 1;
   }
@@ -429,7 +464,7 @@ async function runBadge(resultPath: string, options: ParsedArgs): Promise<number
 
     return 0;
   } catch (error) {
-    console.error(`FAIL ${resultPath}`);
+    console.error(`${statusText("fail", "FAIL", process.stderr)} ${resultPath}`);
     console.error(error instanceof Error ? error.message : String(error));
     return 1;
   }
@@ -473,10 +508,10 @@ async function runRepair(filePath: string, schemaSource: SchemaSource, options: 
           )
         );
       } else if (validation.ok) {
-        console.log(`PASS ${filePath}`);
+        console.log(`${statusText("pass", "PASS")} ${filePath}`);
         console.log(message);
       } else {
-        console.error(`FAIL ${filePath}`);
+        console.error(`${statusText("fail", "FAIL", process.stderr)} ${filePath}`);
         console.error(message);
       }
 
@@ -509,7 +544,7 @@ async function runRepair(filePath: string, schemaSource: SchemaSource, options: 
         )
       );
     } else if (options.apply) {
-      console.log(`APPLIED ${filePath}`);
+      console.log(`${statusText("pass", "APPLIED")} ${filePath}`);
       console.log(`Changes: ${repair.changes.length}`);
     } else if (options.outputPath !== undefined) {
       console.log(`PATCH ${options.outputPath}`);
@@ -520,7 +555,7 @@ async function runRepair(filePath: string, schemaSource: SchemaSource, options: 
 
     return repairedValidation.ok ? 0 : 1;
   } catch (error) {
-    console.error(`FAIL ${filePath}`);
+    console.error(`${statusText("fail", "FAIL", process.stderr)} ${filePath}`);
     console.error(error instanceof Error ? error.message : String(error));
     return 1;
   }
@@ -686,24 +721,24 @@ function printBatchResult(result: BatchRunResult, format: CheckFormat): void {
 
   for (const fileResult of result.results) {
     if (fileResult.status === "passed") {
-      console.log(`PASS ${fileResult.filePath}`);
+      console.log(`${statusText("pass", "PASS")} ${fileResult.filePath}`);
       continue;
     }
 
     if (fileResult.status === "skipped") {
-      console.log(`SKIP ${fileResult.filePath}`);
+      console.log(`${statusText("skip", "SKIP")} ${fileResult.filePath}`);
       continue;
     }
 
     if (fileResult.status === "error") {
-      console.log(`ERROR ${fileResult.filePath}`);
+      console.log(`${statusText("error", "ERROR")} ${fileResult.filePath}`);
       console.log(`  ${fileResult.error ?? "Unknown read or parse error."}`);
       continue;
     }
 
-    console.log(`FAIL ${fileResult.filePath}`);
+    console.log(`${statusText("fail", "FAIL")} ${fileResult.filePath}`);
     for (const issue of (fileResult.issues ?? []).filter((item) => item.severity === "error")) {
-      console.log(`  ERROR ${issue.code} ${issue.path}: ${issue.message}`);
+      console.log(`  ${statusText("error", "ERROR")} ${issue.code} ${issue.path}: ${issue.message}`);
     }
   }
 
@@ -749,7 +784,7 @@ function printMatrixResult(result: MatrixRunResult, format: CheckFormat): void {
     const packageLabel = version.packageInfo
       ? `${version.packageInfo.name}@${version.packageInfo.version}`
       : `n8n-nodes-base@${version.packageVersion}`;
-    console.log(`MATRIX ${packageLabel}: ${version.ok ? "PASS" : "FAIL"}`);
+    console.log(`MATRIX ${packageLabel}: ${version.ok ? statusText("pass", "PASS") : statusText("fail", "FAIL")}`);
     const { passed, failed, skipped, errors } = version.summary;
     console.log(`  Summary: ${passed} passed, ${failed} failed, ${skipped} skipped, ${errors} errors`);
   }

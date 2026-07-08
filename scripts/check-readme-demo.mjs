@@ -9,7 +9,12 @@ const command = ["packages/cli/dist/bin.js", "check", "examples/failing-dead-par
 
 const result = spawnSync(process.execPath, command, {
   cwd: process.cwd(),
-  encoding: "utf8"
+  encoding: "utf8",
+  env: {
+    ...process.env,
+    FORCE_COLOR: "0",
+    NO_COLOR: "1"
+  }
 });
 
 const output = normalizeLines([result.stdout, result.stderr].filter(Boolean).join("\n"));

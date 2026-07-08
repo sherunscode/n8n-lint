@@ -73,9 +73,9 @@ REST claims.
   `n8n-workflow@2.29.2`.
 - `npm run quality` passed: build, ESLint, Prettier format check, example
   check, bundled-schema check, `check:schema-config`, `check:type-hygiene`,
-  `check:precommit`, `check:community`, `check:release-readiness`,
-  `check:live-rest-boundary`, `check:launch-content`,
-  `check:benchmark-report`, `check:github-action`,
+  `check:cli-output`, `check:precommit`, `check:community`,
+  `check:release-readiness`, `check:live-rest-boundary`,
+  `check:launch-content`, `check:benchmark-report`, `check:github-action`,
   `check:strategy-checklist`, `check:readme-demo`, `check:animated-demo`,
   `check:social-preview`, `check:audit-report`, `check:status-docs`,
   `check:metadata`, `check:security`, `check:docs`, `check:pack`,
@@ -85,7 +85,7 @@ REST claims.
 - Package dry-runs reviewed:
   - `@n8nproof/core@0.0.0`: 12 files, 205.9 kB package, includes `dist`,
     `schema`, package metadata, README, and LICENSE only.
-  - `n8n-lint@0.0.0`: 6 files, 15.7 kB package, includes `dist` only plus
+  - `n8n-lint@0.0.0`: 6 files, 16.2 kB package, includes `dist` only plus
     package metadata, README, and LICENSE.
 - Fresh temp-project tarball install is automated by `npm run smoke:pack` and
   passed with `npx n8n-lint check workflow.json`.
@@ -111,6 +111,9 @@ REST claims.
   dependency reconciled against that config.
 - `npm run check:type-hygiene` now enforces strict TypeScript settings and
   blocks `any` or TypeScript suppression directives in the validation core.
+- `npm run check:cli-output` now enforces interactive color semantics,
+  `NO_COLOR` override behavior, piped plain text, JSON no-color safety, GitHub
+  annotation no-color safety, and batch final-summary ordering.
 - `npm run check:precommit` now enforces the local Git hook's executable mode,
   quiet success path, failure exit-code propagation, and failure-output replay.
 - `npm run check:community` now enforces issue/PR template fields, contribution

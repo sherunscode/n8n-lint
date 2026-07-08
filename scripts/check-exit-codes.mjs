@@ -74,7 +74,12 @@ try {
   for (const check of checks) {
     const result = spawnSync(process.execPath, check.args, {
       cwd: repoRoot,
-      encoding: "utf8"
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        FORCE_COLOR: "0",
+        NO_COLOR: "1"
+      }
     });
 
     if (result.status !== check.exitCode) {

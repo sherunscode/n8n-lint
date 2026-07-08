@@ -34,6 +34,9 @@
   so runtime schema loading and artifact generation cannot drift apart.
 - Added an executable type-hygiene gate for strict TypeScript settings and the
   validation core's no-`any`/no-suppression rule.
+- Added an executable CLI output contract gate for interactive colors,
+  `NO_COLOR`, piped plain text, JSON safety, GitHub annotation safety, and batch
+  final-summary ordering.
 - Added an executable pre-commit hook contract gate for quiet success output,
   loud failure output, exit-code propagation, and executable hook mode.
 - Added an executable community-readiness gate for issue templates, PR template,

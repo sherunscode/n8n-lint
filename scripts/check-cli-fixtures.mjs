@@ -241,7 +241,8 @@ const checks = [
 for (const check of checks) {
   const result = spawnSync(process.execPath, check.args, {
     cwd: repoRoot,
-    encoding: "utf8"
+    encoding: "utf8",
+    env: plainOutputEnv()
   });
 
   if (result.status !== check.exitCode) {
@@ -268,7 +269,8 @@ try {
 
   const result = spawnSync(process.execPath, [cliPath, "repair", tempWorkflowPath, "--apply", "--confirm"], {
     cwd: repoRoot,
-    encoding: "utf8"
+    encoding: "utf8",
+    env: plainOutputEnv()
   });
 
   if (result.status !== 0) {
@@ -296,4 +298,12 @@ console.log(
 
 function fail(check, reason) {
   throw new Error(`${check.name}: ${reason}`);
+}
+
+function plainOutputEnv() {
+  return {
+    ...process.env,
+    FORCE_COLOR: "0",
+    NO_COLOR: "1"
+  };
 }

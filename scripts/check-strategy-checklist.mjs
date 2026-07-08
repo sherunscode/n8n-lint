@@ -51,6 +51,7 @@ if (strategy === undefined) {
     "Every shipped CLI flag and output option is documented",
     "CHANGELOG.md exists",
     "Error messages name the exact node path",
+    "CLI output uses consistent color semantics",
     "`--json` output mode exists",
     "GitHub Action produces a readable PR-check summary",
     "Pre-commit hook output is quiet on success",
@@ -93,7 +94,6 @@ if (strategy === undefined) {
   for (const phrase of [
     "`npx n8n-lint check workflow.json` works on a clean machine",
     "README loads and renders correctly on GitHub",
-    "CLI output uses consistent color semantics",
     "Exit summary (X passed, Y failed, Z warnings)",
     'decaying "last verified',
     "Screenshot of the GitHub PR merge-gate",
