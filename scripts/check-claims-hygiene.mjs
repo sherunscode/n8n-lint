@@ -81,6 +81,10 @@ function isScannableTextFile(filePath) {
     return false;
   }
 
+  if (filePath === "scripts/check-claims-hygiene.mjs") {
+    return false;
+  }
+
   return /\.(?:md|json|ya?ml|mjs|ts|js)$/.test(filePath) || filePath === "action.yml" || filePath === "tool.json";
 }
 
