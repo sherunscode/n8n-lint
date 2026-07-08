@@ -35,6 +35,7 @@
     "check:live-rest-boundary": "node scripts/check-live-rest-boundary.mjs",
     "check:launch-content": "node scripts/check-launch-content.mjs",
     "check:benchmark-report": "node scripts/check-benchmark-report.mjs",
+    "check:github-action": "node scripts/check-github-action.mjs",
     "check:readme-demo": "node scripts/check-readme-demo.mjs",
     "check:animated-demo": "node scripts/check-animated-demo.mjs",
     "check:social-preview": "node scripts/check-social-preview.mjs",
@@ -52,7 +53,7 @@
     "test": "npm run test:core && npm run test:cli",
     "audit:prod": "npm audit --omit=dev --audit-level=high",
     "smoke:pack": "node scripts/smoke-packed-install.mjs",
-    "quality": "npm run build && npm run lint && npm run format:check && npm run check:example && npm run check:bundled-schema && npm run check:schema-config && npm run check:type-hygiene && npm run check:precommit && npm run check:community && npm run check:release-readiness && npm run check:live-rest-boundary && npm run check:launch-content && npm run check:benchmark-report && npm run check:readme-demo && npm run check:animated-demo && npm run check:social-preview && npm run check:audit-report && npm run check:status-docs && npm run check:metadata && npm run check:security && npm run check:docs && npm run check:pack && npm run check:claims && npm run check:links && npm run check:exit-codes && npm test && npm run audit:prod && npm run smoke:pack",
+    "quality": "npm run build && npm run lint && npm run format:check && npm run check:example && npm run check:bundled-schema && npm run check:schema-config && npm run check:type-hygiene && npm run check:precommit && npm run check:community && npm run check:release-readiness && npm run check:live-rest-boundary && npm run check:launch-content && npm run check:benchmark-report && npm run check:github-action && npm run check:readme-demo && npm run check:animated-demo && npm run check:social-preview && npm run check:audit-report && npm run check:status-docs && npm run check:metadata && npm run check:security && npm run check:docs && npm run check:pack && npm run check:claims && npm run check:links && npm run check:exit-codes && npm test && npm run audit:prod && npm run smoke:pack",
     "benchmark:zie619": "node scripts/benchmark-zie619.mjs"
   },
   "devDependencies": {

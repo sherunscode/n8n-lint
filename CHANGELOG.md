@@ -48,6 +48,8 @@
 - Added an executable benchmark-report gate that reconciles the raw JSON,
   Markdown report, README/audit/launch references, failure-category math, and
   non-execution/live REST boundaries.
+- Added an executable GitHub Action gate and hardened action path handling with
+  a quoted bash array before invoking the CLI.
 - Added a generated README failure-demo SVG plus an executable demo gate that
   proves it still matches real CLI output.
 - Added a generated animated failure-demo SVG plus an executable demo gate that

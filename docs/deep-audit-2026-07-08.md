@@ -41,7 +41,8 @@ REST claims.
 - `tool.json`, issue-template routing, CI setup docs, and a pre-commit framework
   example exist without claiming npm publication.
 - A composite GitHub Action exists at `action.yml`, writes a reviewer-facing job
-  summary, and is dogfooded by CI.
+  summary, handles paths via a quoted bash array, is dogfooded by CI, and is
+  checked by `npm run check:github-action`.
 - Owner-review launch drafts exist under `docs/launch-drafts.md` and are based
   only on verified repo, CI, package, and benchmark proof.
 - README embeds `docs/assets/readme-failure-demo.svg`, generated from real CLI
@@ -69,10 +70,10 @@ REST claims.
   check, bundled-schema check, `check:schema-config`, `check:type-hygiene`,
   `check:precommit`, `check:community`, `check:release-readiness`,
   `check:live-rest-boundary`, `check:launch-content`,
-  `check:benchmark-report`, `check:readme-demo`, `check:animated-demo`,
-  `check:social-preview`, `check:audit-report`, `check:status-docs`,
-  `check:metadata`, `check:security`, `check:docs`, `check:pack`,
-  `check:claims`, `check:links`,
+  `check:benchmark-report`, `check:github-action`, `check:readme-demo`,
+  `check:animated-demo`, `check:social-preview`, `check:audit-report`,
+  `check:status-docs`, `check:metadata`, `check:security`, `check:docs`,
+  `check:pack`, `check:claims`, `check:links`,
   `check:exit-codes`, core fixture tests, CLI fixture tests, production
   dependency audit, and packed-install smoke.
 - Package dry-runs reviewed:
@@ -123,6 +124,9 @@ REST claims.
 - `npm run check:benchmark-report` now enforces raw benchmark JSON totals,
   failure-category math, relative result paths, Markdown render parity,
   README/audit/launch proof phrases, and non-execution/live REST boundaries.
+- `npm run check:github-action` now enforces composite action metadata, safe
+  paths array expansion, `--format github` invocation, job-summary output, CI
+  dogfooding, tool metadata, and Marketplace non-claim boundaries.
 - `npm run check:readme-demo` now enforces that the README SVG demo is generated
   from a real failing CLI command and matches the current output.
 - `npm run check:animated-demo` now enforces that the animated failure demo SVG
@@ -158,6 +162,9 @@ Current checked behavior:
   commands.
 - Composite GitHub Action path that runs `check --format github` and writes a
   Markdown job summary.
+- GitHub Action contract check for action metadata, safe paths handling,
+  `--format github` invocation, job-summary output, CI dogfooding, tool
+  metadata, and Marketplace non-claim boundaries.
 - Batch human and JSON output with stable summary counts.
 - Local badge generation from checked JSON output.
 - Matrix human and JSON output with per-version summaries and compatibility
