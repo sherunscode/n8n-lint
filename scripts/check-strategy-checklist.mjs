@@ -56,6 +56,7 @@ if (strategy === undefined) {
     "`--json` output mode exists",
     "GitHub Action produces a readable PR-check summary",
     "Pre-commit hook output is quiet on success",
+    'decaying "last verified',
     "Naming is consistent end-to-end",
     "README has a checked real failing validation demo",
     "Demo SVG assets are tiny",
@@ -97,7 +98,6 @@ if (strategy === undefined) {
   for (const phrase of [
     "`npx n8n-lint check workflow.json` works on a clean machine",
     "README loads and renders correctly on GitHub",
-    'decaying "last verified',
     "Screenshot of the GitHub PR merge-gate",
     "Video or GIF demonstrates the multi-version matrix result",
     "Tool fails closed on TLS/certificate errors",

@@ -19,6 +19,7 @@ import {
 type CliSchemaSource = Extract<SchemaSourceKind, "bundled-n8n-package" | "local-placeholder">;
 type BatchStatus = "passed" | "failed" | "skipped" | "error";
 type BadgeFormat = "markdown" | "json" | "svg";
+type BadgeKind = "status" | "last-verified";
 type OutputFormat = BadgeFormat | "github";
 type CheckFormat = "human" | "json" | "github";
 type N8nVersionSelection = string;
@@ -33,6 +34,9 @@ interface ParsedArgs {
   formatWasSet: boolean;
   outputPath?: string;
   label: string;
+  labelWasSet: boolean;
+  badgeKind: BadgeKind;
+  asOfDate?: string;
   n8nVersion: N8nVersionSelection;
   apply: boolean;
   confirm: boolean;
@@ -104,6 +108,8 @@ const ansiByRole: Record<ColorRole, string> = {
   error: "31",
   skip: "36"
 };
+
+const millisecondsPerDay = 24 * 60 * 60 * 1000;
 
 let parsed: ParsedArgs;
 try {
@@ -183,6 +189,8 @@ function parseArgs(args: string[]): ParsedArgs {
     format: "markdown",
     formatWasSet: false,
     label: "n8n-lint",
+    labelWasSet: false,
+    badgeKind: "status",
     n8nVersion: defaultBundledN8nPackageVersion,
     apply: false,
     confirm: false
@@ -284,6 +292,7 @@ function parseArgs(args: string[]): ParsedArgs {
       }
 
       parsedArgs.label = label;
+      parsedArgs.labelWasSet = true;
       index += 1;
       continue;
     }
@@ -295,6 +304,44 @@ function parseArgs(args: string[]): ParsedArgs {
       }
 
       parsedArgs.label = label;
+      parsedArgs.labelWasSet = true;
+      continue;
+    }
+
+    if (arg === "--kind") {
+      const kind = args[index + 1];
+      if (kind === undefined) {
+        throw new Error("--kind requires status or last-verified.");
+      }
+
+      parsedArgs.badgeKind = parseBadgeKind(kind);
+      index += 1;
+      continue;
+    }
+
+    if (arg.startsWith("--kind=")) {
+      parsedArgs.badgeKind = parseBadgeKind(arg.slice("--kind=".length));
+      continue;
+    }
+
+    if (arg === "--as-of") {
+      const asOfDate = args[index + 1];
+      if (asOfDate === undefined || asOfDate.trim() === "") {
+        throw new Error("--as-of requires a YYYY-MM-DD date.");
+      }
+
+      parsedArgs.asOfDate = asOfDate;
+      index += 1;
+      continue;
+    }
+
+    if (arg.startsWith("--as-of=")) {
+      const asOfDate = arg.slice("--as-of=".length);
+      if (asOfDate.trim() === "") {
+        throw new Error("--as-of requires a YYYY-MM-DD date.");
+      }
+
+      parsedArgs.asOfDate = asOfDate;
       continue;
     }
 
@@ -332,6 +379,14 @@ function parseArgs(args: string[]): ParsedArgs {
   }
 
   return parsedArgs;
+}
+
+function parseBadgeKind(value: string): BadgeKind {
+  if (value === "status" || value === "last-verified") {
+    return value;
+  }
+
+  throw new Error("--kind must be status or last-verified.");
 }
 
 function readCheckFormat(options: ParsedArgs): CheckFormat | undefined {
@@ -487,7 +542,7 @@ async function runBadge(resultPath: string, options: ParsedArgs): Promise<number
   try {
     const raw = await readFile(resultPath, "utf8");
     const parsedResult = JSON.parse(raw) as unknown;
-    const badge = createBadgeModel(parsedResult, options.label, displayPath(resultPath));
+    const badge = createBadgeModel(parsedResult, options, displayPath(resultPath));
     const rendered = renderBadge(badge, readBadgeFormat(options.format));
 
     if (options.outputPath !== undefined) {
@@ -1154,15 +1209,24 @@ function isWorkflowCandidate(value: unknown): boolean {
 interface BadgeModel {
   label: string;
   message: string;
-  color: "brightgreen" | "red";
+  color: "brightgreen" | "yellow" | "red";
+  kind: BadgeKind;
   ok: boolean;
   sourceFile: string;
   summary?: BatchSummary;
+  checkedAt?: string;
+  n8nVersion?: string;
+  ageDays?: number;
+  state?: "passing" | "failing" | "current" | "recheck-recommended" | "stale" | "unverified";
 }
 
-function createBadgeModel(value: unknown, label: string, sourceFile: string): BadgeModel {
+function createBadgeModel(value: unknown, options: ParsedArgs, sourceFile: string): BadgeModel {
   if (!isRecord(value) || typeof value.ok !== "boolean") {
     throw new Error("Badge input must be a JSON result emitted by n8n-lint check --json.");
+  }
+
+  if (options.badgeKind === "last-verified") {
+    return createLastVerifiedBadgeModel(value, options, sourceFile);
   }
 
   const summary = readOptionalBatchSummary(value.summary);
@@ -1170,11 +1234,59 @@ function createBadgeModel(value: unknown, label: string, sourceFile: string): Ba
   const message = ok ? passingBadgeMessage(summary) : failingBadgeMessage(summary);
 
   return {
-    label,
+    label: options.label,
     message,
     color: ok ? "brightgreen" : "red",
+    kind: "status",
     ok,
     sourceFile,
+    state: ok ? "passing" : "failing",
+    ...(summary === undefined ? {} : { summary })
+  };
+}
+
+function createLastVerifiedBadgeModel(
+  value: Record<string, unknown>,
+  options: ParsedArgs,
+  sourceFile: string
+): BadgeModel {
+  const checkedAt = readCheckedAt(value.checkedAt);
+  const asOfDate = readAsOfDate(options.asOfDate);
+  const ageDays = daysSince(checkedAt, asOfDate);
+  const n8nVersion = readN8nVersionLabel(value);
+  const label = options.labelWasSet ? options.label : "last verified";
+  const summary = readOptionalBatchSummary(value.summary);
+
+  if (value.ok !== true) {
+    return {
+      label,
+      message: `${n8nVersion}, unverified`,
+      color: "red",
+      kind: "last-verified",
+      ok: false,
+      sourceFile,
+      checkedAt: checkedAt.toISOString(),
+      n8nVersion,
+      ageDays,
+      state: "unverified",
+      ...(summary === undefined ? {} : { summary })
+    };
+  }
+
+  const state = readLastVerifiedState(ageDays);
+  const message = `${n8nVersion}, ${lastVerifiedMessage(ageDays, state)}`;
+
+  return {
+    label,
+    message,
+    color: state === "current" ? "brightgreen" : state === "recheck-recommended" ? "yellow" : "red",
+    kind: "last-verified",
+    ok: true,
+    sourceFile,
+    checkedAt: checkedAt.toISOString(),
+    n8nVersion,
+    ageDays,
+    state,
     ...(summary === undefined ? {} : { summary })
   };
 }
@@ -1223,6 +1335,95 @@ function failingBadgeMessage(summary: BatchSummary | undefined): string {
   return `${summary.failed + summary.errors} failing`;
 }
 
+function readCheckedAt(value: unknown): Date {
+  if (typeof value !== "string") {
+    throw new Error("Last-verified badge input must include checkedAt from n8n-lint check --json.");
+  }
+
+  const checkedAt = new Date(value);
+  if (Number.isNaN(checkedAt.getTime())) {
+    throw new Error("Last-verified badge input checkedAt must be a valid ISO date.");
+  }
+
+  return checkedAt;
+}
+
+function readAsOfDate(value: string | undefined): Date {
+  if (value === undefined) {
+    return new Date();
+  }
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    throw new Error("--as-of must be a YYYY-MM-DD date.");
+  }
+
+  const asOfDate = new Date(`${value}T00:00:00.000Z`);
+  if (Number.isNaN(asOfDate.getTime()) || asOfDate.toISOString().slice(0, 10) !== value) {
+    throw new Error("--as-of must be a valid YYYY-MM-DD date.");
+  }
+
+  return asOfDate;
+}
+
+function daysSince(checkedAt: Date, asOfDate: Date): number {
+  return Math.max(0, Math.floor((toUtcDateStart(asOfDate) - toUtcDateStart(checkedAt)) / millisecondsPerDay));
+}
+
+function toUtcDateStart(date: Date): number {
+  return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+}
+
+function readN8nVersionLabel(value: Record<string, unknown>): string {
+  const packageInfo = value.packageInfo;
+  if (isRecord(packageInfo) && typeof packageInfo.version === "string" && packageInfo.version.trim() !== "") {
+    return `n8n v${packageInfo.version}`;
+  }
+
+  const selection = value.selection;
+  if (isRecord(selection) && typeof selection.packageVersion === "string" && selection.packageVersion.trim() !== "") {
+    return `n8n v${selection.packageVersion}`;
+  }
+
+  const versions = value.versions;
+  if (Array.isArray(versions)) {
+    const packageVersions = versions
+      .map((version) =>
+        isRecord(version) && typeof version.packageVersion === "string" ? version.packageVersion : undefined
+      )
+      .filter((version): version is string => version !== undefined);
+    if (packageVersions.length > 0) {
+      return `n8n v${packageVersions.join("+")}`;
+    }
+  }
+
+  return "n8n version unknown";
+}
+
+function readLastVerifiedState(ageDays: number): "current" | "recheck-recommended" | "stale" {
+  if (ageDays <= 30) {
+    return "current";
+  }
+
+  if (ageDays <= 90) {
+    return "recheck-recommended";
+  }
+
+  return "stale";
+}
+
+function lastVerifiedMessage(ageDays: number, state: "current" | "recheck-recommended" | "stale"): string {
+  const ageText = `${ageDays} ${ageDays === 1 ? "day" : "days"} ago`;
+  if (state === "recheck-recommended") {
+    return `verified ${ageText} - recheck recommended`;
+  }
+
+  if (state === "stale") {
+    return `verified ${ageText} - stale, unverified`;
+  }
+
+  return `verified ${ageText}`;
+}
+
 function renderBadge(badge: BadgeModel, format: BadgeFormat): string {
   if (format === "json") {
     return JSON.stringify(badge, null, 2);
@@ -1241,7 +1442,12 @@ function renderSvgBadge(badge: BadgeModel): string {
   const labelWidth = textWidth(badge.label);
   const messageWidth = textWidth(badge.message);
   const width = labelWidth + messageWidth;
-  const color = badge.color === "brightgreen" ? "#4c1" : "#e05d44";
+  const colorByBadgeColor: Record<BadgeModel["color"], string> = {
+    brightgreen: "#4c1",
+    yellow: "#dfb317",
+    red: "#e05d44"
+  };
+  const color = colorByBadgeColor[badge.color];
 
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="20" role="img" aria-label="${escapeXml(
@@ -1401,7 +1607,7 @@ function printHelp(): void {
       "Usage:",
       "  n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0|matrix] [--json|--format github]",
       "  n8n-lint repair <workflow.json> [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0] [--output fix.patch] [--apply --confirm] [--json]",
-      "  n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]"
+      "  n8n-lint badge <check-result.json> [--kind status|last-verified] [--as-of YYYY-MM-DD] [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]"
     ].join("\n")
   );
 }

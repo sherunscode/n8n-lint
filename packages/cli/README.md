@@ -9,6 +9,7 @@ n8n-lint check workflows/ "examples/*.json"
 n8n-lint check workflow.json --n8n-version=matrix
 n8n-lint repair workflow.json --output fix.patch
 n8n-lint badge n8n-lint-result.json --format svg --output badge.svg
+n8n-lint badge n8n-lint-result.json --kind last-verified
 ```
 
 Current verified behavior uses the bundled `n8n-nodes-base@2.29.6` compact
@@ -17,10 +18,11 @@ credential type names, top-level node parameter names, structured nested
 collection/fixedCollection/filter parameter keys, and trigger graph/type-version
 shape. It also supports GitHub Actions annotations, action job summaries, batch
 checks for multiple files, directories, simple globs, a pinned two-version
-schema matrix, and local badge output from real `check --json` results. Repair
-mode is diff-only by default and currently removes only schema-proven unknown
-top-level parameters; applying a repair requires both `--apply` and `--confirm`.
-It does not execute workflows and does not claim live REST validation.
+schema matrix, local pass/fail badge output, and decaying last-verified badge
+output from real `check --json` results. Repair mode is diff-only by default
+and currently removes only schema-proven unknown top-level parameters; applying
+a repair requires both `--apply` and `--confirm`. It does not execute workflows
+and does not claim live REST validation.
 
 See the repository README for full setup, packed-install smoke tests, benchmark
 methodology, and release boundaries.

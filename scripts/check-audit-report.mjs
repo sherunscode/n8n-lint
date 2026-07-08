@@ -58,6 +58,7 @@ expect(audit.includes("secrets.N8N_API_KEY"), "audit must mention encrypted GitH
 expect(audit.includes("npm run check:launch-content"), "audit must mention the launch-content checker");
 expect(audit.includes("npm run check:benchmark-report"), "audit must mention the benchmark-report checker");
 expect(audit.includes("npm run check:github-action"), "audit must mention the GitHub Action checker");
+expect(audit.includes("last-verified badge"), "audit must mention last-verified badge proof");
 expect(audit.includes("npm run check:strategy-checklist"), "audit must mention the strategy checklist checker");
 expect(audit.includes("npm run check:claims"), "audit must mention the claims checker");
 

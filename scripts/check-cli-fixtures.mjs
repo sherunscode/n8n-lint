@@ -123,6 +123,62 @@ const checks = [
     stdoutIncludes: ['<svg xmlns="http://www.w3.org/2000/svg"', "n8n proof", "1 passing"]
   },
   {
+    name: "last-verified badge renders green for recent proof",
+    args: [
+      cliPath,
+      "badge",
+      "examples/badge-last-verified-green.json",
+      "--kind",
+      "last-verified",
+      "--as-of",
+      "2026-07-08"
+    ],
+    exitCode: 0,
+    stdoutIncludes: [
+      "![last verified: n8n v2.29.6, verified 2 days ago]",
+      "last_verified-n8n_v2.29.6%2C_verified_2_days_ago-brightgreen"
+    ]
+  },
+  {
+    name: "last-verified badge renders yellow when recheck is recommended",
+    args: [
+      cliPath,
+      "badge",
+      "examples/badge-last-verified-yellow.json",
+      "--kind=last-verified",
+      "--as-of=2026-07-08",
+      "--format",
+      "json"
+    ],
+    exitCode: 0,
+    stdoutIncludes: [
+      '"message": "n8n v2.29.6, verified 45 days ago - recheck recommended"',
+      '"color": "yellow"',
+      '"ageDays": 45',
+      '"state": "recheck-recommended"'
+    ]
+  },
+  {
+    name: "last-verified badge renders red when stale",
+    args: [
+      cliPath,
+      "badge",
+      "examples/badge-last-verified-red.json",
+      "--kind",
+      "last-verified",
+      "--as-of",
+      "2026-07-08",
+      "--format=svg"
+    ],
+    exitCode: 0,
+    stdoutIncludes: [
+      '<svg xmlns="http://www.w3.org/2000/svg"',
+      "last verified",
+      "n8n v2.29.6, verified 120 days ago - stale, unverified",
+      "#e05d44"
+    ]
+  },
+  {
     name: "explicit 2.30 schema accepts 2.30-only parameter",
     args: [cliPath, "check", "examples/matrix-2-30-parameter-workflow.json", "--n8n-version=2.30.0"],
     exitCode: 0,

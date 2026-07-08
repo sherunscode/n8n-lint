@@ -72,8 +72,8 @@ output and checked by `npm run check:animated-demo`.
 - Multi-version schema selector and matrix compatibility report.
 - Batch checks for multiple files, directories, and simple globs, with skipped
   ordinary JSON files reported separately.
-- Local badge generation from real `check --json` output in markdown, JSON, or
-  static SVG format.
+- Local status and decaying last-verified badge generation from real
+  `check --json` output in markdown, JSON, or static SVG format.
 - Human-gated repair patches for schema-proven unknown top-level parameters.
 - Composite GitHub Action in `action.yml`, dogfooded by this repo's CI.
 - Local quality gates for build, lint, format, fixtures, metadata, security
@@ -105,7 +105,7 @@ WARN schema_source.warning: Bundled n8n package metadata is loaded from a compac
 ```bash
 n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0|matrix] [--json|--format github]
 n8n-lint repair <workflow.json> [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0] [--output fix.patch] [--apply --confirm] [--json]
-n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]
+n8n-lint badge <check-result.json> [--kind status|last-verified] [--as-of YYYY-MM-DD] [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]
 ```
 
 `n8n-lint --help` output:
@@ -114,7 +114,7 @@ n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lin
 Usage:
   n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0|matrix] [--json|--format github]
   n8n-lint repair <workflow.json> [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0] [--output fix.patch] [--apply --confirm] [--json]
-  n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]
+  n8n-lint badge <check-result.json> [--kind status|last-verified] [--as-of YYYY-MM-DD] [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]
 ```
 
 | Option                         |    Default | Description                                                                     |
@@ -131,6 +131,9 @@ Usage:
 | `--apply`                      |         no | Allows repair mode to modify the workflow file.                                 |
 | `--confirm`                    |         no | Required with `--apply` before repair mode mutates a workflow file.             |
 | `--label <text>`               | `n8n-lint` | Sets the generated badge label.                                                 |
+| `--kind status`                |        yes | Generates a pass/fail status badge from check JSON.                             |
+| `--kind last-verified`         |         no | Generates an age-decaying last-verified badge from check JSON.                  |
+| `--as-of YYYY-MM-DD`           |      today | Computes last-verified badge age against a deterministic date.                  |
 
 Local development currently runs the built CLI directly:
 
@@ -172,7 +175,13 @@ Badge example:
 
 ```bash
 node packages/cli/dist/bin.js badge examples/badge-batch-result.json
+node packages/cli/dist/bin.js badge examples/badge-last-verified-green.json --kind last-verified --as-of 2026-07-08
 ```
+
+Last-verified badges decay from green to yellow to red based on the checked
+JSON `checkedAt` timestamp. The checked examples render `verified 2 days ago`,
+`verified 45 days ago - recheck recommended`, and
+`verified 120 days ago - stale, unverified` states.
 
 Before publish, test the install shape from packed local packages:
 
@@ -287,8 +296,8 @@ references, and launch-pack references all match the committed
 does not claim live REST validation.
 
 `npm run check:github-action` proves the composite action metadata, safe paths
-array expansion, `--format github` invocation, job summary, CI dogfood step,
-tool metadata, and Marketplace boundary stay aligned.
+array expansion, `--format github` invocation, last-verified badge summary, CI
+dogfood step, tool metadata, and Marketplace boundary stay aligned.
 
 `npm run check:strategy-checklist` checks the local strategy checklist when
 present, keeps executable repo proof aligned, and leaves owner-gated release

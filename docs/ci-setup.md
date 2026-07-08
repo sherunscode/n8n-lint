@@ -33,8 +33,9 @@ The public workflow is `.github/workflows/ci.yml`.
 The repo ships a composite action at `action.yml`. It builds the action runtime
 from the checked-out action repository, then runs the CLI with
 `--format github`. The action writes a GitHub job summary with the checked
-paths, schema source, version selector, and the last 200 lines of CLI output,
-while preserving the CLI exit code as the merge gate.
+paths, schema source, version selector, a decaying last-verified badge generated
+from the same check JSON, and the last 200 lines of CLI output, while
+preserving the CLI exit code as the merge gate.
 
 Until an owner-approved semver tag exists, pin a commit SHA for external use
 rather than relying on a moving branch:
@@ -70,7 +71,8 @@ node packages/cli/dist/bin.js check "examples/*.json" --format github
 
 Failures are emitted as `::error` annotations, warnings as `::warning`
 annotations, and skipped non-workflow JSON files as `::notice` annotations.
-The composite action also writes a Markdown job summary for reviewers.
+The composite action also writes a Markdown job summary for reviewers, including
+the same `last verified` badge that can be rendered in a README.
 Exit codes remain the same as normal check mode:
 
 | Exit | Meaning                                                              |

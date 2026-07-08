@@ -1,0 +1,19 @@
+{
+  "ok": true,
+  "checkedAt": "2026-07-06T00:00:00.000Z",
+  "source": "bundled-n8n-package",
+  "packageInfo": {
+    "name": "n8n-nodes-base",
+    "version": "2.29.6"
+  },
+  "summary": {
+    "totalFiles": 1,
+    "workflows": 1,
+    "passed": 1,
+    "failed": 0,
+    "warnings": 0,
+    "skipped": 0,
+    "errors": 0
+  },
+  "results": []
+}

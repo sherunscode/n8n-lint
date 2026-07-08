@@ -87,7 +87,10 @@ function expectReadmeDocumentsCliOptionVariants() {
     "`--output <file>`",
     "`--apply`",
     "`--confirm`",
-    "`--label <text>`"
+    "`--label <text>`",
+    "`--kind status`",
+    "`--kind last-verified`",
+    "`--as-of YYYY-MM-DD`"
   ];
 
   for (const option of requiredOptionVariants) {

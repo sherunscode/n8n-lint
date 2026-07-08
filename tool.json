@@ -26,8 +26,9 @@
     },
     {
       "name": "badge",
-      "usage": "n8n-lint badge <check-result.json>",
-      "outputs": ["markdown", "json", "svg"]
+      "usage": "n8n-lint badge <check-result.json> [--kind status|last-verified]",
+      "outputs": ["markdown", "json", "svg"],
+      "modes": ["status", "last-verified"]
     }
   ],
   "githubAction": {
@@ -36,6 +37,7 @@
     "inputs": ["paths", "source", "n8n-version"],
     "outputFormat": "github-annotations",
     "jobSummary": true,
+    "lastVerifiedBadgeSummary": true,
     "releaseBoundary": "Use a commit SHA or owner-approved semver tag; GitHub Marketplace listing is not claimed."
   },
   "verifiedClaims": [
@@ -48,6 +50,7 @@
     "batch checks",
     "two-version bundled schema matrix",
     "local badge generation",
+    "decaying last-verified badge generation",
     "human-gated repair patches"
   ],
   "notClaimed": [

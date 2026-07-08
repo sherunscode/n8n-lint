@@ -31,7 +31,8 @@ REST claims.
 - Batch mode is implemented for multiple files, directories, and globs, with
   skipped ordinary JSON files counted separately.
 - Badge generation is implemented from real `check --json` output in markdown,
-  JSON, and static SVG formats.
+  JSON, and static SVG formats, including decaying last-verified green/yellow/red
+  states.
 - Multi-version schema matrix is implemented for pinned bundled artifacts:
   `n8n-nodes-base@2.29.6` and `n8n-nodes-base@2.30.0`.
 - Human-gated repair mode is implemented for schema-proven unknown top-level
@@ -41,8 +42,8 @@ REST claims.
 - `tool.json`, issue-template routing, CI setup docs, and a pre-commit framework
   example exist without claiming npm publication.
 - A composite GitHub Action exists at `action.yml`, writes a reviewer-facing job
-  summary, handles paths via a quoted bash array, is dogfooded by CI, and is
-  checked by `npm run check:github-action`.
+  summary with a last-verified badge, handles paths via a quoted bash array, is
+  dogfooded by CI, and is checked by `npm run check:github-action`.
 - The strategy checklist reconciliation is complete for the local-only
   `STRATEGY.md` repo-proof items when that ignored planning file is present:
   `npm run check:strategy-checklist` keeps proven boxes checked and confirms
@@ -88,7 +89,7 @@ REST claims.
 - Package dry-runs reviewed:
   - `@n8nproof/core@0.0.0`: 12 files, 205.9 kB package, includes `dist`,
     `schema`, package metadata, README, and LICENSE only.
-  - `n8n-lint@0.0.0`: 6 files, 17.0 kB package, includes `dist` only plus
+  - `n8n-lint@0.0.0`: 6 files, 19.1 kB package, includes `dist` only plus
     package metadata, README, and LICENSE.
 - Fresh temp-project tarball install is automated by `npm run smoke:pack` and
   passed with `npx n8n-lint check workflow.json`.
@@ -184,11 +185,12 @@ Current checked behavior:
 - Composite GitHub Action path that runs `check --format github` and writes a
   Markdown job summary.
 - GitHub Action contract check for action metadata, safe paths handling,
-  `--format github` invocation, job-summary output, CI dogfooding, tool
-  metadata, and Marketplace non-claim boundaries.
+  `--format github` invocation, last-verified badge summary output, CI
+  dogfooding, tool metadata, and Marketplace non-claim boundaries.
 - Single-file and batch human/JSON output with final summary counts, including
   warning totals.
-- Local badge generation from checked JSON output.
+- Local badge generation from checked JSON output, including age-decaying
+  last-verified badge output.
 - Matrix human and JSON output with per-version summaries, aggregate final
   summary counts, and compatibility differences.
 - Repair human and JSON output for schema-proven unknown top-level parameters,
@@ -223,6 +225,9 @@ Fixture coverage includes:
 - `examples/failing-stale-trigger-shape.json`
 - `examples/not-a-workflow.json`
 - `examples/badge-batch-result.json`
+- `examples/badge-last-verified-green.json`
+- `examples/badge-last-verified-yellow.json`
+- `examples/badge-last-verified-red.json`
 - `examples/matrix-2-30-parameter-workflow.json`
 
 ## Benchmark Proof

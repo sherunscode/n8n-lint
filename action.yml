@@ -35,9 +35,15 @@ runs:
         set +e
         cd "$GITHUB_WORKSPACE"
         output_file="$RUNNER_TEMP/n8n-lint-output.txt"
+        json_file="$RUNNER_TEMP/n8n-lint-result.json"
         read -r -a path_args <<< "$N8N_LINT_PATHS"
         node "$GITHUB_ACTION_PATH/packages/cli/dist/bin.js" check "${path_args[@]}" --source "$N8N_LINT_SOURCE" --n8n-version "$N8N_LINT_VERSION" --format github 2>&1 | tee "$output_file"
         status=${PIPESTATUS[0]}
+        node "$GITHUB_ACTION_PATH/packages/cli/dist/bin.js" check "${path_args[@]}" --source "$N8N_LINT_SOURCE" --n8n-version "$N8N_LINT_VERSION" --json > "$json_file" 2>/dev/null
+        badge_markdown=$(node "$GITHUB_ACTION_PATH/packages/cli/dist/bin.js" badge "$json_file" --kind last-verified 2>/dev/null || true)
+        if [ -z "$badge_markdown" ]; then
+          badge_markdown="Unavailable - check output was not JSON-readable."
+        fi
 
         {
           echo "## n8n-lint"
@@ -48,6 +54,7 @@ runs:
           echo "| Paths | \`$N8N_LINT_PATHS\` |"
           echo "| Source | \`$N8N_LINT_SOURCE\` |"
           echo "| n8n version selector | \`$N8N_LINT_VERSION\` |"
+          echo "| Last verified badge | $badge_markdown |"
           echo
           echo "### Output"
           echo

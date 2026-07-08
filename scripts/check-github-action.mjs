@@ -34,8 +34,11 @@ for (const phrase of [
   "npm run build",
   'read -r -a path_args <<< "$N8N_LINT_PATHS"',
   'check "${path_args[@]}" --source "$N8N_LINT_SOURCE" --n8n-version "$N8N_LINT_VERSION" --format github',
+  'check "${path_args[@]}" --source "$N8N_LINT_SOURCE" --n8n-version "$N8N_LINT_VERSION" --json',
+  'badge "$json_file" --kind last-verified',
   "status=${PIPESTATUS[0]}",
   "GITHUB_STEP_SUMMARY",
+  "| Last verified badge | $badge_markdown |",
   "tail -n 200",
   'exit "$status"'
 ]) {
@@ -58,6 +61,10 @@ expect(
 );
 expect(tool.githubAction?.jobSummary === true, "tool.json must preserve job summary support");
 expect(
+  tool.githubAction?.lastVerifiedBadgeSummary === true,
+  "tool.json must preserve last-verified badge job summary support"
+);
+expect(
   hasPhrase(tool.githubAction?.releaseBoundary ?? "", "GitHub Marketplace listing is not claimed"),
   "tool.json must preserve Marketplace non-claim for the action"
 );
@@ -73,6 +80,7 @@ for (const phrase of [
 for (const phrase of [
   "The repo ships a composite action at `action.yml`.",
   "The action writes a GitHub job summary",
+  "decaying last-verified badge",
   "Marketplace listing and semver tag usage remain release gates.",
   "pin a commit SHA for external use"
 ]) {
@@ -82,6 +90,7 @@ for (const phrase of [
 for (const phrase of [
   "A composite GitHub Action exists at `action.yml`, writes a reviewer-facing job",
   "Composite GitHub Action path that runs `check --format github` and writes a",
+  "last-verified badge",
   "npm run check:github-action"
 ]) {
   expect(hasPhrase(deepAudit, phrase), `deep audit must include action proof phrase: ${phrase}`);
@@ -99,6 +108,7 @@ console.log(
         "action metadata",
         "safe paths array expansion",
         "format github invocation",
+        "last-verified badge summary",
         "job summary output",
         "CI dogfood step",
         "tool metadata",
