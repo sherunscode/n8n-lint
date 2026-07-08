@@ -25,6 +25,8 @@ REST claims.
   include `n8n`, `cli`, `ci-cd`, `validation`, `github-actions`, and
   `workflow-automation`.
 - Three real starter issues exist and use `good first issue`.
+- Follow-up documentation issues for JSON output, README failure output, and
+  batch-check design were converted into repo docs after the initial audit.
 - npm package name `n8n-lint` returned registry `E404`, so it was not already
   published at audit time.
 - `n8n@2.29.7` still resolves to `n8n-nodes-base@2.29.6` and
@@ -54,6 +56,7 @@ Current checked behavior:
 - Unknown or dead top-level node parameter detection.
 - Stale trigger graph/type-version shape detection.
 - Stable `--json` output mode.
+- `docs/json-output.md` documents the current JSON output contract.
 
 Fixture coverage includes:
 

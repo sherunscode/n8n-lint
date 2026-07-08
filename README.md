@@ -93,6 +93,23 @@ node packages/cli/dist/bin.js check examples/failing-unknown-node.json
 node packages/cli/dist/bin.js check examples/failing-unknown-credential.json --json
 ```
 
+Failure example:
+
+```bash
+node packages/cli/dist/bin.js check examples/failing-dead-parameter.json
+```
+
+Representative output:
+
+```text
+FAIL examples/failing-dead-parameter.json
+Schema source: bundled-n8n-package
+ERROR workflow.node_parameter_unknown $.nodes[0].parameters.notARealParameter: Unknown or dead parameter "notARealParameter" for node type "n8n-nodes-base.httpRequest".
+WARNING schema_source.warning $: Bundled n8n package metadata is loaded from a compact checked-in artifact; this is not live REST validation.
+```
+
+See `docs/json-output.md` for the current `--json` output contract.
+
 Before publish, test the install shape from packed local packages:
 
 ```bash
@@ -169,6 +186,11 @@ git config core.hooksPath .githooks
 ```
 
 See `docs/pre-commit.md`.
+
+## Design Notes
+
+- `docs/json-output.md`: stable JSON output contract for CI tooling.
+- `docs/batch-check-design.md`: V1.1 batch-check design notes.
 
 ## Benchmark Report
 
