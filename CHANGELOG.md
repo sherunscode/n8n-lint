@@ -40,6 +40,9 @@
   contribution docs, code of conduct, and security contact/API-key boundaries.
 - Added an executable release-readiness gate for package-version alignment,
   owner-gated publish/tag/release/posting language, and rollback/support docs.
+- Added an executable live REST boundary gate that keeps live validation
+  unclaimed, blocks public CLI exposure, and proves the internal placeholder
+  does not echo API-key material.
 - Added a generated README failure-demo SVG plus an executable demo gate that
   proves it still matches real CLI output.
 - Added a generated animated failure-demo SVG plus an executable demo gate that

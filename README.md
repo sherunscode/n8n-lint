@@ -207,6 +207,7 @@ npm run check:type-hygiene
 npm run check:precommit
 npm run check:community
 npm run check:release-readiness
+npm run check:live-rest-boundary
 npm run check:readme-demo
 npm run check:animated-demo
 npm run check:social-preview
@@ -253,6 +254,11 @@ guide, code of conduct, and security contact/API-key boundaries stay launchable.
 `npm run check:release-readiness` proves package versions and release docs stay
 aligned while npm publish, tags/releases, public posts, Marketplace listing, and
 live REST claims remain owner-gated.
+
+`npm run check:live-rest-boundary` proves the live REST source boundary stays
+locked: public CLI help exposes only the verified local sources, the internal
+placeholder still fails closed or warns, API-key material is not echoed, and the
+docs keep live REST schema validation unclaimed until endpoint proof exists.
 
 `npm run check:readme-demo` proves the README demo asset was generated from a
 real failing CLI command and still matches the current output.

@@ -91,7 +91,11 @@ the config, artifacts, and CLI behavior against positive and negative fixtures.
 `examples/failing-nested-dead-parameter.json` proves nested key rejection for
 structured metadata. The live REST source remains a separate adapter and must
 stay labeled unproven until a local or owner-approved n8n instance confirms
-endpoint behavior.
+endpoint behavior. `npm run check:live-rest-boundary` proves this boundary:
+public CLI help exposes only `bundled-n8n-package` and `local-placeholder`, the
+internal `live-rest` placeholder must stay CLI-inaccessible until endpoint
+coverage exists, blank base URLs fail closed, and provided API-key material is
+not echoed in placeholder output.
 
 ## Blockers
 

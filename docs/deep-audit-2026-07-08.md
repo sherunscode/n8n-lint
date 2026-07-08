@@ -62,8 +62,8 @@ REST claims.
 - `npm run quality` passed: build, ESLint, Prettier format check, example
   check, bundled-schema check, `check:schema-config`, `check:type-hygiene`,
   `check:precommit`, `check:community`, `check:release-readiness`,
-  `check:readme-demo`, `check:animated-demo`, `check:social-preview`,
-  `check:audit-report`, `check:status-docs`, `check:metadata`,
+  `check:live-rest-boundary`, `check:readme-demo`, `check:animated-demo`,
+  `check:social-preview`, `check:audit-report`, `check:status-docs`, `check:metadata`,
   `check:security`, `check:docs`, `check:pack`, `check:claims`, `check:links`,
   `check:exit-codes`, core fixture tests, CLI fixture tests, production
   dependency audit, and packed-install smoke.
@@ -104,6 +104,11 @@ REST claims.
 - `npm run check:release-readiness` now enforces package-version alignment,
   pre-release npm boundaries, owner-gated publish/tag/release/posting language,
   and rollback/support documentation.
+- `npm run check:live-rest-boundary` now enforces that the live REST source
+  boundary stays locked: public CLI help exposes only verified local sources,
+  the internal placeholder stays unimplemented, API-key material is not echoed,
+  and docs keep live REST schema validation unclaimed until endpoint proof
+  exists.
 - `npm run check:readme-demo` now enforces that the README SVG demo is generated
   from a real failing CLI command and matches the current output.
 - `npm run check:animated-demo` now enforces that the animated failure demo SVG

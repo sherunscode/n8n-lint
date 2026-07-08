@@ -16,10 +16,10 @@ Verified:
 - GitHub Actions annotation output is available through `--format github`.
 - Local quality gates prove build, lint, format, fixtures, metadata, security
   hygiene, schema-config integrity, type hygiene, pre-commit hook behavior,
-  community readiness, release readiness, README demo freshness, animated-demo
-  freshness, social-preview freshness, audit-report freshness, superseded-status
-  note clarity, README/CLI docs contract, package contents, claims hygiene,
-  Markdown link integrity,
+  community readiness, release readiness, live REST boundary enforcement, README
+  demo freshness, animated-demo freshness, social-preview freshness,
+  audit-report freshness, superseded-status note clarity, README/CLI docs
+  contract, package contents, claims hygiene, Markdown link integrity,
   executable exit-code behavior, tests, and production dependency audit status.
 - Packed-package install smoke has proven the source checkout and local tarball
   path, and `npm run smoke:pack` now enforces it in quality checks.

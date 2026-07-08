@@ -14,6 +14,7 @@ const requiredQualityGates = [
   "check:precommit",
   "check:community",
   "check:release-readiness",
+  "check:live-rest-boundary",
   "check:readme-demo",
   "check:animated-demo",
   "check:social-preview",
@@ -41,6 +42,7 @@ expect(audit.includes("npm run check:animated-demo"), "audit must mention the an
 expect(audit.includes("docs/assets/social-preview.svg"), "audit must mention the checked social preview asset");
 expect(audit.includes("npm run check:social-preview"), "audit must mention the social preview checker");
 expect(audit.includes("npm run check:release-readiness"), "audit must mention the release-readiness checker");
+expect(audit.includes("npm run check:live-rest-boundary"), "audit must mention the live REST boundary checker");
 expect(audit.includes("npm run check:claims"), "audit must mention the claims checker");
 
 for (const gate of requiredQualityGates) {
@@ -91,7 +93,8 @@ console.log(
         "owner-gated remaining items",
         "README demo proof",
         "animated demo proof",
-        "social preview proof"
+        "social preview proof",
+        "live REST boundary proof"
       ]
     },
     null,
