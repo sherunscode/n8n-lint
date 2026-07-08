@@ -44,6 +44,9 @@
   live GitHub Discussion #8 support/badge channel proof.
 - Added an executable release-readiness gate for package-version alignment,
   owner-gated publish/tag/release/posting language, and rollback/support docs.
+- Added a checked draft GitHub Release note for v0.1.0 plus an executable gate
+  that reconciles it against owner gates, benchmark counts, release proof, and
+  current non-claims.
 - Added an executable live REST boundary gate that keeps live validation
   unclaimed, blocks public CLI exposure, and proves the internal placeholder
   does not echo API-key material, while enforcing encrypted GitHub Actions
@@ -69,6 +72,9 @@
   protected `BLOCKED` merge state, closed PR state, deleted proof branch
   cleanup, and `main` branch protection requiring `quality` for everyone with
   admin bypass disabled through public GitHub metadata.
+- Hardened the PR merge-gate proof checker to use `GITHUB_TOKEN` for
+  authenticated GitHub API reads when available, so CI keeps live proof without
+  relying on unauthenticated public rate limits.
 - Added an executable strategy-checklist gate that reconciles `STRATEGY.md`
   checklist status against repo proof while keeping owner/external/future gates
   unchecked.

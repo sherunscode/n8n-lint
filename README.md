@@ -277,6 +277,7 @@ npm run check:precommit
 npm run check:precommit-rejection-demo
 npm run check:community
 npm run check:release-readiness
+npm run check:release-notes
 npm run check:live-rest-boundary
 npm run check:launch-content
 npm run check:benchmark-report
@@ -349,6 +350,11 @@ support/badge thread stay launchable.
 `npm run check:release-readiness` proves package versions and release docs stay
 aligned while npm publish, tags/releases, public posts, Marketplace listing, and
 live REST claims remain owner-gated.
+
+`npm run check:release-notes` proves
+`docs/release-notes-v0.1.0-draft.md` is substantive, owner-gated, aligned to the
+current benchmark counts, and free of npm, Marketplace, workflow-execution, or
+live REST claims that are not true yet.
 
 `npm run check:live-rest-boundary` proves the live REST source boundary stays
 locked: public CLI help exposes only the verified local sources, the internal
@@ -526,6 +532,8 @@ See `docs/pre-commit.md`.
   fail-closed implementation gates.
 - `docs/repair.md`: diff-only repair behavior and apply confirmation rules.
 - `docs/launch-drafts.md`: owner-review launch copy grounded in current proof.
+- `docs/release-notes-v0.1.0-draft.md`: owner-gated draft GitHub Release notes
+  grounded in current proof.
 - `docs/support-rollback.md`: first-48-hours support and rollback plan for an
   owner-approved launch.
 

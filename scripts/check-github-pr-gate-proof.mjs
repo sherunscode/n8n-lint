@@ -167,11 +167,18 @@ async function fetchGitHubJson(url) {
 }
 
 async function fetchGitHub(url) {
+  const headers = {
+    Accept: "application/vnd.github+json",
+    "User-Agent": "sherunscode-n8n-lint-proof-check"
+  };
+
+  if (process.env.GITHUB_TOKEN) {
+    headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+    headers["X-GitHub-Api-Version"] = "2022-11-28";
+  }
+
   return fetch(url, {
-    headers: {
-      Accept: "application/vnd.github+json",
-      "User-Agent": "sherunscode-n8n-lint-proof-check"
-    }
+    headers
   });
 }
 
