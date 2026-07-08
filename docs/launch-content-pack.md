@@ -188,11 +188,12 @@ Before any external post:
 1. Confirm owner approval for the specific channel and text.
 2. Re-check the public repo URL and latest CI run.
 3. Do not include benchmark numbers unless the report URL is public and working.
-4. Do not include npm or `npx` claims until publication is complete and verified.
-5. Use `docs/assets/social-preview.svg` only after `npm run check:social-preview`
+4. Run `npm run check:benchmark-report` before publishing benchmark-number claims.
+5. Do not include npm or `npx` claims until publication is complete and verified.
+6. Use `docs/assets/social-preview.svg` only after `npm run check:social-preview`
    passes on the same commit.
-6. Use `docs/assets/animated-failure-demo.svg` only after
+7. Use `docs/assets/animated-failure-demo.svg` only after
    `npm run check:animated-demo` passes on the same commit.
-7. Do not mention stars, followers, installs, traffic, or engagement unless a
+8. Do not mention stars, followers, installs, traffic, or engagement unless a
    current source is attached.
-8. Run `npm run check:launch-content` before approving any launch copy changes.
+9. Run `npm run check:launch-content` before approving any launch copy changes.

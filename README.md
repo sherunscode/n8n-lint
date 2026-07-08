@@ -209,6 +209,7 @@ npm run check:community
 npm run check:release-readiness
 npm run check:live-rest-boundary
 npm run check:launch-content
+npm run check:benchmark-report
 npm run check:readme-demo
 npm run check:animated-demo
 npm run check:social-preview
@@ -264,6 +265,12 @@ docs keep live REST schema validation unclaimed until endpoint proof exists.
 `npm run check:launch-content` proves launch copy remains owner-gated,
 real-growth-only, evidence-mapped, aligned to the benchmark report, and free of
 unsupported npm, `npx`, workflow-execution, live REST, and engagement claims.
+
+`npm run check:benchmark-report` proves the benchmark JSON totals, failure
+categories, relative result paths, Markdown report, README references, audit
+references, and launch-pack references all match the committed
+`Zie619/n8n-workflows` report. The benchmark does not execute workflows and
+does not claim live REST validation.
 
 `npm run check:readme-demo` proves the README demo asset was generated from a
 real failing CLI command and still matches the current output.
@@ -373,6 +380,9 @@ Current report, generated from `Zie619/n8n-workflows` commit
 - Passed: 762.
 - Failed: 1,304.
 - Skipped non-workflow JSON files: 11.
+
+Benchmark proof phrase: 2,066 workflow inputs, 762 passed, 1,304 failed, 11
+skipped.
 
 The benchmark uses the bundled `n8n-nodes-base@2.29.6` schema artifact. It does
 not execute workflows and does not claim live REST validation. The current

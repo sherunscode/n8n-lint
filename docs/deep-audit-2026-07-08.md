@@ -55,6 +55,9 @@ REST claims.
 - Launch content pack and drafts are evidence-mapped, owner-gated,
   real-growth-only, benchmark-aligned, and checked by
   `npm run check:launch-content`.
+- Benchmark report artifacts are reconciled from raw JSON to Markdown,
+  README/audit/launch references, failure-category math, and non-execution/live
+  REST boundaries by `npm run check:benchmark-report`.
 - Architecture and support/rollback docs exist for the current MVP.
 - Dependabot is configured for npm and GitHub Actions.
 - CodeQL is configured for JavaScript/TypeScript analysis.
@@ -65,10 +68,11 @@ REST claims.
 - `npm run quality` passed: build, ESLint, Prettier format check, example
   check, bundled-schema check, `check:schema-config`, `check:type-hygiene`,
   `check:precommit`, `check:community`, `check:release-readiness`,
-  `check:live-rest-boundary`, `check:launch-content`, `check:readme-demo`,
-  `check:animated-demo`, `check:social-preview`, `check:audit-report`,
-  `check:status-docs`, `check:metadata`, `check:security`, `check:docs`,
-  `check:pack`, `check:claims`, `check:links`,
+  `check:live-rest-boundary`, `check:launch-content`,
+  `check:benchmark-report`, `check:readme-demo`, `check:animated-demo`,
+  `check:social-preview`, `check:audit-report`, `check:status-docs`,
+  `check:metadata`, `check:security`, `check:docs`, `check:pack`,
+  `check:claims`, `check:links`,
   `check:exit-codes`, core fixture tests, CLI fixture tests, production
   dependency audit, and packed-install smoke.
 - Package dry-runs reviewed:
@@ -116,6 +120,9 @@ REST claims.
 - `npm run check:launch-content` now enforces that launch copy is owner-gated,
   real-growth-only, evidence-mapped, benchmark-aligned, and free of unsupported
   npm, `npx`, workflow-execution, live REST, and engagement claims.
+- `npm run check:benchmark-report` now enforces raw benchmark JSON totals,
+  failure-category math, relative result paths, Markdown render parity,
+  README/audit/launch proof phrases, and non-execution/live REST boundaries.
 - `npm run check:readme-demo` now enforces that the README SVG demo is generated
   from a real failing CLI command and matches the current output.
 - `npm run check:animated-demo` now enforces that the animated failure demo SVG
@@ -199,6 +206,9 @@ Rerun completed against `Zie619/n8n-workflows`.
 - Passed: 762
 - Failed: 1,304
 - Skipped non-workflow JSON: 11
+
+Benchmark proof phrase: 2,066 workflow inputs, 762 passed, 1,304 failed, 11
+skipped.
 
 Report artifacts:
 

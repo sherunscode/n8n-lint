@@ -45,6 +45,9 @@
   does not echo API-key material.
 - Added an executable launch-content gate that ties public copy to owner gates,
   real-growth rules, benchmark proof, and current non-claims.
+- Added an executable benchmark-report gate that reconciles the raw JSON,
+  Markdown report, README/audit/launch references, failure-category math, and
+  non-execution/live REST boundaries.
 - Added a generated README failure-demo SVG plus an executable demo gate that
   proves it still matches real CLI output.
 - Added a generated animated failure-demo SVG plus an executable demo gate that

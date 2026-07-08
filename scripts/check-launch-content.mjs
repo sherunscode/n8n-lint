@@ -42,6 +42,7 @@ for (const phrase of [
   "Do not rely on a static run ID in launch copy; re-check after every pushed commit.",
   "Use `docs/assets/social-preview.svg` only after `npm run check:social-preview`",
   "Use `docs/assets/animated-failure-demo.svg` only after `npm run check:animated-demo`",
+  "Run `npm run check:benchmark-report` before publishing benchmark-number claims.",
   "Do not mention stars, followers, installs, traffic, or engagement unless a current source is attached.",
   "Run `npm run check:launch-content` before approving any launch copy changes."
 ]) {
