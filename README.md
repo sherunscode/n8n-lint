@@ -269,6 +269,8 @@ live REST claims remain owner-gated.
 locked: public CLI help exposes only the verified local sources, the internal
 placeholder still fails closed or warns, API-key material is not echoed, and the
 docs keep live REST schema validation unclaimed until endpoint proof exists.
+It also checks that future GitHub Actions examples use `secrets.N8N_API_KEY`
+instead of plaintext workflow YAML values.
 
 `npm run check:launch-content` proves launch copy remains owner-gated,
 real-growth-only, evidence-mapped, aligned to the benchmark report, and free of

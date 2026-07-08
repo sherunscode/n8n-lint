@@ -85,6 +85,45 @@ surfaces.
 `npm run check:exit-codes` proves the built CLI preserves the `0`/`1`/`2`
 contract for success, validation/input failures, and usage failures.
 
+## Future Live REST Secret Handling
+
+The current MVP does not read an n8n API key and does not expose live REST
+schema validation. When a future live REST adapter is implemented and verified,
+store credentials only as GitHub Actions encrypted secrets:
+
+1. Open the consumer repository on GitHub.
+2. Go to `Settings` -> `Secrets and variables` -> `Actions`.
+3. Add `N8N_API_KEY` as a repository secret. Never put the token in workflow
+   YAML, README snippets, issue comments, action inputs, or command arguments.
+4. Put non-secret configuration such as `N8N_BASE_URL` in repository variables
+   only after the endpoint and TLS behavior are verified.
+
+Future workflow shape:
+
+```yaml
+name: n8n workflow live schema check
+
+on:
+  pull_request:
+
+jobs:
+  n8n-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - uses: actions/setup-node@v6.4.0
+        with:
+          node-version: 22
+      - run: npx n8n-lint check "workflows/**/*.json" --format github
+        env:
+          N8N_BASE_URL: ${{ vars.N8N_BASE_URL }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
+```
+
+This example is intentionally not part of the current verified install path.
+Live REST validation remains blocked until endpoint proof, TLS failure behavior,
+and API-key redaction are covered by executable tests.
+
 ## Consumer Workflow After npm Publish
 
 After owner-approved npm publication and clean-machine registry proof, consumer

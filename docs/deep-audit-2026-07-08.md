@@ -126,8 +126,9 @@ REST claims.
 - `npm run check:live-rest-boundary` now enforces that the live REST source
   boundary stays locked: public CLI help exposes only verified local sources,
   the internal placeholder stays unimplemented, API-key material is not echoed,
-  and docs keep live REST schema validation unclaimed until endpoint proof
-  exists.
+  docs keep live REST schema validation unclaimed until endpoint proof exists,
+  and future GitHub Actions examples use encrypted `secrets.N8N_API_KEY`
+  wiring instead of plaintext workflow YAML values.
 - `npm run check:launch-content` now enforces that launch copy is owner-gated,
   real-growth-only, evidence-mapped, benchmark-aligned, and free of unsupported
   npm, `npx`, workflow-execution, live REST, and engagement claims.
@@ -193,6 +194,9 @@ Current checked behavior:
   bundled-schema selection source of truth.
 - `docs/batch-check-design.md` documents batch behavior and proof gates.
 - `docs/ci-setup.md` documents GitHub annotation output and CI setup paths.
+- `docs/ci-setup.md` documents future live REST API-key handling through
+  GitHub Actions encrypted secrets while preserving the current live REST
+  non-claim.
 - `docs/badge-output.md` documents badge formats and status rules.
 - `docs/schema-matrix.md` documents pinned schema artifacts and matrix behavior.
 - `docs/repair.md` documents diff-only repair behavior and apply confirmation

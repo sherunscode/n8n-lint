@@ -51,6 +51,7 @@ expect(audit.includes("npm run check:cli-output"), "audit must mention the CLI o
 expect(audit.includes("final JSON summary"), "audit must mention final JSON summary proof");
 expect(audit.includes("warning summary counts"), "audit must mention warning summary counts");
 expect(audit.includes("npm run check:live-rest-boundary"), "audit must mention the live REST boundary checker");
+expect(audit.includes("secrets.N8N_API_KEY"), "audit must mention encrypted GitHub Actions API-key handling");
 expect(audit.includes("npm run check:launch-content"), "audit must mention the launch-content checker");
 expect(audit.includes("npm run check:benchmark-report"), "audit must mention the benchmark-report checker");
 expect(audit.includes("npm run check:github-action"), "audit must mention the GitHub Action checker");

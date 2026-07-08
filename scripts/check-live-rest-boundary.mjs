@@ -86,7 +86,20 @@ await expectDocPhrases("docs/exit-codes.md", [
   "does not ship live REST schema validation",
   "network-source failure mode to prove yet"
 ]);
-await expectDocPhrases("SECURITY.md", ["Future live REST validation must redact API keys"]);
+await expectDocPhrases("docs/ci-setup.md", [
+  "Future Live REST Secret Handling",
+  "Settings` -> `Secrets and variables` -> `Actions",
+  "N8N_API_KEY` as a repository secret",
+  "Never put the token in workflow YAML",
+  "N8N_API_KEY: ${{ secrets.N8N_API_KEY }}",
+  "N8N_BASE_URL: ${{ vars.N8N_BASE_URL }}",
+  "Live REST validation remains blocked until endpoint proof"
+]);
+await expectDocPhrases("SECURITY.md", [
+  "Future live REST validation must redact API keys",
+  "secrets.N8N_API_KEY",
+  "never from plaintext workflow YAML"
+]);
 await expectDocPhrases("tool.json", ["live REST schema validation"]);
 
 if (failures.length > 0) {
