@@ -19,6 +19,9 @@
   CLI options.
 - Added an executable docs contract gate that compares the README `--help`
   block against the built CLI and verifies required CLI options are documented.
+- Added an executable package-content gate that fails if publishable tarballs
+  include unexpected files, forbidden paths, bundled dependencies, or size
+  regressions.
 - Added a reproducible `Zie619/n8n-workflows` benchmark report with exact
   pass/fail and skipped-file counts.
 - Refreshed the benchmark report after nested parameter-key validation changed

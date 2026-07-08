@@ -53,8 +53,8 @@ REST claims.
   `n8n-workflow@2.29.2`.
 - `npm run quality` passed: build, ESLint, Prettier format check, example
   check, bundled-schema check, metadata check, security hygiene check,
-  README/CLI docs-contract check, core fixture tests, CLI fixture tests,
-  production dependency audit, and packed-install smoke.
+  README/CLI docs-contract check, package-content check, core fixture tests, CLI
+  fixture tests, production dependency audit, and packed-install smoke.
 - Package dry-runs reviewed:
   - `@n8nproof/core@0.0.0`: 11 files, 204.4 kB package, includes `dist` and
     compact schema artifacts only.
@@ -68,6 +68,8 @@ REST claims.
   token-pattern scanning, and no bare API-key CLI option.
 - `npm run check:docs` now enforces README `--help` parity with the built CLI
   and required CLI option documentation.
+- `npm run check:pack` now enforces expected package file lists, forbidden-path
+  exclusions, no bundled dependencies, and package size ceilings.
 - Stale-claim scan found no old benchmark numbers, fake-growth language,
   invalid old GitHub owner path, or public-report placeholders.
 - `git diff --check` passed.

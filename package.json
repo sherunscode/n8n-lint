@@ -27,12 +27,13 @@
     "check:metadata": "node scripts/check-repo-metadata.mjs",
     "check:security": "node scripts/check-security-hygiene.mjs",
     "check:docs": "node scripts/check-docs-contract.mjs",
+    "check:pack": "node scripts/check-package-contents.mjs",
     "test:core": "node scripts/check-core-validation.mjs",
     "test:cli": "node scripts/check-cli-fixtures.mjs",
     "test": "npm run test:core && npm run test:cli",
     "audit:prod": "npm audit --omit=dev --audit-level=high",
     "smoke:pack": "node scripts/smoke-packed-install.mjs",
-    "quality": "npm run build && npm run lint && npm run format:check && npm run check:example && npm run check:bundled-schema && npm run check:metadata && npm run check:security && npm run check:docs && npm test && npm run audit:prod && npm run smoke:pack",
+    "quality": "npm run build && npm run lint && npm run format:check && npm run check:example && npm run check:bundled-schema && npm run check:metadata && npm run check:security && npm run check:docs && npm run check:pack && npm test && npm run audit:prod && npm run smoke:pack",
     "benchmark:zie619": "node scripts/benchmark-zie619.mjs"
   },
   "devDependencies": {
