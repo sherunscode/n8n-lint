@@ -21,7 +21,7 @@ type BatchStatus = "passed" | "failed" | "skipped" | "error";
 type BadgeFormat = "markdown" | "json" | "svg";
 type OutputFormat = BadgeFormat | "github";
 type CheckFormat = "human" | "json" | "github";
-type N8nVersionSelection = BundledN8nPackageVersion | "matrix";
+type N8nVersionSelection = string;
 
 interface ParsedArgs {
   command?: string;

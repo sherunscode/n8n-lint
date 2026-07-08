@@ -6,7 +6,8 @@ This package loads checked-in compact n8n schema artifacts and validates n8n
 workflow JSON structure, node type names, credential type names, top-level node
 parameter names, structured nested collection/fixedCollection/filter parameter
 keys, and trigger graph/type-version shape. Current pinned artifacts cover
-`n8n-nodes-base@2.29.6` and `n8n-nodes-base@2.30.0`. It does not execute
+`n8n-nodes-base@2.29.6` and `n8n-nodes-base@2.30.0`, with their selections
+centralized in `schema/bundled-n8n-package-config.json`. It does not execute
 workflows and does not claim live REST validation.
 
 After npm publication, install the CLI package for normal use:

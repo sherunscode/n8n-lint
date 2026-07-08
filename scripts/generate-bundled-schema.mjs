@@ -8,29 +8,12 @@ import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
 const repoRoot = dirname(fileURLToPath(new URL("../package.json", import.meta.url)));
-const packageName = "n8n-nodes-base";
-const nodeMetadataFile = "dist/types/nodes.json";
-const credentialMetadataFile = "dist/types/credentials.json";
-const defaultPackageVersion = "2.29.6";
-const selections = {
-  "2.29.6": {
-    referencePackage: "n8n@2.29.7",
-    packageName,
-    packageVersion: "2.29.6",
-    workflowPackageVersion: "2.29.2",
-    outputPath: "packages/core/schema/bundled-n8n-package.json",
-    reason:
-      "Pinned to the n8n-nodes-base dependency selected by n8n@2.29.7, instead of the stale-looking n8n-nodes-base latest dist-tag."
-  },
-  "2.30.0": {
-    referencePackage: "n8n@2.30.0",
-    packageName,
-    packageVersion: "2.30.0",
-    workflowPackageVersion: "2.30.0",
-    outputPath: "packages/core/schema/bundled-n8n-package-2.30.0.json",
-    reason: "Pinned to the n8n-nodes-base dependency selected by n8n@2.30.0."
-  }
-};
+const config = await readBundledSchemaConfig();
+const packageName = config.packageName;
+const nodeMetadataFile = config.nodeMetadataFile;
+const credentialMetadataFile = config.credentialMetadataFile;
+const defaultPackageVersion = config.defaultPackageVersion;
+const selections = config.selections;
 
 const requestedVersions = readRequestedVersions(process.argv.slice(2));
 const results = [];
@@ -145,12 +128,12 @@ async function generateArtifact(version) {
       );
     }
 
-    const outputPath = join(repoRoot, selection.outputPath);
+    const outputPath = join(repoRoot, config.schemaDirectory, selection.artifactFile);
     await mkdir(dirname(outputPath), { recursive: true });
     await writeFile(outputPath, `${JSON.stringify(artifact, null, 2)}\n`);
 
     return {
-      outputPath: selection.outputPath,
+      outputPath: join(config.schemaDirectory, selection.artifactFile).replace(/\\/g, "/"),
       package: `${artifact.package.name}@${artifact.package.version}`,
       nodeTypes: artifact.nodeTypes.length,
       credentialTypes: artifact.credentialTypes.length,
@@ -198,6 +181,84 @@ async function resolvePackageRoot(version) {
       await rm(workDir, { recursive: true, force: true });
     }
   };
+}
+
+async function readBundledSchemaConfig() {
+  const configPath = join(repoRoot, "packages/core/schema/bundled-n8n-package-config.json");
+  const parsed = JSON.parse(await readFile(configPath, "utf8"));
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    throw new Error(`Bundled schema config must be an object at ${configPath}.`);
+  }
+
+  const packageName = readRequiredString(parsed.packageName, "packageName", configPath);
+  const nodeMetadataFile = readRequiredString(parsed.nodeMetadataFile, "nodeMetadataFile", configPath);
+  const credentialMetadataFile = readRequiredString(
+    parsed.credentialMetadataFile,
+    "credentialMetadataFile",
+    configPath
+  );
+  const schemaDirectory = readRequiredString(parsed.schemaDirectory, "schemaDirectory", configPath);
+  const defaultPackageVersion = readRequiredString(parsed.defaultPackageVersion, "defaultPackageVersion", configPath);
+  if (!parsed.selections || typeof parsed.selections !== "object" || Array.isArray(parsed.selections)) {
+    throw new Error(`Bundled schema config selections must be an object at ${configPath}.`);
+  }
+
+  const selections = Object.fromEntries(
+    Object.entries(parsed.selections).map(([packageVersion, value]) => [
+      packageVersion,
+      readConfigSelection(packageVersion, value, packageName, configPath)
+    ])
+  );
+
+  if (!Object.hasOwn(selections, defaultPackageVersion)) {
+    throw new Error(`Bundled schema config default ${defaultPackageVersion} has no selection.`);
+  }
+
+  return {
+    packageName,
+    nodeMetadataFile,
+    credentialMetadataFile,
+    schemaDirectory,
+    defaultPackageVersion,
+    selections
+  };
+}
+
+function readConfigSelection(packageVersion, value, packageName, configPath) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error(`Bundled schema config selection ${packageVersion} must be an object.`);
+  }
+
+  const selection = {
+    referencePackage: readRequiredString(value.referencePackage, `${packageVersion}.referencePackage`, configPath),
+    packageName: readRequiredString(value.packageName, `${packageVersion}.packageName`, configPath),
+    packageVersion: readRequiredString(value.packageVersion, `${packageVersion}.packageVersion`, configPath),
+    workflowPackageVersion: readRequiredString(
+      value.workflowPackageVersion,
+      `${packageVersion}.workflowPackageVersion`,
+      configPath
+    ),
+    artifactFile: readRequiredString(value.artifactFile, `${packageVersion}.artifactFile`, configPath),
+    reason: readRequiredString(value.reason, `${packageVersion}.reason`, configPath)
+  };
+
+  if (selection.packageName !== packageName) {
+    throw new Error(`Bundled schema config selection ${packageVersion} has packageName ${selection.packageName}.`);
+  }
+
+  if (selection.packageVersion !== packageVersion) {
+    throw new Error(`Bundled schema config selection ${packageVersion} has mismatched packageVersion.`);
+  }
+
+  return selection;
+}
+
+function readRequiredString(value, label, configPath) {
+  if (typeof value !== "string" || value.trim() === "") {
+    throw new Error(`Bundled schema config ${label} is invalid at ${configPath}.`);
+  }
+
+  return value.trim();
 }
 
 function npmExecutable() {

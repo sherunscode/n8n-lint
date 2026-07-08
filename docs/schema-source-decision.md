@@ -40,7 +40,8 @@ coverage is proven by a running n8n instance and reproducible command output.
   - `node.exe packages/cli/dist/bin.js check examples/failing-missing-nodes.json` -> expected failure with exit code `1`
 - Bundled metadata verification:
   - Runtime source: `bundled-n8n-package`
-  - Default package: `n8n-nodes-base@2.29.6`, pinned exactly in `packages/core/package.json`
+  - Config: `packages/core/schema/bundled-n8n-package-config.json`
+  - Default package: `n8n-nodes-base@2.29.6`, pinned exactly in the root generator dependency and config
   - Matrix package: `n8n-nodes-base@2.30.0`, generated from an npm tarball by `scripts/generate-bundled-schema.mjs`
   - Transitive workflow packages: `n8n-workflow@2.29.2` and `n8n-workflow@2.30.0`
   - Metadata files: `n8n-nodes-base/dist/types/nodes.json` and `n8n-nodes-base/dist/types/credentials.json`
@@ -57,8 +58,10 @@ packages into a stable internal shape:
 - compatibility arrays for node type and credential type names
 
 ERL-32 replaced runtime package loading with compact checked-in schema
-artifacts. Current artifacts are:
+artifacts. Current config and artifacts are:
 
+- `packages/core/schema/bundled-n8n-package-config.json` for pinned package
+  selections, artifact files, metadata file paths, and generation rationale
 - `packages/core/schema/bundled-n8n-package.json` for `n8n-nodes-base@2.29.6`
 - `packages/core/schema/bundled-n8n-package-2.30.0.json` for
   `n8n-nodes-base@2.30.0`
@@ -80,14 +83,15 @@ also supports `--n8n-version=2.30.0` and `--n8n-version=matrix`. It enforces:
 - matrix compatibility differences across pinned bundled versions
 - truthful schema-source output in human and JSON modes
 
-`scripts/check-bundled-schema.mjs`, `scripts/check-core-validation.mjs`, and
-`scripts/check-cli-fixtures.mjs` prove the artifact and CLI behavior against
-positive and negative fixtures. `examples/matrix-2-30-parameter-workflow.json`
-proves that `dataTable.clearWarning` is absent from 2.29.6 and present in
-2.30.0. `examples/failing-nested-dead-parameter.json` proves nested key
-rejection for structured metadata. The live REST source remains a separate
-adapter and must stay labeled unproven until a local or owner-approved n8n
-instance confirms endpoint behavior.
+`scripts/check-schema-config.mjs`, `scripts/check-bundled-schema.mjs`,
+`scripts/check-core-validation.mjs`, and `scripts/check-cli-fixtures.mjs` prove
+the config, artifacts, and CLI behavior against positive and negative fixtures.
+`examples/matrix-2-30-parameter-workflow.json` proves that
+`dataTable.clearWarning` is absent from 2.29.6 and present in 2.30.0.
+`examples/failing-nested-dead-parameter.json` proves nested key rejection for
+structured metadata. The live REST source remains a separate adapter and must
+stay labeled unproven until a local or owner-approved n8n instance confirms
+endpoint behavior.
 
 ## Blockers
 

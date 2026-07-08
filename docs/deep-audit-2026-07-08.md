@@ -80,6 +80,9 @@ REST claims.
   schema failure, invalid JSON/read failures, batch input failures, and usage
   errors. Live REST/network failures remain unclaimed until a live REST source
   ships.
+- `npm run check:schema-config` now enforces one pinned bundled-schema selection
+  config shared by the runtime and generator, with artifacts and root generator
+  dependency reconciled against that config.
 - Stale-claim scan found no old benchmark numbers, fake-growth language,
   invalid old GitHub owner path, or public-report placeholders.
 - `git diff --check` passed.
@@ -109,6 +112,8 @@ Current checked behavior:
 - `docs/json-output.md` documents the current JSON output contract.
 - `docs/exit-codes.md` documents the current exit-code contract and the live
   REST/network non-claim.
+- `packages/core/schema/bundled-n8n-package-config.json` is the pinned
+  bundled-schema selection source of truth.
 - `docs/batch-check-design.md` documents batch behavior and proof gates.
 - `docs/ci-setup.md` documents GitHub annotation output and CI setup paths.
 - `docs/badge-output.md` documents badge formats and status rules.

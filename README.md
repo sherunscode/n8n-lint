@@ -191,6 +191,7 @@ npm run lint
 npm run format:check
 npm run check:example
 npm run check:bundled-schema
+npm run check:schema-config
 npm run check:metadata
 npm run check:security
 npm run check:docs
@@ -213,6 +214,11 @@ npm run quality
 shipping dependency gate stays clean. The pinned `n8n-nodes-base` package is a
 dev-time generator input only; it is not a runtime dependency of the core or CLI
 packages.
+
+`npm run check:schema-config` proves the pinned bundled schema selections live
+in `packages/core/schema/bundled-n8n-package-config.json`, match the checked-in
+artifacts, match the root generator dependency, and are not duplicated in the
+runtime source or generator script.
 
 `npm run check:security` proves local secret/config paths are ignored, scans
 tracked public files for common token patterns, and verifies the CLI does not
@@ -259,10 +265,11 @@ npm run generate:bundled-schema
 ```
 
 The generated files are `packages/core/schema/bundled-n8n-package.json` and
-`packages/core/schema/bundled-n8n-package-2.30.0.json`. They store node and
-credential type names, top-level node parameter names, structured nested
-parameter paths, and trigger node type names. They do not bundle n8n runtime
-code, integration clients, credentials, or workflow data.
+`packages/core/schema/bundled-n8n-package-2.30.0.json`. The pinned package
+selection config is `packages/core/schema/bundled-n8n-package-config.json`.
+Artifacts store node and credential type names, top-level node parameter names,
+structured nested parameter paths, and trigger node type names. They do not
+bundle n8n runtime code, integration clients, credentials, or workflow data.
 
 ## Pre-Commit
 

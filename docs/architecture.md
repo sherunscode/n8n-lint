@@ -45,6 +45,12 @@ Pinned bundled artifacts:
 | `2.29.6` | `n8n-nodes-base@2.29.6` | `packages/core/schema/bundled-n8n-package.json` |
 | `2.30.0` | `n8n-nodes-base@2.30.0` | `packages/core/schema/bundled-n8n-package-2.30.0.json` |
 
+Pinned package selections are centralized in
+`packages/core/schema/bundled-n8n-package-config.json`. Both the runtime source
+and `scripts/generate-bundled-schema.mjs` read from that config, and
+`npm run check:schema-config` fails if the selected versions, artifact metadata,
+or root generator dependency drift.
+
 The bundled artifact stores compact metadata only:
 
 - node type names

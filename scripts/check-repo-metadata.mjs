@@ -31,13 +31,14 @@ expect(
   typeof packageJson.scripts?.quality === "string" &&
     packageJson.scripts.quality.includes("npm run lint") &&
     packageJson.scripts.quality.includes("npm run format:check") &&
+    packageJson.scripts.quality.includes("npm run check:schema-config") &&
     packageJson.scripts.quality.includes("npm run check:security") &&
     packageJson.scripts.quality.includes("npm run check:docs") &&
     packageJson.scripts.quality.includes("npm run check:pack") &&
     packageJson.scripts.quality.includes("npm run check:claims") &&
     packageJson.scripts.quality.includes("npm run check:links") &&
     packageJson.scripts.quality.includes("npm run check:exit-codes"),
-  "package.json quality gate must include lint, format, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
+  "package.json quality gate must include lint, format, schema config, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
 );
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 
@@ -49,6 +50,8 @@ await expectFile("eslint.config.js");
 await expectFile("examples/pre-commit-setup/.pre-commit-config.yaml");
 await expectFile("examples/failing-nested-dead-parameter.json");
 await expectFile("scripts/smoke-packed-install.mjs");
+await expectFile("packages/core/schema/bundled-n8n-package-config.json");
+await expectFile("scripts/check-schema-config.mjs");
 await expectFile("scripts/check-security-hygiene.mjs");
 await expectFile("scripts/check-docs-contract.mjs");
 await expectFile("scripts/check-package-contents.mjs");
@@ -74,6 +77,8 @@ console.log(
         "examples/pre-commit-setup/.pre-commit-config.yaml",
         "examples/failing-nested-dead-parameter.json",
         "scripts/smoke-packed-install.mjs",
+        "packages/core/schema/bundled-n8n-package-config.json",
+        "scripts/check-schema-config.mjs",
         "scripts/check-security-hygiene.mjs",
         "scripts/check-docs-contract.mjs",
         "scripts/check-package-contents.mjs",

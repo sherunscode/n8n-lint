@@ -46,10 +46,11 @@ npm pack --workspace packages/cli --dry-run
 
 Inspect the dry-run output. The core package should include only `dist`,
 `schema`, `package.json`, `README.md`, and `LICENSE`; the schema directory
-should contain the checked-in compact artifacts for the pinned n8n versions.
-The CLI package should include only `dist`, `package.json`, `README.md`, and
-`LICENSE`. No `.env`, logs, local reports, `node_modules`, or strategy/research
-documents belong in either tarball.
+should contain the checked-in compact artifacts and
+`bundled-n8n-package-config.json` for the pinned n8n versions. The CLI package
+should include only `dist`, `package.json`, `README.md`, and `LICENSE`. No
+`.env`, logs, local reports, `node_modules`, or strategy/research documents
+belong in either tarball.
 
 Before release, run the repair fixture path and confirm it stays human-gated:
 

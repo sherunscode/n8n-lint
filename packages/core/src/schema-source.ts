@@ -1,4 +1,5 @@
-import { readFile } from "node:fs/promises";
+import { readFileSync } from "node:fs";
+import { readFile as readFileAsync } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -54,18 +55,39 @@ export interface BundledN8nPackageSchemaSourceConfig {
   packageVersion?: BundledN8nPackageVersion;
 }
 
-const defaultN8nNodesPackage = "n8n-nodes-base";
-export const bundledN8nPackageVersions = ["2.29.6", "2.30.0"] as const;
-export type BundledN8nPackageVersion = (typeof bundledN8nPackageVersions)[number];
-export const defaultBundledN8nPackageVersion: BundledN8nPackageVersion = "2.29.6";
+interface BundledN8nPackageConfigSelection extends BundledN8nPackageSelection {
+  artifactFile: string;
+}
+
+interface BundledN8nPackageConfig {
+  packageName: string;
+  nodeMetadataFile: string;
+  credentialMetadataFile: string;
+  schemaDirectory: string;
+  defaultPackageVersion: BundledN8nPackageVersion;
+  selections: Record<BundledN8nPackageVersion, BundledN8nPackageConfigSelection>;
+}
+
+export type BundledN8nPackageVersion = string;
+const bundledN8nPackageConfig = readBundledN8nPackageConfig();
+export const bundledN8nPackageVersions = Object.keys(bundledN8nPackageConfig.selections).sort((left, right) =>
+  left.localeCompare(right)
+);
+export const defaultBundledN8nPackageVersion: BundledN8nPackageVersion = bundledN8nPackageConfig.defaultPackageVersion;
 const defaultBundledSchemaArtifactPath = join(
   dirname(fileURLToPath(import.meta.url)),
   "../schema/bundled-n8n-package.json"
 );
-const bundledSchemaArtifactPaths: Record<BundledN8nPackageVersion, string> = {
-  "2.29.6": defaultBundledSchemaArtifactPath,
-  "2.30.0": join(dirname(fileURLToPath(import.meta.url)), "../schema/bundled-n8n-package-2.30.0.json")
-};
+const bundledSchemaArtifactPaths: Record<BundledN8nPackageVersion, string> = Object.fromEntries(
+  bundledN8nPackageVersions.map((packageVersion) => {
+    const selection = readBundledN8nPackageConfigSelection(packageVersion);
+    const artifactPath =
+      packageVersion === defaultBundledN8nPackageVersion
+        ? defaultBundledSchemaArtifactPath
+        : join(dirname(fileURLToPath(import.meta.url)), "../schema", selection.artifactFile);
+    return [packageVersion, artifactPath];
+  })
+);
 
 export interface BundledN8nPackageSelection {
   referencePackage: string;
@@ -75,25 +97,136 @@ export interface BundledN8nPackageSelection {
   reason: string;
 }
 
-export const bundledN8nPackageSelections: Record<BundledN8nPackageVersion, BundledN8nPackageSelection> = {
-  "2.29.6": {
-    referencePackage: "n8n@2.29.7",
-    packageName: defaultN8nNodesPackage,
-    packageVersion: "2.29.6",
-    workflowPackageVersion: "2.29.2",
-    reason:
-      "Pinned to the n8n-nodes-base dependency selected by n8n@2.29.7, instead of the stale-looking n8n-nodes-base latest dist-tag."
-  },
-  "2.30.0": {
-    referencePackage: "n8n@2.30.0",
-    packageName: defaultN8nNodesPackage,
-    packageVersion: "2.30.0",
-    workflowPackageVersion: "2.30.0",
-    reason: "Pinned to the n8n-nodes-base dependency selected by n8n@2.30.0."
-  }
-};
+export const bundledN8nPackageSelections: Record<BundledN8nPackageVersion, BundledN8nPackageSelection> =
+  Object.fromEntries(
+    Object.entries(bundledN8nPackageConfig.selections).map(([packageVersion, selection]) => [
+      packageVersion,
+      toPublicBundledN8nPackageSelection(selection)
+    ])
+  );
 
-export const bundledN8nPackageSelection = bundledN8nPackageSelections[defaultBundledN8nPackageVersion];
+const defaultBundledN8nPackageSelection = bundledN8nPackageSelections[defaultBundledN8nPackageVersion];
+if (defaultBundledN8nPackageSelection === undefined) {
+  throw new Error(`Bundled n8n package config is missing default ${defaultBundledN8nPackageVersion}.`);
+}
+
+export const bundledN8nPackageSelection = defaultBundledN8nPackageSelection;
+
+function readBundledN8nPackageConfig(): BundledN8nPackageConfig {
+  const configPath = join(dirname(fileURLToPath(import.meta.url)), "../schema/bundled-n8n-package-config.json");
+  const parsed = JSON.parse(readFileSync(configPath, "utf8")) as unknown;
+
+  if (!isRecord(parsed)) {
+    throw new Error(`Bundled n8n package config must be an object at ${configPath}.`);
+  }
+
+  const packageName = readNonEmptyConfigString(parsed.packageName, "packageName", configPath);
+  const nodeMetadataFile = readNonEmptyConfigString(parsed.nodeMetadataFile, "nodeMetadataFile", configPath);
+  const credentialMetadataFile = readNonEmptyConfigString(
+    parsed.credentialMetadataFile,
+    "credentialMetadataFile",
+    configPath
+  );
+  const schemaDirectory = readNonEmptyConfigString(parsed.schemaDirectory, "schemaDirectory", configPath);
+  const defaultPackageVersion = readNonEmptyConfigString(
+    parsed.defaultPackageVersion,
+    "defaultPackageVersion",
+    configPath
+  );
+
+  if (!isRecord(parsed.selections)) {
+    throw new Error(`Bundled n8n package config selections must be an object at ${configPath}.`);
+  }
+
+  const selections = Object.fromEntries(
+    Object.entries(parsed.selections).map(([packageVersion, value]) => [
+      packageVersion,
+      readConfigSelection(packageVersion, value, packageName, configPath)
+    ])
+  );
+
+  if (Object.keys(selections).length === 0) {
+    throw new Error(`Bundled n8n package config must include at least one selection at ${configPath}.`);
+  }
+
+  if (!Object.hasOwn(selections, defaultPackageVersion)) {
+    throw new Error(`Bundled n8n package config default ${defaultPackageVersion} has no selection.`);
+  }
+
+  return {
+    packageName,
+    nodeMetadataFile,
+    credentialMetadataFile,
+    schemaDirectory,
+    defaultPackageVersion,
+    selections
+  };
+}
+
+function readConfigSelection(
+  packageVersion: string,
+  value: unknown,
+  packageName: string,
+  configPath: string
+): BundledN8nPackageConfigSelection {
+  if (!isRecord(value)) {
+    throw new Error(`Bundled n8n package config selection ${packageVersion} must be an object.`);
+  }
+
+  const selection = {
+    referencePackage: readNonEmptyConfigString(
+      value.referencePackage,
+      `${packageVersion}.referencePackage`,
+      configPath
+    ),
+    packageName: readNonEmptyConfigString(value.packageName, `${packageVersion}.packageName`, configPath),
+    packageVersion: readNonEmptyConfigString(value.packageVersion, `${packageVersion}.packageVersion`, configPath),
+    workflowPackageVersion: readNonEmptyConfigString(
+      value.workflowPackageVersion,
+      `${packageVersion}.workflowPackageVersion`,
+      configPath
+    ),
+    artifactFile: readNonEmptyConfigString(value.artifactFile, `${packageVersion}.artifactFile`, configPath),
+    reason: readNonEmptyConfigString(value.reason, `${packageVersion}.reason`, configPath)
+  };
+
+  if (selection.packageName !== packageName) {
+    throw new Error(`Bundled n8n package config selection ${packageVersion} has packageName ${selection.packageName}.`);
+  }
+
+  if (selection.packageVersion !== packageVersion) {
+    throw new Error(`Bundled n8n package config selection ${packageVersion} has mismatched packageVersion.`);
+  }
+
+  return selection;
+}
+
+function readBundledN8nPackageConfigSelection(packageVersion: string): BundledN8nPackageConfigSelection {
+  const selection = bundledN8nPackageConfig.selections[packageVersion];
+  if (selection === undefined) {
+    throw new Error(`Bundled n8n package config is missing selection ${packageVersion}.`);
+  }
+
+  return selection;
+}
+
+function toPublicBundledN8nPackageSelection(selection: BundledN8nPackageConfigSelection): BundledN8nPackageSelection {
+  return {
+    referencePackage: selection.referencePackage,
+    packageName: selection.packageName,
+    packageVersion: selection.packageVersion,
+    workflowPackageVersion: selection.workflowPackageVersion,
+    reason: selection.reason
+  };
+}
+
+function readNonEmptyConfigString(value: unknown, label: string, configPath: string): string {
+  if (typeof value !== "string" || value.trim() === "") {
+    throw new Error(`Bundled n8n package config ${label} is invalid at ${configPath}.`);
+  }
+
+  return value.trim();
+}
 
 export function createLocalPlaceholderSchemaSource(): SchemaSource {
   return {
@@ -118,6 +251,9 @@ export function createLocalPlaceholderSchemaSource(): SchemaSource {
 export function createBundledN8nPackageSchemaSource(config: BundledN8nPackageSchemaSourceConfig = {}): SchemaSource {
   const artifactPath =
     config.artifactPath ?? bundledSchemaArtifactPaths[config.packageVersion ?? defaultBundledN8nPackageVersion];
+  if (artifactPath === undefined) {
+    throw new Error(`Unsupported bundled n8n package version ${config.packageVersion ?? "unknown"}.`);
+  }
 
   return {
     kind: "bundled-n8n-package",
@@ -187,8 +323,8 @@ export function createLiveRestSchemaSource(config: LiveRestSchemaSourceConfig): 
   };
 }
 
-export function isBundledN8nPackageVersion(value: string): value is BundledN8nPackageVersion {
-  return bundledN8nPackageVersions.includes(value as BundledN8nPackageVersion);
+export function isBundledN8nPackageVersion(value: string): boolean {
+  return bundledN8nPackageVersions.includes(value);
 }
 
 interface BundledSchemaArtifact {
@@ -204,7 +340,7 @@ interface BundledSchemaArtifact {
 }
 
 async function readBundledSchemaArtifact(filePath: string): Promise<BundledSchemaArtifact> {
-  const raw = await readFile(filePath, "utf8");
+  const raw = await readFileAsync(filePath, "utf8");
   const parsed = JSON.parse(raw) as unknown;
 
   if (!isRecord(parsed)) {
@@ -279,7 +415,12 @@ function inferArtifactSelection(packageInfo: SchemaPackageInfo, filePath: string
     throw new Error(`Bundled n8n schema artifact is missing selection metadata at ${filePath}.`);
   }
 
-  return bundledN8nPackageSelections[packageInfo.version];
+  const selection = bundledN8nPackageSelections[packageInfo.version];
+  if (selection === undefined) {
+    throw new Error(`Bundled n8n schema artifact has no config selection for ${packageInfo.version} at ${filePath}.`);
+  }
+
+  return selection;
 }
 
 function readNonEmptySelectionString(value: unknown, label: string, filePath: string): string {

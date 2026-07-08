@@ -18,6 +18,7 @@ const expectations = [
       "dist/schema-source.js.map",
       "package.json",
       "schema/bundled-n8n-package-2.30.0.json",
+      "schema/bundled-n8n-package-config.json",
       "schema/bundled-n8n-package.json"
     ]
   },
