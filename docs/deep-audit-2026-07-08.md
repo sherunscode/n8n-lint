@@ -25,6 +25,8 @@ REST claims.
 - GitHub repo is public, Issues are enabled, Discussions are enabled, and topics
   include `n8n`, `cli`, `ci-cd`, `validation`, `github-actions`, and
   `workflow-automation`.
+- GitHub Discussion #8 is live as the linked Q&A support/badge channel:
+  `https://github.com/sherunscode/n8n-lint/discussions/8`.
 - Three real starter issues exist and use `good first issue`.
 - Follow-up documentation issues for JSON output, README failure output, and
   batch-check design were converted into repo docs after the initial audit.
@@ -156,8 +158,9 @@ REST claims.
   rejection proof SVG is generated from an actual temporary Git commit rejected
   by the repo's real `.githooks/pre-commit` hook.
 - `npm run check:community` now enforces issue/PR template fields, contribution
-  setup, 72-hour triage target, code-of-conduct presence, and security contact
-  plus API-key boundaries.
+  setup, 72-hour triage target, code-of-conduct presence, security contact plus
+  API-key boundaries, and live GitHub Discussion #8 support/badge channel
+  proof without npm-publish, live-REST, or workflow-execution claims.
 - `npm run check:release-readiness` now enforces package-version alignment,
   pre-release npm boundaries, owner-gated publish/tag/release/posting language,
   and rollback/support documentation.

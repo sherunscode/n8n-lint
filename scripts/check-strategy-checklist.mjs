@@ -87,6 +87,7 @@ if (strategy === undefined) {
     "PR template exists",
     "CODE_OF_CONDUCT.md present",
     "`good first issue` label exists",
+    "GitHub Discussions or an equivalent",
     "Response SLA is self-imposed",
     "Repo topics/tags set on GitHub",
     "No placeholder content anywhere",
@@ -109,7 +110,6 @@ if (strategy === undefined) {
   for (const phrase of [
     "`npx n8n-lint check workflow.json` works on a clean machine",
     "Tool fails closed on TLS/certificate errors",
-    "GitHub Discussions or an equivalent",
     "Social preview image configured in repo settings",
     "Release notes on GitHub Releases",
     "npm package published and installable exactly as documented",

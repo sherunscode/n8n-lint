@@ -6,6 +6,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  discussions: read
+
 jobs:
   quality:
     runs-on: ubuntu-latest
@@ -24,6 +28,8 @@ jobs:
         run: npm ci
 
       - name: Quality
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: npm run quality
 
       - name: Dogfood GitHub Action
