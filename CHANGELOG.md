@@ -66,8 +66,8 @@
 - Added a real GitHub PR checks-tab screenshot proof plus an executable gate
   that validates proof-only PR #6, failed required `quality`, successful CodeQL,
   protected `BLOCKED` merge state, closed PR state, deleted proof branch
-  cleanup, and `main` branch protection requiring `quality` through public
-  GitHub metadata.
+  cleanup, and `main` branch protection requiring `quality` for everyone with
+  admin bypass disabled through public GitHub metadata.
 - Added an executable strategy-checklist gate that reconciles `STRATEGY.md`
   checklist status against repo proof while keeping owner/external/future gates
   unchecked.

@@ -93,7 +93,8 @@ REST claims.
   `npm run check:github-pr-gate-proof` against public PR/run metadata. The
   proof-only PR #6 had a failed required `quality` job, successful CodeQL run,
   protected `BLOCKED` merge state, closed PR state, deleted proof branch, and
-  `main` branch protection requiring `quality` for non-admins.
+  `main` branch protection requiring `quality` for everyone with admin bypass
+  disabled.
 - Architecture and support/rollback docs exist for the current MVP.
 - Dependabot is configured for npm and GitHub Actions.
 - CodeQL is configured for JavaScript/TypeScript analysis.
@@ -189,7 +190,7 @@ REST claims.
   screenshot is a real PNG asset backed by public GitHub metadata for proof-only
   PR #6, including failed required `quality`, successful CodeQL, protected
   `BLOCKED` merge state, closed PR state, deleted proof branch cleanup, and
-  `main` branch protection requiring `quality`.
+  `main` branch protection requiring `quality` with admin bypass disabled.
 - `npm run check:strategy-checklist` now enforces that `STRATEGY.md` marks only
   repo-proven checklist boxes as complete, including final human/JSON summary
   proof, and leaves owner-gated, external UI, and future live REST/release

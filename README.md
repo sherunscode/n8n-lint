@@ -89,7 +89,8 @@ same real matrix CLI and JSON output, then checked by
 - PR merge-gate proof: `docs/github-pr-merge-gate-proof.md` records a real
   GitHub PR checks-tab screenshot at `docs/assets/github-pr-merge-gate-proof.png`
   plus public run metadata for a proof-only PR where the `quality` check failed
-  and left the protected PR merge state blocked.
+  and left the protected PR merge state blocked, with admin bypass disabled on
+  the required `quality` gate.
 - Architecture visual: `docs/assets/architecture.svg` is generated from the
   package metadata, schema config, and tool metadata.
 - Badge-state visual: `docs/assets/last-verified-badges.svg` is generated from
@@ -383,7 +384,7 @@ dogfood step, tool metadata, and Marketplace boundary stay aligned.
 real PNG asset backed by public GitHub metadata for proof-only PR #6, including
 the failed required `quality` job, successful CodeQL run, protected `BLOCKED`
 merge state, closed proof PR, deleted proof branch cleanup, and `main` branch
-protection requiring `quality`.
+protection requiring `quality` for everyone with admin bypass disabled.
 
 `npm run check:strategy-checklist` checks the local strategy checklist when
 present, keeps executable repo proof aligned, and leaves owner-gated release
