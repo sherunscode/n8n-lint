@@ -12,6 +12,9 @@ const unknownCredential = JSON.parse(
   await readFile(new URL("../examples/failing-unknown-credential.json", import.meta.url), "utf8")
 );
 const deadParameter = JSON.parse(await readFile(new URL("../examples/failing-dead-parameter.json", import.meta.url), "utf8"));
+const nestedDeadParameter = JSON.parse(
+  await readFile(new URL("../examples/failing-nested-dead-parameter.json", import.meta.url), "utf8")
+);
 const staleTriggerShape = JSON.parse(
   await readFile(new URL("../examples/failing-stale-trigger-shape.json", import.meta.url), "utf8")
 );
@@ -42,6 +45,13 @@ assert(
   "dead parameter fixture should report workflow.node_parameter_unknown"
 );
 
+const nestedParameterFailure = await validateWorkflow(nestedDeadParameter, source);
+assert(!nestedParameterFailure.ok, "nested dead parameter fixture should fail bundled schema validation");
+assert(
+  nestedParameterFailure.issues.some((issue) => issue.code === "workflow.node_parameter_nested_unknown"),
+  "nested dead parameter fixture should report workflow.node_parameter_nested_unknown"
+);
+
 const triggerFailure = await validateWorkflow(staleTriggerShape, source);
 assert(!triggerFailure.ok, "stale trigger shape fixture should fail bundled schema validation");
 assert(
@@ -62,6 +72,7 @@ console.log(
         "core unknown node fixture",
         "core unknown credential fixture",
         "core dead parameter fixture",
+        "core nested dead parameter fixture",
         "core stale trigger shape fixture"
       ]
     },

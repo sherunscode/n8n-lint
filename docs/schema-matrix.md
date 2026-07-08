@@ -11,9 +11,10 @@ artifact without calling a live n8n instance.
 | `2.30.0` | `n8n@2.30.0` -> `n8n-nodes-base@2.30.0` | `packages/core/schema/bundled-n8n-package-2.30.0.json` |
 
 The artifacts are compact metadata snapshots. They store node type names,
-credential type names, top-level node parameter names, and trigger node type
-names. They do not bundle n8n runtime code, workflow contents, credentials, or
-API responses.
+credential type names, top-level node parameter names, structured nested
+collection/fixedCollection/filter parameter paths, and trigger node type names.
+They do not bundle n8n runtime code, workflow contents, credentials, or API
+responses.
 
 ## Commands
 

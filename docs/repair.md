@@ -61,7 +61,7 @@ Repair does not currently:
 - rename credentials
 - rewrite node types
 - rewire trigger connections
-- infer nested parameter shapes
+- mutate nested parameter shapes
 - use live REST schema data
 - call model APIs
 - apply changes without explicit confirmation

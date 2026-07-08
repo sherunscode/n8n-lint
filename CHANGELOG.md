@@ -8,10 +8,14 @@
 - Added fixture-backed checks for unknown node and credential types.
 - Added fixture-backed checks for dead top-level node parameters and stale
   trigger graph/type-version shapes.
+- Added fixture-backed checks for structured nested
+  collection/fixedCollection/filter parameter keys.
 - Added local quality gates, CI workflow, pre-commit hook, and project hygiene
   documents.
 - Added a reproducible `Zie619/n8n-workflows` benchmark report with exact
   pass/fail and skipped-file counts.
+- Refreshed the benchmark report after nested parameter-key validation changed
+  the pass/fail counts.
 - Added batch checks for multiple files, directories, and globs, including
   skipped-file accounting for ordinary JSON files.
 - Added local badge generation from real `check --json` output in markdown,

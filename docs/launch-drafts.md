@@ -9,10 +9,11 @@ Current verified claims:
 - CI and CodeQL are green on `main`.
 - Local package dry-runs are clean.
 - Current validator checks workflow structure, node types, credential types,
-  top-level parameters, trigger graph/type-version shape, batch inputs, badges,
-  a two-version schema matrix, and human-gated repair patches.
+  top-level parameters, structured nested collection/fixedCollection/filter
+  parameter keys, trigger graph/type-version shape, batch inputs, badges, a
+  two-version schema matrix, and human-gated repair patches.
 - Benchmark report checked 2,066 workflow inputs from `Zie619/n8n-workflows`;
-  766 passed, 1,300 failed, and 11 non-workflow JSON files were skipped.
+  762 passed, 1,304 failed, and 11 non-workflow JSON files were skipped.
 
 Do not add npm install claims until `n8n-lint` is published and a clean-machine
 registry install has passed.
@@ -23,7 +24,7 @@ I shipped the first public She Runs Code tool:
 
 `n8n-lint` checks n8n workflow JSON before it breaks in production.
 
-It already found 1,300 failing workflows in a real 2,066-workflow benchmark run.
+It already found 1,304 failing workflows in a real 2,066-workflow benchmark run.
 
 Repo: https://github.com/sherunscode/n8n-lint
 
@@ -46,8 +47,8 @@ Finding that out during production automation is the bad path.
 I ran it against `Zie619/n8n-workflows`.
 
 - 2,066 workflow inputs checked
-- 766 passed
-- 1,300 failed
+- 762 passed
+- 1,304 failed
 - 11 non-workflow JSON files skipped
 
 The report is in the repo.
@@ -79,12 +80,12 @@ I built `n8n-lint`, a TypeScript CLI for checking n8n workflow JSON in Git and
 CI.
 
 The current version validates workflow structure, bundled node and credential
-types, top-level node parameters, trigger graph/type-version shape, batch
-inputs, badge output, two pinned n8n schema artifacts, and conservative
-human-gated repair patches.
+types, top-level node parameters, structured nested collection/fixedCollection/filter
+parameter keys, trigger graph/type-version shape, batch inputs, badge output,
+two pinned n8n schema artifacts, and conservative human-gated repair patches.
 
 The launch benchmark is against `Zie619/n8n-workflows`: 2,066 workflow inputs
-checked, 766 passed, 1,300 failed, and 11 ordinary JSON files skipped. The raw
+checked, 762 passed, 1,304 failed, and 11 ordinary JSON files skipped. The raw
 report and methodology are checked into the repo.
 
 It does not execute workflows or claim live REST validation yet. It also is not
@@ -105,13 +106,14 @@ I have been running n8n in production and wanted a simple way to catch workflow
 JSON drift before it reaches users.
 
 `n8n-lint` is a CLI that checks workflow JSON for structure, unknown node types,
-unknown credential types, dead top-level parameters, and stale trigger
-graph/type-version shapes. It also has batch mode, JSON output for CI, local
-badge generation, a pinned two-version schema matrix, and conservative repair
-patches that require human approval before mutation.
+unknown credential types, dead top-level parameters, structured nested
+parameter-key drift, and stale trigger graph/type-version shapes. It also has
+batch mode, JSON output for CI, local badge generation, a pinned two-version
+schema matrix, and conservative repair patches that require human approval
+before mutation.
 
 I also ran a reproducible benchmark against `Zie619/n8n-workflows`: 2,066
-workflow inputs checked, 766 passed, 1,300 failed, and 11 non-workflow JSON
+workflow inputs checked, 762 passed, 1,304 failed, and 11 non-workflow JSON
 files skipped.
 
 Repo: https://github.com/sherunscode/n8n-lint
@@ -131,14 +133,15 @@ I built `n8n-lint`, a small open-source CLI for validating n8n workflow JSON in
 Git/CI.
 
 It currently checks structure, unknown node types, unknown credential types,
-dead top-level parameters, stale trigger shapes, batch folders, local badges,
-two pinned n8n schema artifacts, and human-gated repair patches.
+dead top-level parameters, structured nested parameter-key drift, stale trigger
+shapes, batch folders, local badges, two pinned n8n schema artifacts, and
+human-gated repair patches.
 
 I ran it against a real public workflow corpus and saved the report:
 
 - 2,066 workflow inputs checked
-- 766 passed
-- 1,300 failed
+- 762 passed
+- 1,304 failed
 - 11 ordinary JSON files skipped
 
 Repo: https://github.com/sherunscode/n8n-lint

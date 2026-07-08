@@ -11,6 +11,8 @@ const fixtureUrl = new URL("../examples/known-http-request-workflow.json", impor
 const fixture = JSON.parse(await readFile(fixtureUrl, "utf8"));
 const matrixFixtureUrl = new URL("../examples/matrix-2-30-parameter-workflow.json", import.meta.url);
 const matrixFixture = JSON.parse(await readFile(matrixFixtureUrl, "utf8"));
+const nestedFixtureUrl = new URL("../examples/failing-nested-dead-parameter.json", import.meta.url);
+const nestedFixture = JSON.parse(await readFile(nestedFixtureUrl, "utf8"));
 const snapshot = await createBundledN8nPackageSchemaSource().load();
 const matrixSnapshots = Object.fromEntries(
   await Promise.all(
@@ -31,6 +33,9 @@ const missingFixtureParameters = collectFixtureParameters(fixture).filter(
   ({ nodeType, parameterName }) => !snapshot.nodeParameterNames[nodeType]?.includes(parameterName)
 );
 const matrixFixtureParameters = collectFixtureParameters(matrixFixture);
+const nestedFixtureNodeType = nestedFixture.nodes[0].type;
+const expectedNestedPath = "options.redirect.redirect.followRedirects";
+const rejectedNestedPath = "options.redirect.redirect.notARealNestedParameter";
 const versionMismatch = snapshot.packageInfo?.version !== bundledN8nPackageSelection.packageVersion;
 const matrixVersionFailures = bundledN8nPackageVersions
   .map((packageVersion) => {
@@ -54,6 +59,14 @@ const matrixDifferenceFailures = [
     )
     .map(({ nodeType, parameterName }) => `Expected ${nodeType}.${parameterName} to be present in 2.30.0`)
 ];
+const nestedPathFailures = [
+  ...(snapshot.nodeParameterPaths[nestedFixtureNodeType]?.includes(expectedNestedPath)
+    ? []
+    : [`Expected nested path ${nestedFixtureNodeType}.${expectedNestedPath} to exist`]),
+  ...(snapshot.nodeParameterPaths[nestedFixtureNodeType]?.includes(rejectedNestedPath)
+    ? [`Expected nested path ${nestedFixtureNodeType}.${rejectedNestedPath} to be absent`]
+    : [])
+];
 const failures = [
   ...missingNodeTypes.map((nodeType) => `Missing node type ${nodeType}`),
   ...missingCredentialTypes.map((credentialType) => `Missing credential type ${credentialType}`),
@@ -66,7 +79,8 @@ const failures = [
       ]
     : []),
   ...matrixVersionFailures,
-  ...matrixDifferenceFailures
+  ...matrixDifferenceFailures,
+  ...nestedPathFailures
 ];
 
 const result = {
@@ -77,6 +91,7 @@ const result = {
   nodeTypes: snapshot.nodeTypes.length,
   credentialTypes: snapshot.credentialTypes.length,
   parameterizedNodeTypes: Object.keys(snapshot.nodeParameterNames).length,
+  nestedParameterizedNodeTypes: Object.keys(snapshot.nodeParameterPaths).length,
   triggerNodeTypes: snapshot.triggerNodeTypes.length,
   matrixArtifacts: Object.fromEntries(
     Object.entries(matrixSnapshots).map(([packageVersion, matrixSnapshot]) => [
@@ -86,6 +101,7 @@ const result = {
         nodeTypes: matrixSnapshot.nodeTypes.length,
         credentialTypes: matrixSnapshot.credentialTypes.length,
         parameterizedNodeTypes: Object.keys(matrixSnapshot.nodeParameterNames).length,
+        nestedParameterizedNodeTypes: Object.keys(matrixSnapshot.nodeParameterPaths).length,
         triggerNodeTypes: matrixSnapshot.triggerNodeTypes.length
       }
     ])
@@ -100,6 +116,12 @@ const result = {
     path: "examples/matrix-2-30-parameter-workflow.json",
     parameters: matrixFixtureParameters,
     expectedDifference: "clearWarning is absent from 2.29.6 and present in 2.30.0"
+  },
+  nestedFixture: {
+    path: "examples/failing-nested-dead-parameter.json",
+    nodeType: nestedFixtureNodeType,
+    expectedNestedPath,
+    rejectedNestedPath
   },
   failures
 };

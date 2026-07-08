@@ -48,7 +48,13 @@ interface SchemaValidationContext {
   nodeTypes?: ReadonlySet<string>;
   credentialTypes?: ReadonlySet<string>;
   nodeParameterNames?: ReadonlyMap<string, ReadonlySet<string>>;
+  nodeParameterPaths?: ReadonlyMap<string, ParameterPathNode>;
   triggerNodeTypes?: ReadonlySet<string>;
+}
+
+interface ParameterPathNode {
+  children: Map<string, ParameterPathNode>;
+  arrayItem?: ParameterPathNode;
 }
 
 interface WorkflowLike {
@@ -79,6 +85,13 @@ export async function validateWorkflow(
   if (nodeParameterEntries.length > 0) {
     schemaContext.nodeParameterNames = new Map(
       nodeParameterEntries.map(([nodeType, names]) => [nodeType, new Set(names)])
+    );
+  }
+
+  const nodeParameterPathEntries = Object.entries(snapshot.nodeParameterPaths);
+  if (nodeParameterPathEntries.length > 0) {
+    schemaContext.nodeParameterPaths = new Map(
+      nodeParameterPathEntries.map(([nodeType, paths]) => [nodeType, buildParameterPathTree(paths)])
     );
   }
 
@@ -228,6 +241,70 @@ function validateWorkflowNodeParameters(
       });
     }
   }
+
+  const parameterPathTree = schemaContext?.nodeParameterPaths?.get(nodeType);
+  if (parameterPathTree === undefined) {
+    return;
+  }
+
+  validateNestedParameterObject(node.parameters, parameterPathTree, `${path}.parameters`, issues, nodeType);
+}
+
+function validateNestedParameterObject(
+  value: Record<string, unknown>,
+  pathNode: ParameterPathNode,
+  path: string,
+  issues: ValidationIssue[],
+  nodeType: string
+): void {
+  for (const [parameterName, parameterValue] of Object.entries(value)) {
+    const childNode = pathNode.children.get(parameterName);
+    if (childNode === undefined) {
+      continue;
+    }
+
+    validateNestedParameterValue(parameterValue, childNode, `${path}.${parameterName}`, issues, nodeType);
+  }
+}
+
+function validateNestedParameterValue(
+  value: unknown,
+  pathNode: ParameterPathNode,
+  path: string,
+  issues: ValidationIssue[],
+  nodeType: string
+): void {
+  if (Array.isArray(value)) {
+    if (pathNode.arrayItem === undefined) {
+      return;
+    }
+
+    value.forEach((item, index) => validateNestedParameterValue(item, pathNode.arrayItem as ParameterPathNode, `${path}[${index}]`, issues, nodeType));
+    return;
+  }
+
+  if (!isRecord(value)) {
+    return;
+  }
+
+  if (pathNode.children.size === 0) {
+    return;
+  }
+
+  for (const [childName, childValue] of Object.entries(value)) {
+    const childNode = pathNode.children.get(childName);
+    if (childNode === undefined) {
+      issues.push({
+        severity: "error",
+        code: "workflow.node_parameter_nested_unknown",
+        message: `Unknown or dead nested parameter "${childName}" for node type "${nodeType}".`,
+        path: `${path}.${childName}`
+      });
+      continue;
+    }
+
+    validateNestedParameterValue(childValue, childNode, `${path}.${childName}`, issues, nodeType);
+  }
 }
 
 function validateWorkflowNodeCredentials(
@@ -359,6 +436,44 @@ function result(issues: ValidationIssue[], source: SchemaSourceKind): Validation
     checkedAt: new Date().toISOString(),
     source,
     issues
+  };
+}
+
+function buildParameterPathTree(paths: readonly string[]): ParameterPathNode {
+  const root = createParameterPathNode();
+  for (const path of paths) {
+    let current = root;
+    for (const segment of path.split(".").filter((item) => item.trim() !== "")) {
+      const isArraySegment = segment.endsWith("[]");
+      const key = isArraySegment ? segment.slice(0, -2) : segment;
+      if (key === "") {
+        continue;
+      }
+
+      let child = current.children.get(key);
+      if (child === undefined) {
+        child = createParameterPathNode();
+        current.children.set(key, child);
+      }
+
+      if (isArraySegment) {
+        if (child.arrayItem === undefined) {
+          child.arrayItem = createParameterPathNode();
+        }
+
+        current = child.arrayItem;
+      } else {
+        current = child;
+      }
+    }
+  }
+
+  return root;
+}
+
+function createParameterPathNode(): ParameterPathNode {
+  return {
+    children: new Map()
   };
 }
 

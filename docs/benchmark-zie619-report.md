@@ -1,6 +1,6 @@
 # Zie619 n8n-workflows Benchmark Report
 
-Generated: 2026-07-08T05:09:51.955Z
+Generated: 2026-07-08T07:24:33.452Z
 
 ## Summary
 
@@ -10,15 +10,15 @@ Generated: 2026-07-08T05:09:51.955Z
 | Source commit | `94007c1445d9258a7da116646b79473e7c7c3282` |
 | Source ref | `main` |
 | Source dirty | false |
-| n8n-lint commit | `f3107548492c598600b213968defc634616c5115` |
+| n8n-lint commit | `332ed3291de05e56001983c342c7de20d37628b9` |
 | n8n-lint ref | `main` |
-| n8n-lint dirty | false |
+| n8n-lint dirty | true |
 | JSON files discovered | 2077 |
 | Input workflows | 2066 |
-| Passed | 766 |
-| Failed | 1300 |
+| Passed | 762 |
+| Failed | 1304 |
 | Skipped non-workflow JSON | 11 |
-| Runtime | 351783.14 ms |
+| Runtime | 203128.27 ms |
 
 ## Reproduce
 
@@ -37,9 +37,9 @@ Report files:
 
 ## Methodology
 
-Discovers JSON files under workflowRoot, skips JSON that is not an n8n workflow object with a top-level nodes array, then runs n8n-lint check --json against each selected workflow using the bundled-n8n-package schema source. It validates workflow structure, bundled node and credential type names, top-level node parameter names, and trigger graph/type-version shape. This benchmark does not execute workflows and does not use live n8n REST validation.
+Discovers JSON files under workflowRoot, skips JSON that is not an n8n workflow object with a top-level nodes array, then runs n8n-lint check --json against each selected workflow using the bundled-n8n-package schema source. It validates workflow structure, bundled node and credential type names, top-level node parameter names, structured nested collection/fixedCollection parameter keys, and trigger graph/type-version shape. This benchmark does not execute workflows and does not use live n8n REST validation.
 
-The current n8n-lint validator checks workflow JSON structure, bundled n8n node type names, bundled credential type names, top-level node parameter names, and trigger graph/type-version shape. It does not execute workflows or claim live REST schema validation.
+The current n8n-lint validator checks workflow JSON structure, bundled n8n node type names, bundled credential type names, top-level node parameter names, structured nested collection/fixedCollection parameter keys, and trigger graph/type-version shape. It does not execute workflows or claim live REST schema validation.
 
 ## Failure Categories
 
@@ -50,6 +50,7 @@ Failure categories are non-exclusive: one workflow can contribute to multiple ca
 | `workflow.node_parameter_unknown` | 1088 | 2218 |
 | `workflow.credential_type_unknown` | 277 | 666 |
 | `workflow.node_type_unknown` | 129 | 377 |
+| `workflow.node_parameter_nested_unknown` | 5 | 14 |
 
 ## Skipped JSON Categories
 

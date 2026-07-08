@@ -40,6 +40,15 @@ const checks = [
     stderrIncludes: ["workflow.node_parameter_unknown", "notARealParameter"]
   },
   {
+    name: "nested dead parameter fixture fails schema validation",
+    args: [cliPath, "check", "examples/failing-nested-dead-parameter.json"],
+    exitCode: 1,
+    stderrIncludes: [
+      "workflow.node_parameter_nested_unknown",
+      "$.nodes[0].parameters.options.redirect.redirect.notARealNestedParameter"
+    ]
+  },
+  {
     name: "stale trigger shape fixture fails schema validation",
     args: [cliPath, "check", "examples/failing-stale-trigger-shape.json"],
     exitCode: 1,
@@ -207,6 +216,12 @@ const checks = [
   {
     name: "repair keeps non-repairable stale trigger failures blocked",
     args: [cliPath, "repair", "examples/failing-stale-trigger-shape.json"],
+    exitCode: 1,
+    stderrIncludes: ["No repairable issues found."]
+  },
+  {
+    name: "repair keeps nested parameter failures blocked",
+    args: [cliPath, "repair", "examples/failing-nested-dead-parameter.json"],
     exitCode: 1,
     stderrIncludes: ["No repairable issues found."]
   },

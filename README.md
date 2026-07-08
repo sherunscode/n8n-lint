@@ -7,8 +7,8 @@ Validate n8n workflow JSON before it reaches production.
 
 `n8n-lint` is the first n8nproof tool from She Runs Code. It exists because
 production n8n workflows can fail from stale node names, renamed credential
-types, dead top-level parameters, stale trigger graph shapes, and schema drift
-that static template collections do not catch.
+types, dead parameters, stale trigger graph shapes, and schema drift that static
+template collections do not catch.
 
 The project came out of ERLV Inc operating n8n in production at
 `n8n.erlvinc.com`, where minor-version workflow drift is an operator problem,
@@ -26,14 +26,16 @@ will only be documented after npm publication.
 - Current install paths: source checkout and packed local tarball only until npm
   publication.
 - Current validation: workflow structure, bundled n8n node type names, bundled
-  credential type names, top-level node parameter names, and trigger
-  graph/type-version shape.
+  credential type names, top-level node parameter names, structured nested
+  collection/fixedCollection/filter parameter keys, and trigger graph/type-version
+  shape.
 - Current schema selectors: pinned bundled artifacts for `n8n-nodes-base@2.29.6`
   and `n8n-nodes-base@2.30.0`, plus matrix mode.
 - Benchmark: `docs/benchmark-zie619-report.md` records the reproducible
   `Zie619/n8n-workflows` run and exact source commit.
 - Not claimed yet: npm registry install, live REST schema validation, workflow
-  execution, deep nested parameter validation, hosted SaaS, or marketplace.
+  execution, arbitrary custom nested parameter semantics, hosted SaaS, or
+  marketplace.
 
 ## What Works Now
 
@@ -46,6 +48,8 @@ will only be documented after npm publication.
 - Unknown node type detection.
 - Unknown or renamed credential type detection.
 - Unknown or dead top-level node parameter detection.
+- Unknown or dead structured nested parameter-key detection for bundled
+  collection, fixedCollection, and filter metadata.
 - Stale trigger graph/type-version shape detection.
 - JSON output mode for CI tooling.
 - GitHub Actions annotation output with `--format github` and action job
@@ -219,9 +223,9 @@ npm run generate:bundled-schema
 
 The generated files are `packages/core/schema/bundled-n8n-package.json` and
 `packages/core/schema/bundled-n8n-package-2.30.0.json`. They store node and
-credential type names, top-level node parameter names, and trigger node type
-names. They do not bundle n8n runtime code, integration clients, credentials,
-or workflow data.
+credential type names, top-level node parameter names, structured nested
+parameter paths, and trigger node type names. They do not bundle n8n runtime
+code, integration clients, credentials, or workflow data.
 
 ## Pre-Commit
 
@@ -257,14 +261,15 @@ Current report, generated from `Zie619/n8n-workflows` commit
 
 - JSON files discovered: 2,077.
 - Input workflows checked: 2,066.
-- Passed: 766.
-- Failed: 1,300.
+- Passed: 762.
+- Failed: 1,304.
 - Skipped non-workflow JSON files: 11.
 
 The benchmark uses the bundled `n8n-nodes-base@2.29.6` schema artifact. It does
 not execute workflows and does not claim live REST validation. The current
 validator checks workflow structure, bundled node and credential type names,
-top-level node parameter names, and trigger graph/type-version shape.
+top-level node parameter names, structured nested collection/fixedCollection/filter
+parameter keys, and trigger graph/type-version shape.
 
 ```bash
 npm run benchmark:zie619 -- <path-to-Zie619-n8n-workflows> docs/benchmark-zie619-report.json
@@ -281,7 +286,8 @@ MVP scope:
 - Pre-commit hook.
 - GitHub Action quality gate.
 - Fixture-backed validation behavior for structure, node types, credential
-  types, dead top-level parameters, and stale trigger shape.
+  types, dead top-level and structured nested parameters, and stale trigger
+  shape.
 - Pinned two-version schema matrix for bundled metadata.
 - Batch checking for repositories with multiple workflow JSON files.
 - Local static badge generation from real check results.

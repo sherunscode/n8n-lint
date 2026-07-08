@@ -4,7 +4,8 @@ Date: 2026-07-07
 
 Updated: 2026-07-08. The default remains bundled package metadata, and the repo
 now includes a pinned two-version matrix for `n8n-nodes-base@2.29.6` and
-`n8n-nodes-base@2.30.0`.
+`n8n-nodes-base@2.30.0`, with structured nested parameter-key paths in the
+checked-in artifacts.
 
 ## Decision
 
@@ -34,7 +35,8 @@ coverage is proven by a running n8n instance and reproducible command output.
   - `docker ps` -> blocked because Docker Desktop Linux engine is not running
 - Current CLI verification:
   - `npm run build` -> PASS
-  - `npm run check:example` -> PASS with `Schema source: local-placeholder` and the live-validation-not-implemented warning
+  - `npm run check:example` -> PASS with `Schema source: bundled-n8n-package`
+    and the live-REST-not-claimed warning
   - `node.exe packages/cli/dist/bin.js check examples/failing-missing-nodes.json` -> expected failure with exit code `1`
 - Bundled metadata verification:
   - Runtime source: `bundled-n8n-package`
@@ -62,8 +64,9 @@ artifacts. Current artifacts are:
   `n8n-nodes-base@2.30.0`
 
 The artifacts store node type names, credential type names, top-level node
-parameter names, and trigger node type names; they do not ship the full n8n
-runtime dependency tree.
+parameter names, structured nested collection/fixedCollection/filter parameter
+paths, and trigger node type names; they do not ship the full n8n runtime
+dependency tree.
 
 The CLI default is now `bundled-n8n-package` with `--n8n-version=2.29.6`. It
 also supports `--n8n-version=2.30.0` and `--n8n-version=matrix`. It enforces:
@@ -71,6 +74,8 @@ also supports `--n8n-version=2.30.0` and `--n8n-version=matrix`. It enforces:
 - unknown node type detection
 - unknown credential type detection
 - unknown top-level parameter detection
+- unknown structured nested collection/fixedCollection/filter parameter-key
+  detection
 - stale trigger graph/type-version detection
 - matrix compatibility differences across pinned bundled versions
 - truthful schema-source output in human and JSON modes
@@ -79,9 +84,10 @@ also supports `--n8n-version=2.30.0` and `--n8n-version=matrix`. It enforces:
 `scripts/check-cli-fixtures.mjs` prove the artifact and CLI behavior against
 positive and negative fixtures. `examples/matrix-2-30-parameter-workflow.json`
 proves that `dataTable.clearWarning` is absent from 2.29.6 and present in
-2.30.0. The live REST source remains a separate adapter and must stay labeled
-unproven until a local or owner-approved n8n instance confirms endpoint
-behavior.
+2.30.0. `examples/failing-nested-dead-parameter.json` proves nested key
+rejection for structured metadata. The live REST source remains a separate
+adapter and must stay labeled unproven until a local or owner-approved n8n
+instance confirms endpoint behavior.
 
 ## Blockers
 

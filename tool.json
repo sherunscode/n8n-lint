@@ -55,6 +55,7 @@
     "bundled node type validation",
     "bundled credential type validation",
     "top-level node parameter validation",
+    "structured nested collection/fixedCollection/filter parameter-key validation",
     "trigger graph/type-version validation",
     "batch checks",
     "two-version bundled schema matrix",

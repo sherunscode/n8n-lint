@@ -110,7 +110,7 @@ async function generateArtifact(version) {
       .filter((entry) => entry !== undefined);
 
     const artifact = {
-      schemaVersion: 2,
+      schemaVersion: 3,
       generatedAt: new Date().toISOString(),
       source: "bundled-n8n-package",
       package: {
@@ -135,6 +135,7 @@ async function generateArtifact(version) {
           .filter((name) => name !== undefined)
       ),
       nodeParameterNames: buildNodeParameterNameMap(nodeEntries),
+      nodeParameterPaths: buildNodeParameterPathMap(nodeEntries),
       triggerNodeTypes: uniqueSorted(
         nodeEntries
           .filter((entry) => isTriggerNodeDefinition(entry.definition))
@@ -156,6 +157,7 @@ async function generateArtifact(version) {
       nodeTypes: artifact.nodeTypes.length,
       credentialTypes: artifact.credentialTypes.length,
       parameterizedNodeTypes: Object.keys(artifact.nodeParameterNames).length,
+      nestedParameterizedNodeTypes: Object.keys(artifact.nodeParameterPaths).length,
       triggerNodeTypes: artifact.triggerNodeTypes.length,
       packageRootSource: packageRootContext.source
     };
@@ -260,11 +262,99 @@ function collectTopLevelParameterNames(definition) {
   );
 }
 
+function collectParameterPaths(definition) {
+  if (!definition || typeof definition !== "object" || !Array.isArray(definition.properties)) {
+    return [];
+  }
+
+  return uniqueSorted(definition.properties.flatMap((property) => collectPropertyPaths(property)));
+}
+
+function collectPropertyPaths(property) {
+  const name = readPropertyName(property);
+  if (name === undefined) {
+    return [];
+  }
+
+  const childPaths = collectChildPropertyPaths(property).map((childPath) => `${name}.${childPath}`);
+  return [name, ...childPaths];
+}
+
+function collectChildPropertyPaths(property) {
+  if (!property || typeof property !== "object") {
+    return [];
+  }
+
+  if (property.type === "filter") {
+    return [
+      "combinator",
+      "conditions[]",
+      "options",
+      "options.caseSensitive",
+      "options.leftValue",
+      "options.typeValidation",
+      "options.version"
+    ];
+  }
+
+  if (!Array.isArray(property.options)) {
+    return [];
+  }
+
+  if (property.type === "collection") {
+    return uniqueSorted(property.options.flatMap((option) => collectPropertyPaths(option)));
+  }
+
+  if (property.type === "fixedCollection") {
+    const allowsMultiple = property.typeOptions?.multipleValues === true;
+    return uniqueSorted(
+      property.options.flatMap((option) => {
+        const optionName = readPropertyName(option);
+        if (optionName === undefined) {
+          return [];
+        }
+
+        const optionSegment = allowsMultiple ? `${optionName}[]` : optionName;
+        const valuePaths = Array.isArray(option.values)
+          ? option.values.flatMap((value) => collectPropertyPaths(value)).map((valuePath) => `${optionSegment}.${valuePath}`)
+          : [];
+        return [optionSegment, ...valuePaths];
+      })
+    );
+  }
+
+  return [];
+}
+
+function readPropertyName(property) {
+  if (!property || typeof property !== "object" || typeof property.name !== "string") {
+    return undefined;
+  }
+
+  const name = property.name.trim();
+  return name === "" ? undefined : name;
+}
+
 function buildNodeParameterNameMap(nodeEntries) {
   const merged = new Map();
   for (const entry of nodeEntries) {
     const current = merged.get(entry.name) ?? [];
     merged.set(entry.name, [...current, ...collectTopLevelParameterNames(entry.definition)]);
+  }
+
+  return Object.fromEntries(
+    [...merged.entries()]
+      .map(([name, parameters]) => [name, uniqueSorted(parameters)])
+      .filter(([, parameters]) => parameters.length > 0)
+      .sort(([left], [right]) => left.localeCompare(right))
+  );
+}
+
+function buildNodeParameterPathMap(nodeEntries) {
+  const merged = new Map();
+  for (const entry of nodeEntries) {
+    const current = merged.get(entry.name) ?? [];
+    merged.set(entry.name, [...current, ...collectParameterPaths(entry.definition)]);
   }
 
   return Object.fromEntries(

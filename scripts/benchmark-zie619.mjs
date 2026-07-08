@@ -49,7 +49,7 @@ for (const workflowFile of workflowFiles) {
 const report = {
   benchmark: "Zie619/n8n-workflows",
   methodology:
-    "Discovers JSON files under workflowRoot, skips JSON that is not an n8n workflow object with a top-level nodes array, then runs n8n-lint check --json against each selected workflow using the bundled-n8n-package schema source. It validates workflow structure, bundled node and credential type names, top-level node parameter names, and trigger graph/type-version shape. This benchmark does not execute workflows and does not use live n8n REST validation.",
+    "Discovers JSON files under workflowRoot, skips JSON that is not an n8n workflow object with a top-level nodes array, then runs n8n-lint check --json against each selected workflow using the bundled-n8n-package schema source. It validates workflow structure, bundled node and credential type names, top-level node parameter names, structured nested collection/fixedCollection parameter keys, and trigger graph/type-version shape. This benchmark does not execute workflows and does not use live n8n REST validation.",
   workflowRoot,
   command: {
     cwd: repoRoot,
@@ -278,7 +278,7 @@ Report files:
 
 ${report.methodology}
 
-The current n8n-lint validator checks workflow JSON structure, bundled n8n node type names, bundled credential type names, top-level node parameter names, and trigger graph/type-version shape. It does not execute workflows or claim live REST schema validation.
+The current n8n-lint validator checks workflow JSON structure, bundled n8n node type names, bundled credential type names, top-level node parameter names, structured nested collection/fixedCollection parameter keys, and trigger graph/type-version shape. It does not execute workflows or claim live REST schema validation.
 
 ## Failure Categories
 

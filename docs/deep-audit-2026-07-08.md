@@ -6,8 +6,9 @@ Audited the She Runs Code `n8n-lint` repo at `C:\dev\Stars` and public GitHub
 state for `sherunscode/n8n-lint`.
 
 This audit verifies the current local MVP. It does not mark npm publication,
-tags/releases, public launch posting, live REST validation, deep nested
-parameter validation, marketplace publication, or hosted surfaces as complete.
+tags/releases, public launch posting, live REST validation, arbitrary custom
+nested parameter semantics, marketplace publication, or hosted surfaces as
+complete.
 
 ## Verdict
 
@@ -54,7 +55,7 @@ REST claims.
   metadata check, core fixture tests, CLI fixture tests, production dependency
   audit, and packed-install smoke.
 - Package dry-runs reviewed:
-  - `@n8nproof/core@0.0.0`: 11 files, 57.2 kB package, includes `dist` and
+  - `@n8nproof/core@0.0.0`: 11 files, 204.4 kB package, includes `dist` and
     compact schema artifacts only.
   - `n8n-lint@0.0.0`: 6 files, 15.6 kB package, includes `dist` only plus
     package metadata, README, and LICENSE.
@@ -74,6 +75,8 @@ Current checked behavior:
 - Unknown node type detection.
 - Unknown or renamed credential type detection.
 - Unknown or dead top-level node parameter detection.
+- Unknown or dead structured nested parameter-key detection for bundled
+  collection, fixedCollection, and filter metadata.
 - Stale trigger graph/type-version shape detection.
 - Stable `--json` output mode.
 - GitHub annotation output with native `::error`, `::warning`, and `::notice`
@@ -103,6 +106,7 @@ Fixture coverage includes:
 - `examples/failing-unknown-node.json`
 - `examples/failing-unknown-credential.json`
 - `examples/failing-dead-parameter.json`
+- `examples/failing-nested-dead-parameter.json`
 - `examples/failing-stale-trigger-shape.json`
 - `examples/not-a-workflow.json`
 - `examples/badge-batch-result.json`
@@ -110,18 +114,18 @@ Fixture coverage includes:
 
 ## Benchmark Proof
 
-Clean rerun completed against `Zie619/n8n-workflows`.
+Rerun completed against `Zie619/n8n-workflows`.
 
 - Benchmark source commit:
   `94007c1445d9258a7da116646b79473e7c7c3282`
 - Benchmark source dirty: `false`
 - n8n-lint source commit used for benchmark:
-  `f3107548492c598600b213968defc634616c5115`
-- n8n-lint source dirty: `false`
+  `332ed3291de05e56001983c342c7de20d37628b9`
+- n8n-lint source dirty: `true`
 - JSON files discovered: 2,077
 - Workflow inputs checked: 2,066
-- Passed: 766
-- Failed: 1,300
+- Passed: 762
+- Failed: 1,304
 - Skipped non-workflow JSON: 11
 
 Report artifacts:
@@ -137,7 +141,8 @@ These are intentionally not complete:
 - Semver tag and GitHub release.
 - GitHub Action Marketplace listing.
 - Live REST schema validation.
-- Deep nested parameter-shape validation beyond top-level bundled metadata.
+- Arbitrary custom nested parameter semantics beyond bundled structured
+  collection/fixedCollection/filter metadata.
 - README GIF/screenshots and social preview image.
 - Public X, Reddit, HN, or n8n forum launch posts.
 - Broader repair transforms for credential renames, node rewrites, trigger

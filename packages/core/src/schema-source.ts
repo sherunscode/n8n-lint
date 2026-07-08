@@ -31,6 +31,7 @@ export interface SchemaSnapshot {
   nodeTypes: readonly string[];
   credentialTypes: readonly string[];
   nodeParameterNames: Readonly<Record<string, readonly string[]>>;
+  nodeParameterPaths: Readonly<Record<string, readonly string[]>>;
   triggerNodeTypes: readonly string[];
   nodes: readonly SchemaEntityMetadata[];
   credentials: readonly SchemaEntityMetadata[];
@@ -106,6 +107,7 @@ export function createLocalPlaceholderSchemaSource(): SchemaSource {
         nodeTypes: [],
         credentialTypes: [],
         nodeParameterNames: {},
+        nodeParameterPaths: {},
         triggerNodeTypes: [],
         nodes: [],
         credentials: [],
@@ -148,6 +150,7 @@ export function createBundledN8nPackageSchemaSource(config: BundledN8nPackageSch
         nodeTypes: nodes.map((definition) => definition.name),
         credentialTypes: credentials.map((definition) => definition.name),
         nodeParameterNames: artifact.nodeParameterNames,
+        nodeParameterPaths: artifact.nodeParameterPaths,
         triggerNodeTypes: artifact.triggerNodeTypes,
         nodes,
         credentials,
@@ -176,6 +179,7 @@ export function createLiveRestSchemaSource(config: LiveRestSchemaSourceConfig): 
         nodeTypes: [],
         credentialTypes: [],
         nodeParameterNames: {},
+        nodeParameterPaths: {},
         triggerNodeTypes: [],
         nodes: [],
         credentials: [],
@@ -193,13 +197,14 @@ export function isBundledN8nPackageVersion(value: string): value is BundledN8nPa
 }
 
 interface BundledSchemaArtifact {
-  schemaVersion: 1 | 2;
+  schemaVersion: 1 | 2 | 3;
   generatedAt: string;
   package: SchemaPackageInfo;
   selection: BundledN8nPackageSelection;
   nodeTypes: string[];
   credentialTypes: string[];
   nodeParameterNames: Record<string, string[]>;
+  nodeParameterPaths: Record<string, string[]>;
   triggerNodeTypes: string[];
 }
 
@@ -216,10 +221,12 @@ async function readBundledSchemaArtifact(filePath: string): Promise<BundledSchem
   const credentialTypes = readStringArray(parsed.credentialTypes, "credentialTypes", filePath);
   const nodeParameterNames =
     parsed.schemaVersion === 1 ? {} : readStringArrayRecord(parsed.nodeParameterNames, "nodeParameterNames", filePath);
+  const nodeParameterPaths =
+    parsed.schemaVersion === 3 ? readStringArrayRecord(parsed.nodeParameterPaths, "nodeParameterPaths", filePath) : {};
   const triggerNodeTypes =
     parsed.schemaVersion === 1 ? [] : readStringArray(parsed.triggerNodeTypes, "triggerNodeTypes", filePath);
 
-  if (parsed.schemaVersion !== 1 && parsed.schemaVersion !== 2) {
+  if (parsed.schemaVersion !== 1 && parsed.schemaVersion !== 2 && parsed.schemaVersion !== 3) {
     throw new Error(`Unsupported bundled n8n schema artifact version at ${filePath}.`);
   }
 
@@ -235,6 +242,7 @@ async function readBundledSchemaArtifact(filePath: string): Promise<BundledSchem
     nodeTypes,
     credentialTypes,
     nodeParameterNames,
+    nodeParameterPaths,
     triggerNodeTypes
   };
 }

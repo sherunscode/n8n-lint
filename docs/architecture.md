@@ -20,7 +20,8 @@ tests, and packaging.
 2. The selected schema source loads one schema snapshot, or matrix mode loads
    all pinned bundled snapshots.
 3. The core validator checks structure, node type names, credential type names,
-   top-level node parameter names, and trigger graph/type-version shape.
+   top-level node parameter names, structured nested collection/fixedCollection/filter
+   parameter keys, and trigger graph/type-version shape.
 4. The CLI prints human or JSON output.
 5. Optional badge generation consumes real `check --json` output and renders
    markdown, JSON, or static SVG.
@@ -49,6 +50,7 @@ The bundled artifact stores compact metadata only:
 - node type names
 - credential type names
 - top-level node parameter names
+- structured nested collection/fixedCollection/filter parameter paths
 - trigger node type names
 
 It does not bundle n8n runtime code, integration clients, workflow contents,
@@ -89,5 +91,5 @@ not add a hosted runtime surface.
 Human-gated repair builds on the same core validator instead of creating
 separate detection logic. The current repair transform removes only
 schema-proven unknown top-level node parameters. It does not rename credentials,
-rewrite node types, rewire triggers, infer nested parameter shapes, use live
+rewrite node types, rewire triggers, mutate nested parameter shapes, use live
 REST schema data, or call model APIs.

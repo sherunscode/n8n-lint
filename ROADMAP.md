@@ -9,8 +9,9 @@ Verified:
 
 - `n8n-lint check <workflow.json>` validates workflow structure.
 - Bundled compact schema artifact rejects unknown node and credential types.
-- Bundled compact schema artifact rejects unknown top-level node parameters and
-  stale trigger graph/type-version shapes.
+- Bundled compact schema artifact rejects unknown top-level node parameters,
+  structured nested collection/fixedCollection/filter parameter keys, and stale
+  trigger graph/type-version shapes.
 - CLI output truthfully labels `bundled-n8n-package` or `local-placeholder`.
 - GitHub Actions annotation output is available through `--format github`.
 - Local quality gates prove build, fixtures, tests, and production dependency
@@ -38,7 +39,8 @@ Still gated or unproven:
 - Owner-side GitHub mutations such as tag pushes and releases.
 - GitHub Action Marketplace listing.
 - Live REST schema validation from a running n8n instance.
-- Deep nested parameter-shape validation beyond top-level bundled metadata.
+- Arbitrary custom nested parameter semantics beyond the bundled structured
+  collection/fixedCollection/filter metadata.
 - Hosted SaaS, dashboard, MCP server, marketplace, or a second product.
 
 ## V0 Launch Closure
@@ -106,6 +108,8 @@ Gate:
 - Fixture coverage proves a top-level parameter difference across two pinned
   versions: `dataTable.clearWarning` is absent from 2.29.6 and present in
   2.30.0.
+- Fixture coverage proves structured nested parameter-key validation with
+  `examples/failing-nested-dead-parameter.json`.
 
 ### V1.4 Human-Gated Auto-Repair - Done Locally
 

@@ -24,6 +24,7 @@ await expectFile(".github/ISSUE_TEMPLATE/config.yml");
 await expectFile("action.yml");
 await expectFile("docs/ci-setup.md");
 await expectFile("examples/pre-commit-setup/.pre-commit-config.yaml");
+await expectFile("examples/failing-nested-dead-parameter.json");
 await expectFile("scripts/smoke-packed-install.mjs");
 
 if (failures.length > 0) {
@@ -40,6 +41,7 @@ console.log(
         "action.yml",
         "docs/ci-setup.md",
         "examples/pre-commit-setup/.pre-commit-config.yaml",
+        "examples/failing-nested-dead-parameter.json",
         "scripts/smoke-packed-install.mjs"
       ]
     },
