@@ -36,6 +36,8 @@ REST claims.
 - Human-gated repair mode is implemented for schema-proven unknown top-level
   parameters, emits patches by default, and requires `--apply --confirm` before
   mutating workflow files.
+- Owner-review launch drafts exist under `docs/launch-drafts.md` and are based
+  only on verified repo, CI, package, and benchmark proof.
 - Architecture and support/rollback docs exist for the current MVP.
 - Dependabot is configured for npm and GitHub Actions.
 - CodeQL is configured for JavaScript/TypeScript analysis.
@@ -80,6 +82,8 @@ Current checked behavior:
 - `docs/schema-matrix.md` documents pinned schema artifacts and matrix behavior.
 - `docs/repair.md` documents diff-only repair behavior and apply confirmation
   rules.
+- `docs/launch-drafts.md` contains unposted launch copy with owner-review and
+  no-npm-claim gates.
 
 Fixture coverage includes:
 

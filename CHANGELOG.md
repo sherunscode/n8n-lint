@@ -20,5 +20,7 @@
   and `n8n-nodes-base@2.30.0`.
 - Added human-gated repair patches for schema-proven unknown top-level
   parameters, with mutation blocked unless `--apply --confirm` is supplied.
+- Added owner-review launch drafts grounded in the benchmark, CI, and package
+  dry-run proof, without posting or claiming npm publication.
 - Added publishable package metadata, package README files, and an owner-gated
   npm release checklist.

@@ -230,6 +230,7 @@ See `docs/pre-commit.md`.
 - `docs/schema-matrix.md`: pinned schema artifacts and matrix compatibility
   reporting.
 - `docs/repair.md`: diff-only repair behavior and apply confirmation rules.
+- `docs/launch-drafts.md`: owner-review launch copy grounded in current proof.
 - `docs/support-rollback.md`: first-48-hours support and rollback plan for an
   owner-approved launch.
 
