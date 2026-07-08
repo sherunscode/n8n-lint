@@ -47,6 +47,9 @@
 - Added a checked draft GitHub Release note for v0.1.0 plus an executable gate
   that reconciles it against owner gates, benchmark counts, release proof, and
   current non-claims.
+- Added a checked v0.1.0 release command plan plus an executable gate that
+  proves the owner-gated publish, single-tag release, registry smoke, forbidden
+  command, and rollback path stays deterministic before public launch.
 - Added an executable live REST boundary gate that keeps live validation
   unclaimed, blocks public CLI exposure, and proves the internal placeholder
   does not echo API-key material, while enforcing encrypted GitHub Actions

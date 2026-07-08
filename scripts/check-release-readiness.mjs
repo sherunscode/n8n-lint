@@ -11,6 +11,7 @@ const readme = await readText("README.md");
 const changelog = await readText("CHANGELOG.md");
 const releaseChecklist = await readText("docs/release-checklist.md");
 const releaseNotesDraft = await readText("docs/release-notes-v0.1.0-draft.md");
+const releaseCommandPlan = await readText("docs/release-command-plan-v0.1.0.md");
 const launchContentPack = await readText("docs/launch-content-pack.md");
 const launchDrafts = await readText("docs/launch-drafts.md");
 const supportRollback = await readText("docs/support-rollback.md");
@@ -69,6 +70,7 @@ for (const phrase of [
   "prefer npm provenance through OIDC",
   "npm run quality",
   "npm run check:release-notes",
+  "Run `npm run check:release-command-plan` before publish approval.",
   "npm run smoke:pack",
   "npm pack --workspace packages/core --dry-run",
   "npm pack --workspace packages/cli --dry-run",
@@ -89,6 +91,21 @@ for (const phrase of [
   "Publish `@n8nproof/core` first, then `n8n-lint`."
 ]) {
   expect(hasPhrase(releaseNotesDraft, phrase), `release notes draft must include: ${phrase}`);
+}
+
+for (const phrase of [
+  "Status: dry-run command contract only.",
+  "This plan does not grant permission to publish, tag, create a GitHub Release, or post launch copy.",
+  "Stop immediately if any of these are true:",
+  "Owner approval for the exact release version is missing.",
+  "npm run check:release-command-plan",
+  "npm publish --workspace packages/core --access public",
+  "npm publish --workspace packages/cli",
+  "git push origin v0.1.0",
+  "Do not update README with registry-backed `npx` instructions until this smoke passes.",
+  "Prefer a patch release over unpublish."
+]) {
+  expect(hasPhrase(releaseCommandPlan, phrase), `release command plan must include: ${phrase}`);
 }
 
 expect(
@@ -194,6 +211,7 @@ console.log(
         "CHANGELOG unreleased heading",
         "release checklist owner gates",
         "draft release notes owner gates",
+        "release command plan owner gates",
         "launch content owner gates",
         "animated demo freshness gate",
         "terminal output demo freshness gate",
