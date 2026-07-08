@@ -1,16 +1,18 @@
 # n8n-lint
 
+[![CI](https://github.com/sherunscode/n8n-lint/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/sherunscode/n8n-lint/actions/workflows/ci.yml)
+
 Validate n8n workflow JSON before it reaches production.
 
 `n8n-lint` is the first n8nproof tool from She Runs Code. It exists because
 production n8n workflows can fail from stale node names, renamed credential
 types, and schema drift that static template collections do not catch.
 
-This repository is still a local MVP. It is not published to npm yet, has not
-run a public benchmark yet, and does not claim live REST schema validation yet.
-Today the verified paths are a source checkout and a packed local tarball
-install; registry-backed `npx n8n-lint` usage will only be documented after npm
-publication.
+This repository is still a local MVP. It is not published to npm yet and does
+not claim live REST schema validation yet. Today the verified paths are a source
+checkout, a packed local tarball install, and a reproducible local benchmark
+report against `Zie619/n8n-workflows`; registry-backed `npx n8n-lint` usage
+will only be documented after npm publication.
 
 ## What Works Now
 
@@ -24,6 +26,8 @@ publication.
 - Local quality gates for build, fixtures, tests, and production dependency
   audit.
 - Packed-package install smoke test for the publishable core and CLI workspaces.
+- Reproducible `Zie619/n8n-workflows` benchmark report with exact pass/fail and
+  skipped-file counts.
 
 ## Quickstart
 
@@ -107,6 +111,16 @@ shipping dependency gate stays clean. The pinned `n8n-nodes-base` package is a
 dev-time generator input only; it is not a runtime dependency of the core or CLI
 packages.
 
+## Release Gate
+
+The publishable workspaces are `@n8nproof/core` and `n8n-lint`. The CLI depends
+on the core package at the same exact version, so publish `@n8nproof/core`
+first and `n8n-lint` second after owner approval.
+
+See `docs/release-checklist.md` for versioning, npm auth, provenance, tag,
+GitHub release, fresh-install smoke, and rollback steps. Actual npm publish,
+GitHub tag push, and GitHub release creation remain owner-gated.
+
 ## Schema Artifact
 
 Refresh the compact schema artifact only when intentionally changing the pinned
@@ -128,17 +142,30 @@ git config core.hooksPath .githooks
 
 See `docs/pre-commit.md`.
 
-## Benchmark Harness
+## Benchmark Report
 
-The benchmark harness is present but no public benchmark number has been run or
-claimed.
+The real `Zie619/n8n-workflows` benchmark report is checked in at
+`docs/benchmark-zie619-report.md`, with raw per-workflow results in
+`docs/benchmark-zie619-report.json`.
+
+Current report, generated from `Zie619/n8n-workflows` commit
+`94007c1445d9258a7da116646b79473e7c7c3282`:
+
+- JSON files discovered: 2,077.
+- Input workflows checked: 2,066.
+- Passed: 1,703.
+- Failed: 363.
+- Skipped non-workflow JSON files: 11.
+
+The benchmark uses the bundled `n8n-nodes-base@2.29.6` schema artifact. It does
+not execute workflows and does not claim live REST validation.
 
 ```bash
 npm run benchmark:zie619 -- <path-to-Zie619-n8n-workflows> docs/benchmark-zie619-report.json
 ```
 
-Do not publish benchmark claims without the generated report and reproducible
-command output.
+Do not publish benchmark claims unless they match the generated report and
+reproducible command output exactly.
 
 ## Scope Boundaries
 

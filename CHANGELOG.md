@@ -8,3 +8,7 @@
 - Added fixture-backed checks for unknown node and credential types.
 - Added local quality gates, CI workflow, pre-commit hook, and project hygiene
   documents.
+- Added a reproducible `Zie619/n8n-workflows` benchmark report with exact
+  pass/fail and skipped-file counts.
+- Added publishable package metadata, package README files, and an owner-gated
+  npm release checklist.

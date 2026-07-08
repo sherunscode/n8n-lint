@@ -1,13 +1,37 @@
 {
   "name": "@n8nproof/core",
   "version": "0.0.0",
+  "description": "Core workflow validation library for n8n-lint.",
   "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sherunscode/n8n-lint.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/sherunscode/n8n-lint/issues"
+  },
+  "homepage": "https://github.com/sherunscode/n8n-lint/tree/main/packages/core#readme",
+  "keywords": [
+    "n8n",
+    "workflow",
+    "validation",
+    "schema",
+    "ci"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist",
     "schema"
   ],
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
