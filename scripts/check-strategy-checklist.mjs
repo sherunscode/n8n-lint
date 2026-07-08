@@ -62,6 +62,7 @@ if (strategy === undefined) {
     "At least one example `workflow.json` fixture is committed",
     "GitHub Action demo path exists through `/examples`",
     "All demo assets are hosted in-repo",
+    "Architecture diagram",
     "Demo commands and checked assets are re-verified",
     "n8n API key material is never logged",
     "API keys are not accepted as bare CLI arguments",

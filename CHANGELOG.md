@@ -45,7 +45,8 @@
   owner-gated publish/tag/release/posting language, and rollback/support docs.
 - Added an executable live REST boundary gate that keeps live validation
   unclaimed, blocks public CLI exposure, and proves the internal placeholder
-  does not echo API-key material.
+  does not echo API-key material, while enforcing encrypted GitHub Actions
+  secret examples for future live REST credentials.
 - Added an executable launch-content gate that ties public copy to owner gates,
   real-growth rules, benchmark proof, and current non-claims.
 - Added an executable benchmark-report gate that reconciles the raw JSON,
@@ -62,6 +63,8 @@
   proves it still matches real CLI output and preserves the live REST boundary.
 - Added a generated social-preview SVG plus an executable visual proof gate that
   ties it to the current benchmark, schema config, and repo metadata.
+- Added a generated architecture SVG plus an executable visual proof gate that
+  ties it to package metadata, schema config, and tool metadata.
 - Added an executable deep-audit report gate that catches stale package counts,
   missing quality gates, and missing owner-gated release blockers.
 - Added an executable status-doc gate that keeps local build-loop status notes

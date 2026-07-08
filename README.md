@@ -44,9 +44,13 @@ output and checked by `npm run check:animated-demo`.
   `Zie619/n8n-workflows` run and exact source commit.
 - Launch visual: `docs/assets/social-preview.svg` is generated from the checked
   benchmark, schema config, and repo metadata.
+- Architecture visual: `docs/assets/architecture.svg` is generated from the
+  package metadata, schema config, and tool metadata.
 - Not claimed yet: npm registry install, live REST schema validation, workflow
   execution, arbitrary custom nested parameter semantics, hosted SaaS, or
   marketplace.
+
+![Generated n8n-lint architecture diagram](docs/assets/architecture.svg)
 
 ## What Works Now
 
@@ -301,6 +305,10 @@ error plus live REST non-claim warning.
 from the current benchmark report, bundled schema config, and canonical repo
 metadata while preserving npm and live REST non-claim boundaries.
 
+`npm run check:architecture-diagram` proves the README architecture diagram is
+generated from package metadata, schema config, and tool metadata while
+preserving the live REST non-claim boundary.
+
 `npm run check:audit-report` proves the deep-audit report keeps the current
 verdicts, package dry-run counts, quality gate list, remaining gates, and README
 demo proof aligned with executable repo artifacts.
@@ -371,7 +379,8 @@ See `docs/pre-commit.md`.
 ## Design Notes
 
 - `docs/architecture.md`: package boundaries, schema source design, and current
-  validation contract.
+  validation contract, with generated diagram proof in
+  `docs/assets/architecture.svg`.
 - `docs/json-output.md`: stable JSON output contract for CI tooling.
 - `docs/exit-codes.md`: executable exit-code contract for CI tooling.
 - `docs/batch-check-design.md`: batch-check behavior and V1.1 proof gates.

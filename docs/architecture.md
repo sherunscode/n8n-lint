@@ -3,12 +3,17 @@
 `n8n-lint` is a single-purpose TypeScript CLI plus a small core validation
 library. The current local MVP is intentionally stateless and file-based.
 
+The generated README diagram lives at `docs/assets/architecture.svg`. It is
+rendered from `package.json`, `tool.json`, and
+`packages/core/schema/bundled-n8n-package-config.json`, then checked by
+`npm run check:architecture-diagram`.
+
 ## Packages
 
-| Package | Role |
-|---|---|
+| Package          | Role                                                |
+| ---------------- | --------------------------------------------------- |
 | `@n8nproof/core` | Loads schema snapshots and validates workflow JSON. |
-| `n8n-lint` | CLI wrapper around the core validator. |
+| `n8n-lint`       | CLI wrapper around the core validator.              |
 
 The root package is private and exists only to coordinate workspace scripts,
 tests, and packaging.
@@ -32,17 +37,17 @@ tests, and packaging.
 
 ## Schema Sources
 
-| Source | Status | Purpose |
-|---|---|---|
-| `bundled-n8n-package` | Current default | Uses compact metadata generated from pinned `n8n-nodes-base` packages. |
-| `local-placeholder` | Test/adapter path | Structure-only validation with an explicit warning. |
-| `live-rest` | Research lane | Exists as a non-claiming placeholder until endpoint proof exists. |
+| Source                | Status            | Purpose                                                                |
+| --------------------- | ----------------- | ---------------------------------------------------------------------- |
+| `bundled-n8n-package` | Current default   | Uses compact metadata generated from pinned `n8n-nodes-base` packages. |
+| `local-placeholder`   | Test/adapter path | Structure-only validation with an explicit warning.                    |
+| `live-rest`           | Research lane     | Exists as a non-claiming placeholder until endpoint proof exists.      |
 
 Pinned bundled artifacts:
 
-| Selector | Package | Artifact |
-|---|---|---|
-| `2.29.6` | `n8n-nodes-base@2.29.6` | `packages/core/schema/bundled-n8n-package.json` |
+| Selector | Package                 | Artifact                                               |
+| -------- | ----------------------- | ------------------------------------------------------ |
+| `2.29.6` | `n8n-nodes-base@2.29.6` | `packages/core/schema/bundled-n8n-package.json`        |
 | `2.30.0` | `n8n-nodes-base@2.30.0` | `packages/core/schema/bundled-n8n-package-2.30.0.json` |
 
 Pinned package selections are centralized in

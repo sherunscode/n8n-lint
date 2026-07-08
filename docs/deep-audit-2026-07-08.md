@@ -58,6 +58,9 @@ REST claims.
 - Launch/social preview asset `docs/assets/social-preview.svg` is generated
   from the current benchmark report, bundled schema config, and canonical repo
   metadata, then checked by `npm run check:social-preview`.
+- Architecture diagram asset `docs/assets/architecture.svg` is generated from
+  package metadata, bundled schema config, and tool metadata, then checked by
+  `npm run check:architecture-diagram`.
 - Launch content pack and drafts are evidence-mapped, owner-gated,
   real-growth-only, benchmark-aligned, and checked by
   `npm run check:launch-content`.
@@ -77,9 +80,9 @@ REST claims.
   `check:release-readiness`, `check:live-rest-boundary`,
   `check:launch-content`, `check:benchmark-report`, `check:github-action`,
   `check:strategy-checklist`, `check:readme-demo`, `check:animated-demo`,
-  `check:social-preview`, `check:audit-report`, `check:status-docs`,
-  `check:metadata`, `check:security`, `check:docs`, `check:pack`,
-  `check:claims`, `check:links`,
+  `check:social-preview`, `check:architecture-diagram`, `check:audit-report`,
+  `check:status-docs`, `check:metadata`, `check:security`, `check:docs`,
+  `check:pack`, `check:claims`, `check:links`,
   `check:exit-codes`, core fixture tests, CLI fixture tests, production
   dependency audit, and packed-install smoke.
 - Package dry-runs reviewed:
@@ -151,6 +154,9 @@ REST claims.
   is generated from the current benchmark report, bundled schema config, and
   canonical repo metadata while preserving npm and live REST non-claim
   boundaries.
+- `npm run check:architecture-diagram` now enforces that the architecture SVG is
+  generated from package metadata, bundled schema config, and tool metadata
+  while preserving the live REST non-claim boundary.
 - `npm run check:audit-report` now enforces that this audit report retains the
   conditional/no-go verdicts, current package dry-run counts, quality gate list,
   owner-gated remaining items, and README demo proof.
@@ -197,6 +203,8 @@ Current checked behavior:
 - `docs/ci-setup.md` documents future live REST API-key handling through
   GitHub Actions encrypted secrets while preserving the current live REST
   non-claim.
+- `docs/assets/architecture.svg` provides a generated architecture diagram for
+  the README.
 - `docs/badge-output.md` documents badge formats and status rules.
 - `docs/schema-matrix.md` documents pinned schema artifacts and matrix behavior.
 - `docs/repair.md` documents diff-only repair behavior and apply confirmation
@@ -251,8 +259,8 @@ These are intentionally not complete:
 - Live REST schema validation.
 - Arbitrary custom nested parameter semantics beyond bundled structured
   collection/fixedCollection/filter metadata.
-- Additional video/GIF captures beyond the checked README, animated demo, and
-  social preview SVG assets.
+- Additional video/GIF captures beyond the checked README, animated demo, social
+  preview, and architecture SVG assets.
 - Public X, Reddit, HN, or n8n forum launch posts.
 - Broader repair transforms for credential renames, node rewrites, trigger
   rewiring, and nested parameter-shape changes.

@@ -23,6 +23,7 @@ const requiredQualityGates = [
   "check:readme-demo",
   "check:animated-demo",
   "check:social-preview",
+  "check:architecture-diagram",
   "check:audit-report",
   "check:status-docs",
   "check:metadata",
@@ -46,6 +47,8 @@ expect(audit.includes("docs/assets/animated-failure-demo.svg"), "audit must ment
 expect(audit.includes("npm run check:animated-demo"), "audit must mention the animated demo checker");
 expect(audit.includes("docs/assets/social-preview.svg"), "audit must mention the checked social preview asset");
 expect(audit.includes("npm run check:social-preview"), "audit must mention the social preview checker");
+expect(audit.includes("docs/assets/architecture.svg"), "audit must mention the checked architecture diagram asset");
+expect(audit.includes("npm run check:architecture-diagram"), "audit must mention the architecture diagram checker");
 expect(audit.includes("npm run check:release-readiness"), "audit must mention the release-readiness checker");
 expect(audit.includes("npm run check:cli-output"), "audit must mention the CLI output checker");
 expect(audit.includes("final JSON summary"), "audit must mention final JSON summary proof");
@@ -75,9 +78,9 @@ for (const pack of [runPack("packages/core"), runPack("packages/cli")]) {
 expect(
   hasPhrase(
     audit,
-    "Additional video/GIF captures beyond the checked README, animated demo, and social preview SVG assets."
+    "Additional video/GIF captures beyond the checked README, animated demo, social preview, and architecture SVG assets."
   ),
-  "remaining gates must distinguish extra visual launch assets from the checked README, animated demo, and social preview SVGs"
+  "remaining gates must distinguish extra visual launch assets from the checked README, animated demo, social preview, and architecture SVGs"
 );
 
 for (const remainingGate of [
@@ -107,6 +110,7 @@ console.log(
         "README demo proof",
         "animated demo proof",
         "social preview proof",
+        "architecture diagram proof",
         "live REST boundary proof",
         "launch content proof",
         "benchmark report proof",
