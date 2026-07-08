@@ -95,8 +95,23 @@ await expectDocPhrases("docs/ci-setup.md", [
   "N8N_BASE_URL: ${{ vars.N8N_BASE_URL }}",
   "Live REST validation remains blocked until endpoint proof"
 ]);
+await expectDocPhrases("docs/live-rest-threat-model.md", [
+  "Current status: live REST schema validation is not implemented",
+  "The shipped CLI does not contact an n8n instance.",
+  "Fail closed by default.",
+  "Do not use `rejectUnauthorized: false`",
+  "Do not send Authorization headers across redirects.",
+  "Cross-origin redirects must fail closed.",
+  "API keys must come from environment variables or encrypted CI secrets",
+  "never bare CLI arguments",
+  "Live REST schema validation must not execute workflows",
+  "fire triggers",
+  "Endpoint proof exists from a local or owner-approved n8n instance",
+  "the public CLI source list must remain unchanged"
+]);
 await expectDocPhrases("SECURITY.md", [
   "Future live REST validation must redact API keys",
+  "Live REST remains disabled until endpoint proof and the live REST threat model gates are satisfied.",
   "secrets.N8N_API_KEY",
   "never from plaintext workflow YAML"
 ]);
@@ -116,7 +131,8 @@ console.log(
         "public CLI source choices",
         "built CLI help",
         "internal live-rest placeholder behavior",
-        "documentation non-claim phrases"
+        "documentation non-claim phrases",
+        "live REST threat model gates"
       ]
     },
     null,

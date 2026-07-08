@@ -47,6 +47,9 @@
   unclaimed, blocks public CLI exposure, and proves the internal placeholder
   does not echo API-key material, while enforcing encrypted GitHub Actions
   secret examples for future live REST credentials.
+- Added a live REST threat model plus executable boundary checks for future
+  fail-closed TLS, cross-origin redirect, wrong-host, API-key redaction,
+  no-execution, and endpoint-proof gates.
 - Added an executable launch-content gate that ties public copy to owner gates,
   real-growth rules, benchmark proof, and current non-claims.
 - Added an executable benchmark-report gate that reconciles the raw JSON,

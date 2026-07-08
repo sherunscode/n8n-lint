@@ -91,8 +91,8 @@ REST claims.
   `check:precommit-rejection-demo`, `check:release-readiness`, `check:live-rest-boundary`,
   `check:launch-content`, `check:benchmark-report`, `check:github-action`,
   `check:strategy-checklist`, `check:readme-demo`, `check:animated-demo`,
-  `check:terminal-output-demo`, `check:social-preview`, `check:architecture-diagram`,
-  `check:last-verified-badges`, `check:audit-report`, `check:status-docs`,
+  `check:terminal-output-demo`, `check:matrix-demo`, `check:social-preview`,
+  `check:architecture-diagram`, `check:last-verified-badges`, `check:audit-report`, `check:status-docs`,
   `check:metadata`, `check:security`, `check:docs`, `check:pack`,
   `check:claims`, `check:links`,
   `check:exit-codes`, core fixture tests, CLI fixture tests, production
@@ -146,7 +146,10 @@ REST claims.
   the internal placeholder stays unimplemented, API-key material is not echoed,
   docs keep live REST schema validation unclaimed until endpoint proof exists,
   and future GitHub Actions examples use encrypted `secrets.N8N_API_KEY`
-  wiring instead of plaintext workflow YAML values.
+  wiring instead of plaintext workflow YAML values. It also enforces
+  `docs/live-rest-threat-model.md`, including fail-closed TLS, cross-origin
+  redirect, wrong-host, API-key redaction, no-workflow-execution, and endpoint
+  proof gates for any future adapter.
 - `npm run check:launch-content` now enforces that launch copy is owner-gated,
   real-growth-only, evidence-mapped, benchmark-aligned, and free of unsupported
   npm, `npx`, workflow-execution, live REST, and engagement claims.
@@ -230,6 +233,8 @@ Current checked behavior:
 - `docs/ci-setup.md` documents future live REST API-key handling through
   GitHub Actions encrypted secrets while preserving the current live REST
   non-claim.
+- `docs/live-rest-threat-model.md` documents future live REST threat handling
+  and implementation gates without claiming live REST is built.
 - `docs/assets/architecture.svg` provides a generated architecture diagram for
   the README.
 - `docs/assets/terminal-output-demo.svg` provides generated pass/fail terminal

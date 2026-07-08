@@ -97,6 +97,12 @@ internal `live-rest` placeholder must stay CLI-inaccessible until endpoint
 coverage exists, blank base URLs fail closed, and provided API-key material is
 not echoed in placeholder output.
 
+`docs/live-rest-threat-model.md` is now the required checklist before any
+future live REST implementation is exposed. It requires fail-closed TLS and
+certificate behavior, cross-origin redirect blocking for Authorization headers,
+wrong-host handling, API-key redaction, no workflow execution side effects, and
+endpoint proof from a local or owner-approved n8n instance.
+
 ## Blockers
 
 - Docker daemon is not running locally, so this pass did not run a live n8n

@@ -77,6 +77,8 @@ source rather than inventing a hand-maintained schema file.
 This keeps the product honest:
 
 - No live REST claim without endpoint proof.
+- No live REST implementation without the threat-model gates in
+  `docs/live-rest-threat-model.md`.
 - No workflow execution claim.
 - No hosted service or telemetry.
 - No user credentials needed for the current local MVP.

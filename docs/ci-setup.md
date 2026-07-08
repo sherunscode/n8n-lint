@@ -21,7 +21,7 @@ release-readiness verification, live REST boundary verification, launch-content
 verification, benchmark-report verification, GitHub Action contract
 verification, README demo verification, animated-demo verification,
 terminal-output demo verification, precommit-rejection demo verification,
-social-preview verification, audit-report verification, status-doc
+matrix-demo verification, social-preview verification, audit-report verification, status-doc
 verification, README/CLI docs-contract verification, package-content
 verification, claims hygiene verification, Markdown link verification, fixture
 tests, the executable exit-code contract, the production dependency audit, and
@@ -125,7 +125,8 @@ jobs:
 
 This example is intentionally not part of the current verified install path.
 Live REST validation remains blocked until endpoint proof, TLS failure behavior,
-and API-key redaction are covered by executable tests.
+and API-key redaction are covered by executable tests. The required threat
+model and release gates are documented in `docs/live-rest-threat-model.md`.
 
 ## Consumer Workflow After npm Publish
 

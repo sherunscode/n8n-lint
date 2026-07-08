@@ -322,6 +322,8 @@ live REST claims remain owner-gated.
 locked: public CLI help exposes only the verified local sources, the internal
 placeholder still fails closed or warns, API-key material is not echoed, and the
 docs keep live REST schema validation unclaimed until endpoint proof exists.
+It also enforces `docs/live-rest-threat-model.md`, including fail-closed TLS,
+redirect, wrong-host, and API-key handling gates for any future adapter.
 It also checks that future GitHub Actions examples use `secrets.N8N_API_KEY`
 instead of plaintext workflow YAML values.
 
@@ -450,6 +452,8 @@ See `docs/pre-commit.md`.
 - `docs/badge-output.md`: local badge generation from real check results.
 - `docs/schema-matrix.md`: pinned schema artifacts and matrix compatibility
   reporting.
+- `docs/live-rest-threat-model.md`: future live REST threat model and
+  fail-closed implementation gates.
 - `docs/repair.md`: diff-only repair behavior and apply confirmation rules.
 - `docs/launch-drafts.md`: owner-review launch copy grounded in current proof.
 - `docs/support-rollback.md`: first-48-hours support and rollback plan for an

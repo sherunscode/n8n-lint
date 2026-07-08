@@ -21,6 +21,8 @@ path is unavailable, contact `ashley@sherunscode.com`.
   not require an n8n API key.
 - Future live REST validation must redact API keys from stdout, stderr, JSON
   output, logs, badges, and generated reports.
+- Live REST remains disabled until endpoint proof and the live REST threat
+  model gates are satisfied. See `docs/live-rest-threat-model.md`.
 - Future GitHub Actions usage must read n8n API keys from encrypted
   `secrets.N8N_API_KEY`, never from plaintext workflow YAML, command arguments,
   action inputs, or checked-in config.

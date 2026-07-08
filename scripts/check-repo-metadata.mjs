@@ -66,6 +66,7 @@ await expectFile(".github/ISSUE_TEMPLATE/config.yml");
 await expectFile(".prettierrc.json");
 await expectFile("action.yml");
 await expectFile("docs/ci-setup.md");
+await expectFile("docs/live-rest-threat-model.md");
 await expectFile("eslint.config.js");
 await expectFile("examples/pre-commit-setup/.pre-commit-config.yaml");
 await expectFile("docs/assets/readme-failure-demo.svg");
@@ -121,6 +122,7 @@ console.log(
         ".prettierrc.json",
         "action.yml",
         "docs/ci-setup.md",
+        "docs/live-rest-threat-model.md",
         "eslint.config.js",
         "examples/pre-commit-setup/.pre-commit-config.yaml",
         "docs/assets/readme-failure-demo.svg",

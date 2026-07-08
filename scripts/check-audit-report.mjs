@@ -67,6 +67,8 @@ expect(audit.includes("final JSON summary"), "audit must mention final JSON summ
 expect(audit.includes("warning summary counts"), "audit must mention warning summary counts");
 expect(audit.includes("npm run check:live-rest-boundary"), "audit must mention the live REST boundary checker");
 expect(audit.includes("secrets.N8N_API_KEY"), "audit must mention encrypted GitHub Actions API-key handling");
+expect(audit.includes("docs/live-rest-threat-model.md"), "audit must mention the live REST threat model");
+expect(audit.includes("fail-closed TLS"), "audit must mention live REST TLS threat handling");
 expect(audit.includes("npm run check:launch-content"), "audit must mention the launch-content checker");
 expect(audit.includes("npm run check:benchmark-report"), "audit must mention the benchmark-report checker");
 expect(audit.includes("npm run check:github-action"), "audit must mention the GitHub Action checker");
@@ -129,6 +131,7 @@ console.log(
         "architecture diagram proof",
         "last-verified badge visual proof",
         "live REST boundary proof",
+        "live REST threat model proof",
         "launch content proof",
         "benchmark report proof",
         "GitHub Action proof",
