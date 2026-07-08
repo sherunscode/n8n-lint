@@ -192,6 +192,7 @@ npm run format:check
 npm run check:example
 npm run check:bundled-schema
 npm run check:schema-config
+npm run check:type-hygiene
 npm run check:metadata
 npm run check:security
 npm run check:docs
@@ -219,6 +220,9 @@ packages.
 in `packages/core/schema/bundled-n8n-package-config.json`, match the checked-in
 artifacts, match the root generator dependency, and are not duplicated in the
 runtime source or generator script.
+
+`npm run check:type-hygiene` proves strict TypeScript settings are enabled and
+blocks `any`, `@ts-ignore`, and `@ts-expect-error` in `packages/core/src`.
 
 `npm run check:security` proves local secret/config paths are ignored, scans
 tracked public files for common token patterns, and verifies the CLI does not

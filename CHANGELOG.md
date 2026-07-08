@@ -32,6 +32,8 @@
   success, `1` for validation/input failures, and `2` for usage errors.
 - Added a shared bundled-schema selection config plus an executable config gate
   so runtime schema loading and artifact generation cannot drift apart.
+- Added an executable type-hygiene gate for strict TypeScript settings and the
+  validation core's no-`any`/no-suppression rule.
 - Added a reproducible `Zie619/n8n-workflows` benchmark report with exact
   pass/fail and skipped-file counts.
 - Refreshed the benchmark report after nested parameter-key validation changed

@@ -83,6 +83,8 @@ REST claims.
 - `npm run check:schema-config` now enforces one pinned bundled-schema selection
   config shared by the runtime and generator, with artifacts and root generator
   dependency reconciled against that config.
+- `npm run check:type-hygiene` now enforces strict TypeScript settings and
+  blocks `any` or TypeScript suppression directives in the validation core.
 - Stale-claim scan found no old benchmark numbers, fake-growth language,
   invalid old GitHub owner path, or public-report placeholders.
 - `git diff --check` passed.
