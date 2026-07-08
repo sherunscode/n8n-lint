@@ -107,8 +107,9 @@ REST claims.
 - `npm run quality` passed: build, ESLint, Prettier format check, example
   check, bundled-schema check, `check:schema-config`, `check:type-hygiene`,
   `check:cli-output`, `check:precommit`, `check:community`,
-  `check:precommit-rejection-demo`, `check:release-readiness`, `check:live-rest-boundary`,
-  `check:launch-content`, `check:benchmark-report`,
+  `check:precommit-rejection-demo`, `check:release-readiness`,
+  `check:release-notes`, `check:release-command-plan`,
+  `check:live-rest-boundary`, `check:launch-content`, `check:benchmark-report`,
   `check:benchmark-dashboard`, `check:batch-benchmark-output`,
   `check:github-action`, `check:github-pr-gate-proof`,
   `check:strategy-checklist`, `check:github-rendered-readme`,
@@ -168,6 +169,12 @@ REST claims.
   `docs/release-notes-v0.1.0-draft.md` is a substantive, owner-gated draft
   GitHub Release body aligned to current benchmark counts, quality proof,
   publish order, rollback boundaries, and current non-claims.
+- `npm run check:release-command-plan` now enforces that
+  `docs/release-command-plan-v0.1.0.md` is a dry-run command contract for the
+  owner-gated v0.1.0 release path, including public-state preflight commands,
+  version-PR mutation boundaries, final pre-publish checks, publish order,
+  registry smoke, single approved tag creation, forbidden commands, and
+  rollback boundaries.
 - `npm run check:live-rest-boundary` now enforces that the live REST source
   boundary stays locked: public CLI help exposes only verified local sources,
   the internal placeholder stays unimplemented, API-key material is not echoed,
@@ -314,6 +321,9 @@ Current checked behavior:
   rules.
 - `docs/launch-drafts.md` contains unposted launch copy with owner-review and
   no-npm-claim gates.
+- `docs/release-command-plan-v0.1.0.md` contains the owner-gated dry-run command
+  contract for public-state checks, package publish order, registry smoke,
+  single approved tag creation, GitHub Release creation, and rollback.
 
 Fixture coverage includes:
 

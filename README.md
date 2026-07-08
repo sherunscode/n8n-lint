@@ -278,6 +278,7 @@ npm run check:precommit-rejection-demo
 npm run check:community
 npm run check:release-readiness
 npm run check:release-notes
+npm run check:release-command-plan
 npm run check:live-rest-boundary
 npm run check:launch-content
 npm run check:benchmark-report
@@ -355,6 +356,12 @@ live REST claims remain owner-gated.
 `docs/release-notes-v0.1.0-draft.md` is substantive, owner-gated, aligned to the
 current benchmark counts, and free of npm, Marketplace, workflow-execution, or
 live REST claims that are not true yet.
+
+`npm run check:release-command-plan` proves the owner-gated
+publish/tag/release command path in `docs/release-command-plan-v0.1.0.md`,
+including public-state preflight commands, final pre-publish checks, package
+publish order, registry smoke, single-tag GitHub Release creation, forbidden
+commands, and rollback boundaries.
 
 `npm run check:live-rest-boundary` proves the live REST source boundary stays
 locked: public CLI help exposes only the verified local sources, the internal
@@ -489,8 +496,10 @@ on the core package at the same exact version, so publish `@n8nproof/core`
 first and `n8n-lint` second after owner approval.
 
 See `docs/release-checklist.md` for versioning, npm auth, provenance, tag,
-GitHub release, fresh-install smoke, and rollback steps. Actual npm publish,
-GitHub tag push, and GitHub release creation remain owner-gated.
+GitHub release, fresh-install smoke, and rollback steps. See
+`docs/release-command-plan-v0.1.0.md` for the checked command-by-command
+v0.1.0 release path. Actual npm publish, GitHub tag push, and GitHub release
+creation remain owner-gated.
 
 ## Schema Artifact
 
@@ -534,6 +543,9 @@ See `docs/pre-commit.md`.
 - `docs/launch-drafts.md`: owner-review launch copy grounded in current proof.
 - `docs/release-notes-v0.1.0-draft.md`: owner-gated draft GitHub Release notes
   grounded in current proof.
+- `docs/release-command-plan-v0.1.0.md`: owner-gated dry-run command contract
+  for npm publish, single-tag GitHub Release creation, registry smoke, and
+  rollback.
 - `docs/support-rollback.md`: first-48-hours support and rollback plan for an
   owner-approved launch.
 

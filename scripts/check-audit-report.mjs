@@ -17,6 +17,7 @@ const requiredQualityGates = [
   "check:community",
   "check:release-readiness",
   "check:release-notes",
+  "check:release-command-plan",
   "check:live-rest-boundary",
   "check:launch-content",
   "check:benchmark-report",
@@ -73,6 +74,9 @@ expect(audit.includes("npm run check:last-verified-badges"), "audit must mention
 expect(audit.includes("npm run check:release-readiness"), "audit must mention the release-readiness checker");
 expect(audit.includes("npm run check:release-notes"), "audit must mention the release-notes checker");
 expect(audit.includes("docs/release-notes-v0.1.0-draft.md"), "audit must mention the checked draft release notes");
+expect(audit.includes("npm run check:release-command-plan"), "audit must mention the release command plan checker");
+expect(audit.includes("docs/release-command-plan-v0.1.0.md"), "audit must mention the checked release command plan");
+expect(audit.includes("single approved tag"), "audit must mention the single approved tag boundary");
 expect(audit.includes("GitHub Discussion #8"), "audit must mention the live GitHub Discussion proof");
 expect(
   audit.includes("live GitHub Discussion #8 support/badge channel"),
@@ -160,6 +164,7 @@ console.log(
         "current package dry-run counts",
         "owner-gated remaining items",
         "release notes draft proof",
+        "release command plan proof",
         "README demo proof",
         "animated demo proof",
         "terminal output proof",

@@ -40,6 +40,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:community") &&
     packageJson.scripts.quality.includes("npm run check:release-readiness") &&
     packageJson.scripts.quality.includes("npm run check:release-notes") &&
+    packageJson.scripts.quality.includes("npm run check:release-command-plan") &&
     packageJson.scripts.quality.includes("npm run check:live-rest-boundary") &&
     packageJson.scripts.quality.includes("npm run check:launch-content") &&
     packageJson.scripts.quality.includes("npm run check:benchmark-report") &&
@@ -66,7 +67,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:claims") &&
     packageJson.scripts.quality.includes("npm run check:links") &&
     packageJson.scripts.quality.includes("npm run check:exit-codes"),
-  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, release readiness, release notes, live REST boundary, launch content, benchmark report, benchmark dashboard, batch benchmark output, GitHub Action, GitHub PR gate proof, strategy checklist, GitHub-rendered README, GitHub profile, README demo, animated demo, terminal output demo, matrix demo, matrix GIF, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
+  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, release readiness, release notes, release command plan, live REST boundary, launch content, benchmark report, benchmark dashboard, batch benchmark output, GitHub Action, GitHub PR gate proof, strategy checklist, GitHub-rendered README, GitHub profile, README demo, animated demo, terminal output demo, matrix demo, matrix GIF, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
 );
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 expect(ciWorkflow.includes("contents: read"), "CI workflow must keep contents read permission");
@@ -80,6 +81,10 @@ expect(
   "package.json must expose the release notes draft checker"
 );
 expect(
+  packageJson.scripts?.["check:release-command-plan"] === "node scripts/check-release-command-plan.mjs",
+  "package.json must expose the release command plan checker"
+);
+expect(
   githubPrGateProof.includes("process.env.GITHUB_TOKEN") && githubPrGateProof.includes("headers.Authorization"),
   "GitHub PR gate proof checker must use GITHUB_TOKEN for authenticated API reads when available"
 );
@@ -90,6 +95,7 @@ await expectFile("action.yml");
 await expectFile("docs/ci-setup.md");
 await expectFile("docs/live-rest-threat-model.md");
 await expectFile("docs/release-notes-v0.1.0-draft.md");
+await expectFile("docs/release-command-plan-v0.1.0.md");
 await expectFile("docs/github-pr-merge-gate-proof.md");
 await expectFile("eslint.config.js");
 await expectFile("examples/pre-commit-setup/.pre-commit-config.yaml");
@@ -116,6 +122,7 @@ await expectFile("scripts/check-precommit-rejection-demo.mjs");
 await expectFile("scripts/check-community-readiness.mjs");
 await expectFile("scripts/check-release-readiness.mjs");
 await expectFile("scripts/check-release-notes-draft.mjs");
+await expectFile("scripts/check-release-command-plan.mjs");
 await expectFile("scripts/check-live-rest-boundary.mjs");
 await expectFile("scripts/check-launch-content.mjs");
 await expectFile("scripts/check-benchmark-report.mjs");
@@ -159,6 +166,7 @@ console.log(
         "docs/ci-setup.md",
         "docs/live-rest-threat-model.md",
         "docs/release-notes-v0.1.0-draft.md",
+        "docs/release-command-plan-v0.1.0.md",
         "docs/github-pr-merge-gate-proof.md",
         "eslint.config.js",
         "examples/pre-commit-setup/.pre-commit-config.yaml",
@@ -185,6 +193,7 @@ console.log(
         "scripts/check-community-readiness.mjs",
         "scripts/check-release-readiness.mjs",
         "scripts/check-release-notes-draft.mjs",
+        "scripts/check-release-command-plan.mjs",
         "scripts/check-live-rest-boundary.mjs",
         "scripts/check-launch-content.mjs",
         "scripts/check-benchmark-report.mjs",

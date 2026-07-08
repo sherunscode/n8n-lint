@@ -31,7 +31,10 @@ The CLI package depends on `@n8nproof/core` at the same exact version, so publis
 4. Update `CHANGELOG.md` with the release date and verified artifacts.
 5. Update `docs/release-notes-v0.1.0-draft.md` or create the matching release
    draft for the chosen version, then run `npm run check:release-notes`.
-6. Ensure README examples do not claim registry-backed `npx` usage until after
+6. Update `docs/release-command-plan-v0.1.0.md` or create the matching command
+   plan for the chosen version. Run `npm run check:release-command-plan` before
+   publish approval.
+7. Ensure README examples do not claim registry-backed `npx` usage until after
    publication is complete.
 
 ## Local Gates
@@ -43,6 +46,7 @@ npm ci
 npm run quality
 npm run check:release-readiness
 npm run check:release-notes
+npm run check:release-command-plan
 npm run smoke:pack
 npm pack --workspace packages/core --dry-run
 npm pack --workspace packages/cli --dry-run
