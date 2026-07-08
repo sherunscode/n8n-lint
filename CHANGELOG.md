@@ -44,6 +44,8 @@
   proves it still matches real CLI output.
 - Added an executable deep-audit report gate that catches stale package counts,
   missing quality gates, and missing owner-gated release blockers.
+- Added an executable status-doc gate that keeps local build-loop status notes
+  ignored and clearly marked as historical evidence when present.
 - Added a reproducible `Zie619/n8n-workflows` benchmark report with exact
   pass/fail and skipped-file counts.
 - Refreshed the benchmark report after nested parameter-key validation changed

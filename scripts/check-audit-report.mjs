@@ -16,6 +16,7 @@ const requiredQualityGates = [
   "check:release-readiness",
   "check:readme-demo",
   "check:audit-report",
+  "check:status-docs",
   "check:metadata",
   "check:security",
   "check:docs",

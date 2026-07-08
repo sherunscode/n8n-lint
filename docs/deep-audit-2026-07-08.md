@@ -56,8 +56,8 @@ REST claims.
 - `npm run quality` passed: build, ESLint, Prettier format check, example
   check, bundled-schema check, `check:schema-config`, `check:type-hygiene`,
   `check:precommit`, `check:community`, `check:release-readiness`,
-  `check:readme-demo`, `check:audit-report`, `check:metadata`,
-  `check:security`, `check:docs`, `check:pack`, `check:claims`,
+  `check:readme-demo`, `check:audit-report`, `check:status-docs`,
+  `check:metadata`, `check:security`, `check:docs`, `check:pack`, `check:claims`,
   `check:links`, `check:exit-codes`, core fixture tests, CLI fixture tests,
   production dependency audit, and packed-install smoke.
 - Package dry-runs reviewed:
@@ -102,6 +102,9 @@ REST claims.
 - `npm run check:audit-report` now enforces that this audit report retains the
   conditional/no-go verdicts, current package dry-run counts, quality gate list,
   owner-gated remaining items, and README demo proof.
+- `npm run check:status-docs` now enforces that local build-loop status notes
+  stay ignored and, when present, are clearly marked historical with a pointer
+  back to this current audit.
 - Stale-claim scan found no old benchmark numbers, fake-growth language,
   invalid old GitHub owner path, or public-report placeholders.
 - `git diff --check` passed.

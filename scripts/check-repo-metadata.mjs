@@ -38,13 +38,14 @@ expect(
     packageJson.scripts.quality.includes("npm run check:release-readiness") &&
     packageJson.scripts.quality.includes("npm run check:readme-demo") &&
     packageJson.scripts.quality.includes("npm run check:audit-report") &&
+    packageJson.scripts.quality.includes("npm run check:status-docs") &&
     packageJson.scripts.quality.includes("npm run check:security") &&
     packageJson.scripts.quality.includes("npm run check:docs") &&
     packageJson.scripts.quality.includes("npm run check:pack") &&
     packageJson.scripts.quality.includes("npm run check:claims") &&
     packageJson.scripts.quality.includes("npm run check:links") &&
     packageJson.scripts.quality.includes("npm run check:exit-codes"),
-  "package.json quality gate must include lint, format, schema config, type hygiene, pre-commit, community readiness, release readiness, README demo, audit report, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
+  "package.json quality gate must include lint, format, schema config, type hygiene, pre-commit, community readiness, release readiness, README demo, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
 );
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 
@@ -65,6 +66,7 @@ await expectFile("scripts/check-community-readiness.mjs");
 await expectFile("scripts/check-release-readiness.mjs");
 await expectFile("scripts/check-readme-demo.mjs");
 await expectFile("scripts/check-audit-report.mjs");
+await expectFile("scripts/check-status-docs.mjs");
 await expectFile("scripts/check-security-hygiene.mjs");
 await expectFile("scripts/check-docs-contract.mjs");
 await expectFile("scripts/check-package-contents.mjs");
@@ -99,6 +101,7 @@ console.log(
         "scripts/check-release-readiness.mjs",
         "scripts/check-readme-demo.mjs",
         "scripts/check-audit-report.mjs",
+        "scripts/check-status-docs.mjs",
         "scripts/check-security-hygiene.mjs",
         "scripts/check-docs-contract.mjs",
         "scripts/check-package-contents.mjs",

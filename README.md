@@ -203,6 +203,7 @@ npm run check:community
 npm run check:release-readiness
 npm run check:readme-demo
 npm run check:audit-report
+npm run check:status-docs
 npm run check:metadata
 npm run check:security
 npm run check:docs
@@ -251,6 +252,10 @@ real failing CLI command and still matches the current output.
 `npm run check:audit-report` proves the deep-audit report keeps the current
 verdicts, package dry-run counts, quality gate list, remaining gates, and README
 demo proof aligned with executable repo artifacts.
+
+`npm run check:status-docs` proves local build-loop status notes stay ignored
+and, when present, are clearly marked historical with a pointer back to the
+current deep audit.
 
 `npm run check:security` proves local secret/config paths are ignored, scans
 tracked public files for common token patterns, and verifies the CLI does not
