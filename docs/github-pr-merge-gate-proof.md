@@ -8,30 +8,32 @@ Asset path: `docs/assets/github-pr-merge-gate-proof.png`
 
 ## Evidence
 
-- Proof-only PR: `https://github.com/sherunscode/n8n-lint/pull/5`
-- Purpose: capture a real GitHub merge-gate failure screenshot for the n8n-lint
-  launch checklist.
-- PR title: `Proof: failing merge gate capture`
+- Proof-only PR: `https://github.com/sherunscode/n8n-lint/pull/6`
+- Purpose: capture a real protected GitHub merge-gate failure screenshot for
+  the n8n-lint launch checklist.
+- PR title: `Proof: protected merge gate capture`
 - PR state after capture: closed.
-- PR merge state at proof check: `UNSTABLE` from the failed `quality` check.
-- Proof commit: `2925418`.
-- Remote proof branch deleted after capture: `codex/pr-merge-gate-proof`.
+- PR merge state at proof check: `BLOCKED` from the failed required status
+  check.
+- Branch protection: `main` requires the `quality` status check for non-admins.
+- Proof commit: `1420b51`.
+- Remote proof branch deleted after capture: `codex/protected-merge-gate-proof`.
 - The proof-only PR intentionally rewired the quality script to fail and must
   not be merged.
 - Failing CI run:
-  `https://github.com/sherunscode/n8n-lint/actions/runs/28957583303`
+  `https://github.com/sherunscode/n8n-lint/actions/runs/28958780193`
 - Failing quality job:
-  `https://github.com/sherunscode/n8n-lint/actions/runs/28957583303/job/85920525638`
+  `https://github.com/sherunscode/n8n-lint/actions/runs/28958780193/job/85924615158`
 - Failing job name: `quality`
 - Failing job conclusion: `FAILURE`
 - Successful CodeQL run:
-  `https://github.com/sherunscode/n8n-lint/actions/runs/28957583576`
+  `https://github.com/sherunscode/n8n-lint/actions/runs/28958780281`
 - CodeQL conclusion: `SUCCESS`
 
 ## Boundaries
 
 - This proof does not claim the failing branch was product work.
-- This proof does not claim the PR was mergeable after checks.
+- This proof confirms the PR was blocked by the failed required status check.
 - This proof does not keep the failing branch alive.
 - The durable artifact is the screenshot plus public GitHub run metadata checked
   by `npm run check:github-pr-gate-proof`.

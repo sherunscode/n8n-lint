@@ -4,12 +4,12 @@ import { readFile } from "node:fs/promises";
 const failures = [];
 const owner = "sherunscode";
 const repo = "n8n-lint";
-const prNumber = 5;
-const failingRunId = 28957583303;
-const failingJobId = 85920525638;
-const codeqlRunId = 28957583576;
-const proofCommitPrefix = "2925418";
-const proofBranch = "codex/pr-merge-gate-proof";
+const prNumber = 6;
+const failingRunId = 28958780193;
+const failingJobId = 85924615158;
+const codeqlRunId = 28958780281;
+const proofCommitPrefix = "1420b51";
+const proofBranch = "codex/protected-merge-gate-proof";
 const assetPath = "docs/assets/github-pr-merge-gate-proof.png";
 const proofPath = "docs/github-pr-merge-gate-proof.md";
 
@@ -45,7 +45,9 @@ for (const phrase of [
   "FAILURE",
   "CodeQL",
   "SUCCESS",
-  "UNSTABLE",
+  "BLOCKED",
+  "required status check",
+  "Branch protection",
   "Remote proof branch deleted",
   assetPath,
   proofCommitPrefix,
@@ -65,25 +67,37 @@ for (const target of [
   }
 }
 
-const [pullRequest, failingRun, failingJob, codeqlRun] = await Promise.all([
+const [pullRequest, failingRun, failingJob, codeqlRun, mainBranch] = await Promise.all([
   fetchGitHubJson(`https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}`),
   fetchGitHubJson(`https://api.github.com/repos/${owner}/${repo}/actions/runs/${failingRunId}`),
   fetchGitHubJson(`https://api.github.com/repos/${owner}/${repo}/actions/jobs/${failingJobId}`),
-  fetchGitHubJson(`https://api.github.com/repos/${owner}/${repo}/actions/runs/${codeqlRunId}`)
+  fetchGitHubJson(`https://api.github.com/repos/${owner}/${repo}/actions/runs/${codeqlRunId}`),
+  fetchGitHubJson(`https://api.github.com/repos/${owner}/${repo}/branches/main`)
 ]);
 const proofBranchResponse = await fetchGitHub(
   `https://api.github.com/repos/${owner}/${repo}/git/ref/heads/${proofBranch}`
 );
 
 expect(pullRequest.number === prNumber, "proof PR number must match");
-expect(pullRequest.title === "Proof: failing merge gate capture", "proof PR title must match");
+expect(pullRequest.title === "Proof: protected merge gate capture", "proof PR title must match");
 expect(pullRequest.state === "closed", "proof PR must remain closed after capture");
-expect(pullRequest.mergeable_state === "unstable", "proof PR mergeable_state must remain unstable from failed check");
+expect(pullRequest.merged === false, "proof PR must remain unmerged");
+expect(pullRequest.base?.ref === "main", "proof PR must target main");
+expect(pullRequest.head?.ref === proofBranch, "proof PR head ref must match proof branch name");
 expect(
-  hasPhrase(pullRequest.body ?? "", "Proof-only PR used to capture a real GitHub merge-gate failure screenshot"),
+  hasPhrase(pullRequest.body ?? "", "Proof-only PR used to capture a real protected GitHub merge-gate failure"),
   "proof PR body must explain the intentional failure"
 );
 expect(proofBranchResponse.status === 404, "remote proof branch must remain deleted after capture");
+expect(mainBranch.protected === true, "main branch must be protected");
+expect(
+  mainBranch.protection?.required_status_checks?.contexts?.includes("quality"),
+  "main branch protection must require the quality status check"
+);
+expect(
+  mainBranch.protection?.required_status_checks?.enforcement_level === "non_admins",
+  "main branch required quality check should apply to non-admins"
+);
 
 expect(failingRun.name === "CI", "failing proof run must be the CI workflow");
 expect(failingRun.event === "pull_request", "failing proof run must be a pull_request event");
@@ -122,6 +136,8 @@ console.log(
         "live failed CI run metadata",
         "live failed quality job metadata",
         "live successful CodeQL run metadata",
+        "main branch protection requiring quality",
+        "closed unmerged proof PR",
         "deleted proof branch",
         "README/audit/launch references"
       ]

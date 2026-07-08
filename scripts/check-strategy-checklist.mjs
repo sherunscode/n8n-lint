@@ -73,6 +73,7 @@ if (strategy === undefined) {
     "Architecture diagram",
     "Demo commands and checked assets are re-verified",
     "Screenshot of the GitHub PR merge-gate",
+    "GitHub Action check run in a PR",
     "n8n API key material is never logged",
     "API keys are not accepted as bare CLI arguments",
     "`.gitignore` explicitly excludes local config/credentials/log file patterns",

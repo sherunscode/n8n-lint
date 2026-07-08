@@ -92,7 +92,9 @@ expect(
   "audit must mention the checked PR gate screenshot"
 );
 expect(audit.includes("npm run check:github-pr-gate-proof"), "audit must mention the PR gate proof checker");
-expect(audit.includes("proof-only PR #5"), "audit must mention proof-only PR #5");
+expect(audit.includes("proof-only PR #6"), "audit must mention proof-only PR #6");
+expect(audit.includes("protected `BLOCKED` merge state"), "audit must mention protected blocked PR state");
+expect(audit.includes("`main` branch protection requiring `quality`"), "audit must mention main branch protection");
 expect(audit.includes("last-verified badge"), "audit must mention last-verified badge proof");
 expect(audit.includes("npm run check:strategy-checklist"), "audit must mention the strategy checklist checker");
 expect(audit.includes("npm run check:github-rendered-readme"), "audit must mention the GitHub-rendered README checker");

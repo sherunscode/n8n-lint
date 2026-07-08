@@ -91,8 +91,9 @@ REST claims.
   GitHub PR checks-tab screenshot at
   `docs/assets/github-pr-merge-gate-proof.png` and is checked by
   `npm run check:github-pr-gate-proof` against public PR/run metadata. The
-  proof-only PR #5 had a failed `quality` job, successful CodeQL run, unstable
-  merge state, closed PR state, and deleted proof branch.
+  proof-only PR #6 had a failed required `quality` job, successful CodeQL run,
+  protected `BLOCKED` merge state, closed PR state, deleted proof branch, and
+  `main` branch protection requiring `quality` for non-admins.
 - Architecture and support/rollback docs exist for the current MVP.
 - Dependabot is configured for npm and GitHub Actions.
 - CodeQL is configured for JavaScript/TypeScript analysis.
@@ -186,8 +187,9 @@ REST claims.
   dogfooding, tool metadata, and Marketplace non-claim boundaries.
 - `npm run check:github-pr-gate-proof` now enforces that the PR merge-gate
   screenshot is a real PNG asset backed by public GitHub metadata for proof-only
-  PR #5, including failed `quality`, successful CodeQL, unstable merge state,
-  closed PR state, and deleted proof branch cleanup.
+  PR #6, including failed required `quality`, successful CodeQL, protected
+  `BLOCKED` merge state, closed PR state, deleted proof branch cleanup, and
+  `main` branch protection requiring `quality`.
 - `npm run check:strategy-checklist` now enforces that `STRATEGY.md` marks only
   repo-proven checklist boxes as complete, including final human/JSON summary
   proof, and leaves owner-gated, external UI, and future live REST/release
