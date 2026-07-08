@@ -67,6 +67,12 @@ expect(
   "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, release readiness, live REST boundary, launch content, benchmark report, benchmark dashboard, batch benchmark output, GitHub Action, GitHub PR gate proof, strategy checklist, GitHub-rendered README, GitHub profile, README demo, animated demo, terminal output demo, matrix demo, matrix GIF, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
 );
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
+expect(ciWorkflow.includes("contents: read"), "CI workflow must keep contents read permission");
+expect(ciWorkflow.includes("discussions: read"), "CI workflow must allow community discussion proof reads");
+expect(
+  ciWorkflow.includes("GITHUB_TOKEN: ${{ github.token }}"),
+  "CI quality step must pass GitHub token to proof checks"
+);
 
 await expectFile(".github/ISSUE_TEMPLATE/config.yml");
 await expectFile(".prettierrc.json");

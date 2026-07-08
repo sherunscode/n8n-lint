@@ -70,6 +70,11 @@ expect(audit.includes("npm run check:architecture-diagram"), "audit must mention
 expect(audit.includes("docs/assets/last-verified-badges.svg"), "audit must mention the checked badge-state asset");
 expect(audit.includes("npm run check:last-verified-badges"), "audit must mention the badge-state checker");
 expect(audit.includes("npm run check:release-readiness"), "audit must mention the release-readiness checker");
+expect(audit.includes("GitHub Discussion #8"), "audit must mention the live GitHub Discussion proof");
+expect(
+  audit.includes("live GitHub Discussion #8 support/badge channel"),
+  "audit must mention support/badge channel proof"
+);
 expect(audit.includes("npm run check:cli-output"), "audit must mention the CLI output checker");
 expect(audit.includes("final JSON summary"), "audit must mention final JSON summary proof");
 expect(audit.includes("warning summary counts"), "audit must mention warning summary counts");

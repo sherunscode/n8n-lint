@@ -40,7 +40,8 @@
 - Added an executable pre-commit hook contract gate for quiet success output,
   loud failure output, exit-code propagation, and executable hook mode.
 - Added an executable community-readiness gate for issue templates, PR template,
-  contribution docs, code of conduct, and security contact/API-key boundaries.
+  contribution docs, code of conduct, security contact/API-key boundaries, and
+  live GitHub Discussion #8 support/badge channel proof.
 - Added an executable release-readiness gate for package-version alignment,
   owner-gated publish/tag/release/posting language, and rollback/support docs.
 - Added an executable live REST boundary gate that keeps live validation

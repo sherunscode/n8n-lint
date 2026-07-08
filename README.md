@@ -342,7 +342,9 @@ asset was generated from an actual temporary `git commit` rejected by the repo's
 real `.githooks/pre-commit` hook.
 
 `npm run check:community` proves the issue templates, PR template, contributing
-guide, code of conduct, and security contact/API-key boundaries stay launchable.
+guide, code of conduct, security contact/API-key boundaries, and live
+[Discussion #8](https://github.com/sherunscode/n8n-lint/discussions/8)
+support/badge thread stay launchable.
 
 `npm run check:release-readiness` proves package versions and release docs stay
 aligned while npm publish, tags/releases, public posts, Marketplace listing, and
@@ -464,6 +466,15 @@ are not claimed yet and must be added to this gate before that source ships.
 
 `npm run smoke:pack` packs `@n8nproof/core` and `n8n-lint`, installs both
 tarballs into a fresh temp project, and runs `npx n8n-lint check workflow.json`.
+
+## Community
+
+Use
+[Discussion #8: Ask questions and share verified badges](https://github.com/sherunscode/n8n-lint/discussions/8)
+for usage questions, validation-result feedback, and local badge examples from
+real checks. Do not post secrets, n8n API keys, credentials, customer workflow
+data, or private workflow JSON there. Security issues should go to
+`ashley@sherunscode.com`.
 
 ## Release Gate
 
