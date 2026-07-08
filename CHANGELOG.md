@@ -42,6 +42,8 @@
 - Added an executable community-readiness gate for issue templates, PR template,
   contribution docs, code of conduct, security contact/API-key boundaries, and
   live GitHub Discussion #8 support/badge channel proof.
+- Added an executable npm registry boundary gate that verifies both publishable
+  package names still return `E404` before any owner-approved public release.
 - Added an executable release-readiness gate for package-version alignment,
   owner-gated publish/tag/release/posting language, and rollback/support docs.
 - Added a checked draft GitHub Release note for v0.1.0 plus an executable gate

@@ -50,6 +50,7 @@ for (const phrase of [
   "Use `docs/assets/batch-benchmark-output.svg` only after `npm run check:batch-benchmark-output`",
   "Use `docs/assets/github-pr-merge-gate-proof.png` only after `npm run check:github-pr-gate-proof`",
   "Run `npm run check:benchmark-report` before publishing benchmark-number claims.",
+  "npm run check:npm-registry-boundary",
   "Do not mention stars, followers, installs, traffic, or engagement unless a current source is attached.",
   "Run `npm run check:launch-content` before approving any launch copy changes."
 ]) {
@@ -66,6 +67,9 @@ for (const evidenceId of [
   "E7",
   "E8",
   "E9",
+  "E9A",
+  "E9B",
+  "E9C",
   "E10",
   "E11",
   "E12",

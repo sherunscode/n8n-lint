@@ -276,6 +276,7 @@ npm run check:cli-output
 npm run check:precommit
 npm run check:precommit-rejection-demo
 npm run check:community
+npm run check:npm-registry-boundary
 npm run check:release-readiness
 npm run check:release-notes
 npm run check:release-command-plan
@@ -347,6 +348,11 @@ real `.githooks/pre-commit` hook.
 guide, code of conduct, security contact/API-key boundaries, and live
 [Discussion #8](https://github.com/sherunscode/n8n-lint/discussions/8)
 support/badge thread stay launchable.
+
+`npm run check:npm-registry-boundary` proves the current npm pre-publication
+boundary by checking that both publishable package names, `@n8nproof/core` and
+`n8n-lint`, still return `E404` from the npm registry while registry
+publication remains unclaimed.
 
 `npm run check:release-readiness` proves package versions and release docs stay
 aligned while npm publish, tags/releases, public posts, Marketplace listing, and

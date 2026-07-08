@@ -38,6 +38,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:precommit") &&
     packageJson.scripts.quality.includes("npm run check:precommit-rejection-demo") &&
     packageJson.scripts.quality.includes("npm run check:community") &&
+    packageJson.scripts.quality.includes("npm run check:npm-registry-boundary") &&
     packageJson.scripts.quality.includes("npm run check:release-readiness") &&
     packageJson.scripts.quality.includes("npm run check:release-notes") &&
     packageJson.scripts.quality.includes("npm run check:release-command-plan") &&
@@ -67,7 +68,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:claims") &&
     packageJson.scripts.quality.includes("npm run check:links") &&
     packageJson.scripts.quality.includes("npm run check:exit-codes"),
-  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, release readiness, release notes, release command plan, live REST boundary, launch content, benchmark report, benchmark dashboard, batch benchmark output, GitHub Action, GitHub PR gate proof, strategy checklist, GitHub-rendered README, GitHub profile, README demo, animated demo, terminal output demo, matrix demo, matrix GIF, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
+  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, npm registry boundary, release readiness, release notes, release command plan, live REST boundary, launch content, benchmark report, benchmark dashboard, batch benchmark output, GitHub Action, GitHub PR gate proof, strategy checklist, GitHub-rendered README, GitHub profile, README demo, animated demo, terminal output demo, matrix demo, matrix GIF, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
 );
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 expect(ciWorkflow.includes("contents: read"), "CI workflow must keep contents read permission");
@@ -79,6 +80,10 @@ expect(
 expect(
   packageJson.scripts?.["check:release-notes"] === "node scripts/check-release-notes-draft.mjs",
   "package.json must expose the release notes draft checker"
+);
+expect(
+  packageJson.scripts?.["check:npm-registry-boundary"] === "node scripts/check-npm-registry-boundary.mjs",
+  "package.json must expose the npm registry boundary checker"
 );
 expect(
   packageJson.scripts?.["check:release-command-plan"] === "node scripts/check-release-command-plan.mjs",
@@ -120,6 +125,7 @@ await expectFile("scripts/check-cli-output-contract.mjs");
 await expectFile("scripts/check-precommit-hook.mjs");
 await expectFile("scripts/check-precommit-rejection-demo.mjs");
 await expectFile("scripts/check-community-readiness.mjs");
+await expectFile("scripts/check-npm-registry-boundary.mjs");
 await expectFile("scripts/check-release-readiness.mjs");
 await expectFile("scripts/check-release-notes-draft.mjs");
 await expectFile("scripts/check-release-command-plan.mjs");
@@ -191,6 +197,7 @@ console.log(
         "scripts/check-precommit-hook.mjs",
         "scripts/check-precommit-rejection-demo.mjs",
         "scripts/check-community-readiness.mjs",
+        "scripts/check-npm-registry-boundary.mjs",
         "scripts/check-release-readiness.mjs",
         "scripts/check-release-notes-draft.mjs",
         "scripts/check-release-command-plan.mjs",

@@ -40,6 +40,7 @@ expect(hasPhrase(notes, "npm run quality"), "draft notes must require full quali
 expect(hasPhrase(notes, "npm run smoke:pack"), "draft notes must mention packed smoke proof");
 expect(hasPhrase(notes, "npm run check:pack"), "draft notes must mention package-content proof");
 expect(hasPhrase(notes, "npm run check:release-readiness"), "draft notes must mention release-readiness proof");
+expect(hasPhrase(notes, "npm run check:npm-registry-boundary"), "draft notes must mention npm registry boundary proof");
 expect(hasPhrase(notes, "npm run check:release-notes"), "draft notes must mention this release-notes proof gate");
 expect(
   hasPhrase(notes, "GitHub Discussion #8"),
@@ -128,6 +129,7 @@ console.log(
         "current non-claims",
         "schema version facts",
         "quality and package proof commands",
+        "npm registry boundary proof",
         "community and deep-audit proof links",
         "benchmark count reconciliation",
         "publish order and rollback boundaries"

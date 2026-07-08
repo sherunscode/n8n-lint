@@ -15,6 +15,7 @@ const requiredQualityGates = [
   "check:precommit",
   "check:precommit-rejection-demo",
   "check:community",
+  "check:npm-registry-boundary",
   "check:release-readiness",
   "check:release-notes",
   "check:release-command-plan",
@@ -72,6 +73,11 @@ expect(audit.includes("npm run check:architecture-diagram"), "audit must mention
 expect(audit.includes("docs/assets/last-verified-badges.svg"), "audit must mention the checked badge-state asset");
 expect(audit.includes("npm run check:last-verified-badges"), "audit must mention the badge-state checker");
 expect(audit.includes("npm run check:release-readiness"), "audit must mention the release-readiness checker");
+expect(audit.includes("npm run check:npm-registry-boundary"), "audit must mention the npm registry boundary checker");
+expect(
+  audit.includes("both publishable package names return npm `E404`"),
+  "audit must mention both npm package E404 proofs"
+);
 expect(audit.includes("npm run check:release-notes"), "audit must mention the release-notes checker");
 expect(audit.includes("docs/release-notes-v0.1.0-draft.md"), "audit must mention the checked draft release notes");
 expect(audit.includes("npm run check:release-command-plan"), "audit must mention the release command plan checker");
@@ -163,6 +169,7 @@ console.log(
         "quality gate list",
         "current package dry-run counts",
         "owner-gated remaining items",
+        "npm registry boundary proof",
         "release notes draft proof",
         "release command plan proof",
         "README demo proof",
