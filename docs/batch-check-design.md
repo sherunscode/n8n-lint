@@ -1,7 +1,8 @@
-# Batch Check Design Notes
+# Batch Check
 
-This is the V1.1 design note for future batch-check mode. It is not implemented
-in the current local MVP.
+Batch mode is implemented in the CLI. It runs when `check` receives multiple
+inputs, a directory, or a glob. Single-file `check <workflow.json>` behavior is
+preserved.
 
 ## Goal
 
@@ -10,19 +11,25 @@ without adding a hosted service, dashboard, marketplace, or registry.
 
 ## Inputs
 
-Future batch mode should accept:
+Batch mode accepts:
 
 - Explicit file paths.
 - Directory paths, scanned recursively for `.json` files.
 - Glob patterns, resolved by the CLI in a deterministic order.
 
-The command should preserve single-file behavior for `check <workflow.json>`.
-Batch mode can be a separate command or an explicit flag, but it must not make
-single-file checks slower or noisier.
+The command preserves single-file behavior for `check <workflow.json>`.
+
+Examples:
+
+```bash
+n8n-lint check workflows/
+n8n-lint check "workflows/**/*.json"
+n8n-lint check workflows/a.json workflows/b.json package.json
+```
 
 ## File Classification
 
-Each `.json` file should become one of:
+Each `.json` file becomes one of:
 
 | Status | Meaning |
 |---|---|
@@ -31,12 +38,12 @@ Each `.json` file should become one of:
 | `skipped` | File is JSON but is not an n8n workflow object with a top-level `nodes` array. |
 | `error` | File could not be read or parsed. |
 
-Skipped files should be counted and reported, not treated as validation
-failures by default. Parse/read errors should fail the run.
+Skipped files are counted and reported, not treated as validation failures by
+default. Parse/read/input errors fail the run.
 
 ## Human Output
 
-Human output should be quiet enough for CI logs:
+Human output is quiet enough for CI logs:
 
 ```text
 PASS workflows/passing.json
@@ -51,7 +58,7 @@ The final summary line must always be printed last.
 
 ## JSON Output
 
-Batch JSON should keep the single-file issue object intact and add a summary:
+Batch JSON keeps the single-file issue object intact and adds a summary:
 
 ```json
 {
@@ -71,13 +78,27 @@ Batch JSON should keep the single-file issue object intact and add a summary:
       "filePath": "workflows/passing.json",
       "status": "passed",
       "ok": true,
-      "issues": []
+      "issues": [
+        {
+          "severity": "warning",
+          "code": "schema_source.warning",
+          "message": "Bundled n8n package metadata is loaded from a compact checked-in artifact; this is not live REST validation.",
+          "path": "$"
+        }
+      ]
     },
     {
       "filePath": "workflows/dead-parameter.json",
       "status": "failed",
       "ok": false,
-      "issues": []
+      "issues": [
+        {
+          "severity": "error",
+          "code": "workflow.node_parameter_unknown",
+          "message": "Unknown or dead parameter \"oldName\" for node type \"n8n-nodes-base.httpRequest\".",
+          "path": "$.nodes[0].parameters.oldName"
+        }
+      ]
     },
     {
       "filePath": "package.json",
@@ -98,8 +119,13 @@ Batch JSON should keep the single-file issue object intact and add a summary:
 
 ## Non-Goals
 
-- Do not implement badge generation as part of batch mode.
 - Do not mutate workflow files.
 - Do not call live n8n REST endpoints unless the live adapter has separate,
   owner-approved proof.
 - Do not send telemetry or upload workflow contents.
+
+## Verified Gates
+
+- `npm run test:cli` covers mixed explicit inputs, JSON summary output, and glob
+  skip behavior.
+- `npm run quality` runs the batch fixture checks through the normal CI gate.

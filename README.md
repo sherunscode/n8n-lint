@@ -44,6 +44,10 @@ will only be documented after npm publication.
 - Unknown or dead top-level node parameter detection.
 - Stale trigger graph/type-version shape detection.
 - JSON output mode for CI tooling.
+- Batch checks for multiple files, directories, and simple globs, with skipped
+  ordinary JSON files reported separately.
+- Local badge generation from real `check --json` output in markdown, JSON, or
+  static SVG format.
 - Local quality gates for build, fixtures, tests, and production dependency
   audit.
 - Packed-package install smoke test for the publishable core and CLI workspaces.
@@ -71,13 +75,16 @@ WARN schema_source.warning: Bundled n8n package metadata is loaded from a compac
 ## CLI
 
 ```bash
-n8n-lint check <workflow.json> [--source bundled-n8n-package|local-placeholder] [--json]
+n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--json]
+n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]
 ```
 
 `n8n-lint --help` output:
 
 ```text
-Usage: n8n-lint check <workflow.json> [--source bundled-n8n-package|local-placeholder] [--json]
+Usage:
+  n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--json]
+  n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]
 ```
 
 | Option | Default | Description |
@@ -91,6 +98,7 @@ Local development currently runs the built CLI directly:
 ```bash
 node packages/cli/dist/bin.js check examples/failing-unknown-node.json
 node packages/cli/dist/bin.js check examples/failing-unknown-credential.json --json
+node packages/cli/dist/bin.js check "examples/*.json"
 ```
 
 Failure example:
@@ -109,6 +117,15 @@ WARNING schema_source.warning $: Bundled n8n package metadata is loaded from a c
 ```
 
 See `docs/json-output.md` for the current `--json` output contract.
+See `docs/batch-check-design.md` for batch mode behavior, skipped-file rules,
+and exit codes.
+See `docs/badge-output.md` for local badge generation from checked output.
+
+Badge example:
+
+```bash
+node packages/cli/dist/bin.js badge examples/badge-batch-result.json
+```
 
 Before publish, test the install shape from packed local packages:
 
@@ -189,8 +206,13 @@ See `docs/pre-commit.md`.
 
 ## Design Notes
 
+- `docs/architecture.md`: package boundaries, schema source design, and current
+  validation contract.
 - `docs/json-output.md`: stable JSON output contract for CI tooling.
-- `docs/batch-check-design.md`: V1.1 batch-check design notes.
+- `docs/batch-check-design.md`: batch-check behavior and V1.1 proof gates.
+- `docs/badge-output.md`: local badge generation from real check results.
+- `docs/support-rollback.md`: first-48-hours support and rollback plan for an
+  owner-approved launch.
 
 ## Benchmark Report
 
@@ -228,6 +250,8 @@ MVP scope:
 - GitHub Action quality gate.
 - Fixture-backed validation behavior for structure, node types, credential
   types, dead top-level parameters, and stale trigger shape.
+- Batch checking for repositories with multiple workflow JSON files.
+- Local static badge generation from real check results.
 - Honest docs and benchmark harness.
 
 Not MVP scope:

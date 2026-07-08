@@ -1,0 +1,4 @@
+{
+  "name": "not-a-workflow",
+  "description": "Fixture used to prove batch mode skips ordinary JSON files."
+}

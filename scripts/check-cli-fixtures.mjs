@@ -48,6 +48,64 @@ const checks = [
     args: [cliPath, "check", "examples/known-http-request-workflow.json", "--json"],
     exitCode: 0,
     stdoutIncludes: ['"source": "bundled-n8n-package"']
+  },
+  {
+    name: "batch mode reports mixed explicit inputs",
+    args: [
+      cliPath,
+      "check",
+      "examples/known-http-request-workflow.json",
+      "examples/failing-dead-parameter.json",
+      "examples/not-a-workflow.json"
+    ],
+    exitCode: 1,
+    stdoutIncludes: [
+      "PASS examples/known-http-request-workflow.json",
+      "FAIL examples/failing-dead-parameter.json",
+      "workflow.node_parameter_unknown",
+      "SKIP examples/not-a-workflow.json",
+      "Summary: 1 passed, 1 failed, 1 skipped, 0 errors"
+    ]
+  },
+  {
+    name: "batch json mode reports summary",
+    args: [
+      cliPath,
+      "check",
+      "examples/known-http-request-workflow.json",
+      "examples/failing-dead-parameter.json",
+      "examples/not-a-workflow.json",
+      "--json"
+    ],
+    exitCode: 1,
+    stdoutIncludes: ['"summary"', '"passed": 1', '"failed": 1', '"skipped": 1', '"status": "skipped"']
+  },
+  {
+    name: "batch glob mode can skip ordinary json without failing",
+    args: [cliPath, "check", "examples/not-a-*.json"],
+    exitCode: 0,
+    stdoutIncludes: ["SKIP examples/not-a-workflow.json", "Summary: 0 passed, 0 failed, 1 skipped, 0 errors"]
+  },
+  {
+    name: "badge markdown output uses checked json result",
+    args: [cliPath, "badge", "examples/badge-batch-result.json"],
+    exitCode: 0,
+    stdoutIncludes: [
+      "![n8n-lint: 1 passing]",
+      "https://img.shields.io/badge/n8n--lint-1_passing-brightgreen"
+    ]
+  },
+  {
+    name: "badge json output reports summary-derived status",
+    args: [cliPath, "badge", "examples/badge-batch-result.json", "--format", "json"],
+    exitCode: 0,
+    stdoutIncludes: ['"message": "1 passing"', '"color": "brightgreen"', '"sourceFile": "examples/badge-batch-result.json"']
+  },
+  {
+    name: "badge svg output is static local markup",
+    args: [cliPath, "badge", "examples/badge-batch-result.json", "--format=svg", "--label", "n8n proof"],
+    exitCode: 0,
+    stdoutIncludes: ['<svg xmlns="http://www.w3.org/2000/svg"', "n8n proof", "1 passing"]
   }
 ];
 

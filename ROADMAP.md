@@ -18,11 +18,15 @@ Verified:
   path.
 - The real `Zie619/n8n-workflows` benchmark report exists under `docs/`.
 - Release readiness is prepared, with npm publish still behind an owner gate.
+- Batch mode accepts multiple files, directories, and globs, with skipped
+  ordinary JSON files reported separately.
+- Badge generation emits markdown, JSON, or static SVG from real `check --json`
+  output without adding a hosted badge service.
 
 Still gated or unproven:
 
 - npm publication and registry-backed `npx n8n-lint` docs.
-- Owner-side GitHub mutations such as topics, tag pushes, and releases.
+- Owner-side GitHub mutations such as tag pushes and releases.
 - Live REST schema validation from a running n8n instance.
 - Deep nested parameter-shape validation beyond top-level bundled metadata.
 - Hosted SaaS, dashboard, MCP server, marketplace, or a second product.
@@ -39,39 +43,41 @@ Close these before claiming V1 publicly:
 
 ## V1 Backlog Sequence
 
-### V1.1 Batch Check Improvements
+### V1.1 Batch Check Improvements - Done Locally
 
 Goal: make the CLI useful for real repositories before adding new surface area.
 
 Scope:
 
-- Accept directories, globs, and explicit file lists.
-- Emit stable per-file summaries in human and JSON modes.
-- Preserve predictable exit codes for CI.
-- Add fixtures for mixed pass/fail/skipped inputs.
+- Accepts directories, globs, and explicit file lists.
+- Emits stable per-file summaries in human and JSON modes.
+- Preserves predictable exit codes for CI.
+- Includes fixtures for mixed pass/fail/skipped inputs.
 
 Gate:
 
 - `npm run quality` passes.
-- A temp-repo smoke proves batch mode with at least one passing workflow, one
+- `npm run test:cli` proves batch mode with at least one passing workflow, one
   failing workflow, and one skipped non-workflow JSON file.
 
-### V1.2 Badge Generator
+### V1.2 Badge Generator - Done Locally
 
 Goal: let users publish a simple status signal without creating a hosted badge
 service.
 
 Scope:
 
-- Generate markdown, JSON, or static SVG badge output from a local check result.
-- Prefer deterministic local files or Shields-compatible static badge URLs.
-- Do not create a hosted endpoint in V1.
+- Generates markdown, JSON, or static SVG badge output from a local check
+  result.
+- Uses deterministic local files or Shields-compatible static badge URLs.
+- Does not create a hosted endpoint in V1.
 
 Gate:
 
 - Batch summary output is stable enough to feed the badge generator.
 - README examples show only local/static badge workflows until a hosted service
   is explicitly approved.
+- `npm run test:cli` proves markdown, JSON, and SVG badge output.
 
 ### V1.3 Multi-Version Schema Matrix
 

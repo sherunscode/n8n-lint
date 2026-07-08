@@ -27,6 +27,13 @@ REST claims.
 - Three real starter issues exist and use `good first issue`.
 - Follow-up documentation issues for JSON output, README failure output, and
   batch-check design were converted into repo docs after the initial audit.
+- Batch mode is implemented for multiple files, directories, and globs, with
+  skipped ordinary JSON files counted separately.
+- Badge generation is implemented from real `check --json` output in markdown,
+  JSON, and static SVG formats.
+- Architecture and support/rollback docs exist for the current MVP.
+- Dependabot is configured for npm and GitHub Actions.
+- CodeQL is configured for JavaScript/TypeScript analysis.
 - npm package name `n8n-lint` returned registry `E404`, so it was not already
   published at audit time.
 - `n8n@2.29.7` still resolves to `n8n-nodes-base@2.29.6` and
@@ -36,7 +43,7 @@ REST claims.
 - Package dry-runs reviewed:
   - `@n8nproof/core@0.0.0`: 10 files, 32.8 kB package, includes `dist` and
     compact schema only.
-  - `n8n-lint@0.0.0`: 6 files, 3.5 kB package, includes `dist` only plus
+  - `n8n-lint@0.0.0`: 6 files, 10.0 kB package, includes `dist` only plus
     package metadata, README, and LICENSE.
 - Fresh temp-project tarball install passed with `npx n8n-lint check
   workflow.json`.
@@ -56,7 +63,11 @@ Current checked behavior:
 - Unknown or dead top-level node parameter detection.
 - Stale trigger graph/type-version shape detection.
 - Stable `--json` output mode.
+- Batch human and JSON output with stable summary counts.
+- Local badge generation from checked JSON output.
 - `docs/json-output.md` documents the current JSON output contract.
+- `docs/batch-check-design.md` documents batch behavior and proof gates.
+- `docs/badge-output.md` documents badge formats and status rules.
 
 Fixture coverage includes:
 
@@ -66,6 +77,8 @@ Fixture coverage includes:
 - `examples/failing-unknown-credential.json`
 - `examples/failing-dead-parameter.json`
 - `examples/failing-stale-trigger-shape.json`
+- `examples/not-a-workflow.json`
+- `examples/badge-batch-result.json`
 
 ## Benchmark Proof
 
@@ -99,8 +112,7 @@ These are intentionally not complete:
 - Deep nested parameter-shape validation beyond top-level bundled metadata.
 - README GIF/screenshots and social preview image.
 - Public X, Reddit, HN, or n8n forum launch posts.
-- Full V1 backlog: batch mode, badge generator, multi-version matrix, and
-  human-gated auto-repair.
+- Remaining V1 backlog: multi-version matrix and human-gated auto-repair.
 
 ## Requirement Decision
 

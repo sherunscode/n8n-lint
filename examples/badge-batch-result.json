@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "checkedAt": "2026-07-08T00:00:00.000Z",
+  "source": "bundled-n8n-package",
+  "summary": {
+    "totalFiles": 2,
+    "workflows": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 1,
+    "errors": 0
+  },
+  "results": []
+}

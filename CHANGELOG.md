@@ -12,5 +12,9 @@
   documents.
 - Added a reproducible `Zie619/n8n-workflows` benchmark report with exact
   pass/fail and skipped-file counts.
+- Added batch checks for multiple files, directories, and globs, including
+  skipped-file accounting for ordinary JSON files.
+- Added local badge generation from real `check --json` output in markdown,
+  JSON, and static SVG formats.
 - Added publishable package metadata, package README files, and an owner-gated
   npm release checklist.
