@@ -28,6 +28,8 @@
   strategy-history boundary.
 - Added an executable Markdown link gate that verifies tracked local
   Markdown links, image targets, and heading anchors.
+- Added an executable exit-code gate that proves the built CLI exits `0` for
+  success, `1` for validation/input failures, and `2` for usage errors.
 - Added a reproducible `Zie619/n8n-workflows` benchmark report with exact
   pass/fail and skipped-file counts.
 - Refreshed the benchmark report after nested parameter-key validation changed

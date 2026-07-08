@@ -42,6 +42,11 @@ service behavior.
 | `1` | Workflow failed validation or the file could not be read/parsed. |
 | `2` | CLI usage error, such as an unknown flag or missing command. |
 
+`npm run check:exit-codes` proves the exit-code contract against the built CLI.
+The current MVP does not ship a live REST/network schema source, so network
+failure handling is not claimed yet. Any future live REST source must extend the
+exit-code gate before release.
+
 ## Example
 
 ```bash

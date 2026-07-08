@@ -17,7 +17,8 @@ npm run quality
 validation, bundled-schema verification, metadata verification, security
 hygiene verification, README/CLI docs-contract verification, package-content
 verification, claims hygiene verification, Markdown link verification, fixture
-tests, the production dependency audit, and the packed-install smoke test.
+tests, the executable exit-code contract, the production dependency audit, and
+the packed-install smoke test.
 
 The public workflow is `.github/workflows/ci.yml`.
 
@@ -74,6 +75,9 @@ Exit codes remain the same as normal check mode:
 
 Do not combine `--json` with `--format github`; those are separate automation
 surfaces.
+
+`npm run check:exit-codes` proves the built CLI preserves the `0`/`1`/`2`
+contract for success, validation/input failures, and usage failures.
 
 ## Consumer Workflow After npm Publish
 

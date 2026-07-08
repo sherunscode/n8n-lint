@@ -76,6 +76,10 @@ REST claims.
   claims outside the strategy-history boundary.
 - `npm run check:links` now enforces tracked Markdown local link and anchor
   integrity.
+- `npm run check:exit-codes` now enforces built-CLI exit codes for success,
+  schema failure, invalid JSON/read failures, batch input failures, and usage
+  errors. Live REST/network failures remain unclaimed until a live REST source
+  ships.
 - Stale-claim scan found no old benchmark numbers, fake-growth language,
   invalid old GitHub owner path, or public-report placeholders.
 - `git diff --check` passed.
@@ -103,6 +107,8 @@ Current checked behavior:
 - Repair human and JSON output for schema-proven unknown top-level parameters,
   with non-repairable failures kept blocked.
 - `docs/json-output.md` documents the current JSON output contract.
+- `docs/exit-codes.md` documents the current exit-code contract and the live
+  REST/network non-claim.
 - `docs/batch-check-design.md` documents batch behavior and proof gates.
 - `docs/ci-setup.md` documents GitHub annotation output and CI setup paths.
 - `docs/badge-output.md` documents badge formats and status rules.

@@ -144,6 +144,7 @@ WARNING schema_source.warning $: Bundled n8n package metadata is loaded from a c
 ```
 
 See `docs/json-output.md` for the current `--json` output contract.
+See `docs/exit-codes.md` for the executable exit-code contract.
 See `docs/batch-check-design.md` for batch mode behavior, skipped-file rules,
 and exit codes.
 See `docs/ci-setup.md` for GitHub Actions annotation output and current CI
@@ -196,6 +197,7 @@ npm run check:docs
 npm run check:pack
 npm run check:claims
 npm run check:links
+npm run check:exit-codes
 npm test
 npm run audit:prod
 npm run smoke:pack
@@ -229,6 +231,10 @@ claims outside the strategy-history boundary.
 `npm run check:links` proves tracked Markdown local links and image targets
 resolve to existing files/directories, with Markdown anchors checked against
 actual headings.
+
+`npm run check:exit-codes` proves the built CLI exits `0` for success, `1` for
+validation/input failures, and `2` for usage errors. Live REST/network failures
+are not claimed yet and must be added to this gate before that source ships.
 
 `npm run smoke:pack` packs `@n8nproof/core` and `n8n-lint`, installs both
 tarballs into a fresh temp project, and runs `npx n8n-lint check workflow.json`.
@@ -271,6 +277,7 @@ See `docs/pre-commit.md`.
 - `docs/architecture.md`: package boundaries, schema source design, and current
   validation contract.
 - `docs/json-output.md`: stable JSON output contract for CI tooling.
+- `docs/exit-codes.md`: executable exit-code contract for CI tooling.
 - `docs/batch-check-design.md`: batch-check behavior and V1.1 proof gates.
 - `docs/ci-setup.md`: GitHub Actions annotation output and CI setup paths.
 - `docs/badge-output.md`: local badge generation from real check results.
