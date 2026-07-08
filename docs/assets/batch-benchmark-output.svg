@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="620" viewBox="0 0 1360 620" role="img" aria-labelledby="title desc">
+  <title id="title">n8n-lint full-repo batch benchmark output</title>
+  <desc id="desc">Terminal-style capture generated from the checked Zie619/n8n-workflows benchmark JSON.</desc>
+  <rect width="100%" height="100%" fill="#f8fafc"/>
+  <text x="52" y="58" fill="#0f172a" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="32" font-weight="800">Full-repo batch output proof</text>
+  <text x="52" y="92" fill="#475569" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">Generated from docs/benchmark-zie619-report.json by npm run generate:batch-benchmark-output.</text>
+  <rect x="52" y="124" width="1256" height="430" rx="14" fill="#0f172a" stroke="#cbd5e1"/>
+  <rect x="52" y="124" width="1256" height="48" rx="14" fill="#111827"/>
+  <rect x="52" y="160" width="1256" height="12" fill="#111827"/>
+  <circle cx="78" cy="149" r="6" fill="#ef4444"/>
+  <circle cx="100" cy="149" r="6" fill="#f59e0b"/>
+  <circle cx="122" cy="149" r="6" fill="#22c55e"/>
+  <text x="150" y="154" fill="#cbd5e1" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14">actual checked benchmark output</text>
+  <text x="82" y="206" fill="#67e8f9" font-family="Consolas, Menlo, Monaco, monospace" font-size="18">$ npm run benchmark:zie619 -- C:/dev/_benchmarks/Zie619-n8n-workflows docs/benchmark-zie619-report.json</text>
+  <text x="82" y="232" fill="#e5e7eb" font-family="Consolas, Menlo, Monaco, monospace" font-size="18">DISCOVERED 2,077 JSON files in Zie619/n8n-workflows</text>
+  <text x="82" y="258" fill="#e5e7eb" font-family="Consolas, Menlo, Monaco, monospace" font-size="18">SELECTED   2,066 n8n workflow inputs</text>
+  <text x="82" y="284" fill="#86efac" font-family="Consolas, Menlo, Monaco, monospace" font-size="18">PASS       762 workflows</text>
+  <text x="82" y="310" fill="#fca5a5" font-family="Consolas, Menlo, Monaco, monospace" font-size="18">FAIL       1,304 workflows</text>
+  <text x="82" y="336" fill="#fde68a" font-family="Consolas, Menlo, Monaco, monospace" font-size="18">SKIP       11 non-workflow JSON files</text>
+  <text x="82" y="362" fill="#e5e7eb" font-family="Consolas, Menlo, Monaco, monospace" font-size="18"></text>
+  <text x="82" y="388" fill="#cbd5e1" font-family="Consolas, Menlo, Monaco, monospace" font-size="18">TOP FAILURE CATEGORIES</text>
+  <text x="82" y="414" fill="#e5e7eb" font-family="Consolas, Menlo, Monaco, monospace" font-size="18">workflow.node_parameter_unknown  1,088 workflows / 2,218 issues</text>
+  <text x="82" y="440" fill="#e5e7eb" font-family="Consolas, Menlo, Monaco, monospace" font-size="18">workflow.credential_type_unknown  277 workflows / 666 issues</text>
+  <text x="82" y="466" fill="#e5e7eb" font-family="Consolas, Menlo, Monaco, monospace" font-size="18">workflow.node_type_unknown  129 workflows / 377 issues</text>
+  <text x="82" y="492" fill="#e5e7eb" font-family="Consolas, Menlo, Monaco, monospace" font-size="18">workflow.node_parameter_nested_unknown  5 workflows / 14 issues</text>
+  <text x="82" y="518" fill="#e5e7eb" font-family="Consolas, Menlo, Monaco, monospace" font-size="18"></text>
+  <text x="82" y="544" fill="#cbd5e1" font-family="Consolas, Menlo, Monaco, monospace" font-size="18">BOUNDARY   no workflow execution; no live REST validation</text>
+  <text x="52" y="590" fill="#64748b" font-family="Consolas, Menlo, Monaco, monospace" font-size="15">benchmark 94007c1445d9 | n8n-lint de5675d75899</text>
+</svg>

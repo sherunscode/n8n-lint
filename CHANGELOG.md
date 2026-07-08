@@ -58,6 +58,9 @@
 - Added a generated benchmark dashboard SVG plus an executable gate that keeps
   pass, fail, skipped, and failure-category counts aligned to the real
   `Zie619/n8n-workflows` report.
+- Added a generated full-repo batch benchmark output SVG plus an executable
+  gate that keeps discovered JSON, selected workflow, pass, fail, skipped, and
+  boundary text aligned to the real `Zie619/n8n-workflows` report.
 - Added an executable GitHub Action gate and hardened action path handling with
   a quoted bash array before invoking the CLI.
 - Added an executable strategy-checklist gate that reconciles `STRATEGY.md`

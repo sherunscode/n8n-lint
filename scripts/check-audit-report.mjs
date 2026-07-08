@@ -20,6 +20,7 @@ const requiredQualityGates = [
   "check:launch-content",
   "check:benchmark-report",
   "check:benchmark-dashboard",
+  "check:batch-benchmark-output",
   "check:github-action",
   "check:strategy-checklist",
   "check:github-rendered-readme",
@@ -79,6 +80,11 @@ expect(audit.includes("npm run check:launch-content"), "audit must mention the l
 expect(audit.includes("npm run check:benchmark-report"), "audit must mention the benchmark-report checker");
 expect(audit.includes("docs/assets/benchmark-dashboard.svg"), "audit must mention the checked benchmark dashboard");
 expect(audit.includes("npm run check:benchmark-dashboard"), "audit must mention the benchmark dashboard checker");
+expect(
+  audit.includes("docs/assets/batch-benchmark-output.svg"),
+  "audit must mention the checked batch benchmark output"
+);
+expect(audit.includes("npm run check:batch-benchmark-output"), "audit must mention the batch benchmark output checker");
 expect(audit.includes("npm run check:github-action"), "audit must mention the GitHub Action checker");
 expect(audit.includes("last-verified badge"), "audit must mention last-verified badge proof");
 expect(audit.includes("npm run check:strategy-checklist"), "audit must mention the strategy checklist checker");
@@ -148,6 +154,7 @@ console.log(
         "launch content proof",
         "benchmark report proof",
         "benchmark dashboard proof",
+        "batch benchmark output proof",
         "GitHub Action proof",
         "strategy checklist proof",
         "GitHub-rendered README proof",

@@ -19,7 +19,7 @@ hygiene verification, schema-config verification, type-hygiene verification,
 pre-commit hook contract verification, community-readiness verification,
 release-readiness verification, live REST boundary verification, launch-content
 verification, benchmark-report verification, benchmark-dashboard verification,
-GitHub Action contract
+batch benchmark output verification, GitHub Action contract
 verification, strategy-checklist verification, GitHub-rendered README
 verification, GitHub profile verification, README demo verification, animated-demo verification,
 terminal-output demo verification, precommit-rejection demo verification,

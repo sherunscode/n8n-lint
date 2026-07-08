@@ -129,6 +129,13 @@ expect(
   ),
   "launch content pack must require benchmark dashboard freshness before use"
 );
+expect(
+  hasPhrase(
+    launchContentPack,
+    "Use `docs/assets/batch-benchmark-output.svg` only after `npm run check:batch-benchmark-output`"
+  ),
+  "launch content pack must require batch benchmark output freshness before use"
+);
 expect(hasPhrase(launchDrafts, "These drafts are not posted."), "launch drafts must remain explicitly unposted");
 expect(
   hasPhrase(launchDrafts, "Do not add npm install claims until `n8n-lint` is published"),
@@ -173,6 +180,7 @@ console.log(
         "matrix demo freshness gate",
         "matrix GIF freshness gate",
         "benchmark dashboard freshness gate",
+        "batch benchmark output freshness gate",
         "launch visual freshness gate",
         "support and rollback plan"
       ]

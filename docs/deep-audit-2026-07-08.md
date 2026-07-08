@@ -84,6 +84,9 @@ REST claims.
 - Benchmark dashboard asset `docs/assets/benchmark-dashboard.svg` is generated
   from the checked `Zie619/n8n-workflows` benchmark JSON and checked by
   `npm run check:benchmark-dashboard`.
+- Batch benchmark output asset `docs/assets/batch-benchmark-output.svg` is
+  generated from the checked `Zie619/n8n-workflows` benchmark JSON and checked
+  by `npm run check:batch-benchmark-output`.
 - Architecture and support/rollback docs exist for the current MVP.
 - Dependabot is configured for npm and GitHub Actions.
 - CodeQL is configured for JavaScript/TypeScript analysis.
@@ -96,7 +99,8 @@ REST claims.
   `check:cli-output`, `check:precommit`, `check:community`,
   `check:precommit-rejection-demo`, `check:release-readiness`, `check:live-rest-boundary`,
   `check:launch-content`, `check:benchmark-report`,
-  `check:benchmark-dashboard`, `check:github-action`,
+  `check:benchmark-dashboard`, `check:batch-benchmark-output`,
+  `check:github-action`,
   `check:strategy-checklist`, `check:github-rendered-readme`,
   `check:github-profile`, `check:readme-demo`, `check:animated-demo`,
   `check:terminal-output-demo`, `check:matrix-demo`, `check:matrix-gif`,
@@ -167,6 +171,10 @@ REST claims.
 - `npm run check:benchmark-dashboard` now enforces that the benchmark dashboard
   SVG is generated from the checked `Zie619/n8n-workflows` report and keeps
   pass, fail, skipped, and failure-category counts aligned.
+- `npm run check:batch-benchmark-output` now enforces that the full-repo batch
+  benchmark output SVG is generated from the checked `Zie619/n8n-workflows`
+  report and keeps discovered JSON, selected workflow, pass, fail, skipped,
+  failure-category, and no-execution/live-REST boundary text aligned.
 - `npm run check:github-action` now enforces composite action metadata, safe
   paths array expansion, `--format github` invocation, job-summary output, CI
   dogfooding, tool metadata, and Marketplace non-claim boundaries.
@@ -265,6 +273,8 @@ Current checked behavior:
   the README.
 - `docs/assets/benchmark-dashboard.svg` provides a generated benchmark
   dashboard for the README and launch content.
+- `docs/assets/batch-benchmark-output.svg` provides generated full-repo batch
+  benchmark output proof for the README and launch content.
 - `docs/assets/terminal-output-demo.svg` provides generated pass/fail terminal
   output proof for the README.
 - `docs/assets/precommit-rejection-demo.svg` provides generated pre-commit
