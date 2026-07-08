@@ -15,7 +15,8 @@ Asset path: `docs/assets/github-pr-merge-gate-proof.png`
 - PR state after capture: closed.
 - PR merge state at proof check: `BLOCKED` from the failed required status
   check.
-- Branch protection: `main` requires the `quality` status check for non-admins.
+- Branch protection: `main` requires the `quality` status check for everyone,
+  with admin bypass disabled.
 - Proof commit: `1420b51`.
 - Remote proof branch deleted after capture: `codex/protected-merge-gate-proof`.
 - The proof-only PR intentionally rewired the quality script to fail and must

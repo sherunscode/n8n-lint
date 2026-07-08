@@ -48,6 +48,7 @@ for (const phrase of [
   "BLOCKED",
   "required status check",
   "Branch protection",
+  "admin bypass disabled",
   "Remote proof branch deleted",
   assetPath,
   proofCommitPrefix,
@@ -95,8 +96,8 @@ expect(
   "main branch protection must require the quality status check"
 );
 expect(
-  mainBranch.protection?.required_status_checks?.enforcement_level === "non_admins",
-  "main branch required quality check should apply to non-admins"
+  mainBranch.protection?.required_status_checks?.enforcement_level === "everyone",
+  "main branch required quality check should apply to admins and non-admins"
 );
 
 expect(failingRun.name === "CI", "failing proof run must be the CI workflow");
@@ -136,7 +137,7 @@ console.log(
         "live failed CI run metadata",
         "live failed quality job metadata",
         "live successful CodeQL run metadata",
-        "main branch protection requiring quality",
+        "main branch protection requiring quality for everyone",
         "closed unmerged proof PR",
         "deleted proof branch",
         "README/audit/launch references"
