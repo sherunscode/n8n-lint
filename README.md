@@ -190,6 +190,7 @@ npm run check:security
 npm run check:docs
 npm run check:pack
 npm run check:claims
+npm run check:links
 npm test
 npm run audit:prod
 npm run smoke:pack
@@ -219,6 +220,10 @@ dist, schema, package metadata, README, and LICENSE files.
 `npm run check:claims` proves high-risk stale claims do not drift back into the
 repo: invalid owner paths, placeholder launch URLs, and present-tense live REST
 claims outside the strategy-history boundary.
+
+`npm run check:links` proves tracked Markdown local links and image targets
+resolve to existing files/directories, with Markdown anchors checked against
+actual headings.
 
 `npm run smoke:pack` packs `@n8nproof/core` and `n8n-lint`, installs both
 tarballs into a fresh temp project, and runs `npx n8n-lint check workflow.json`.

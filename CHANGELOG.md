@@ -25,6 +25,8 @@
 - Added an executable claims hygiene gate that blocks old owner paths,
   placeholder launch URLs, and present-tense live REST claims outside the
   strategy-history boundary.
+- Added an executable Markdown link gate that verifies tracked local
+  Markdown links, image targets, and heading anchors.
 - Added a reproducible `Zie619/n8n-workflows` benchmark report with exact
   pass/fail and skipped-file counts.
 - Refreshed the benchmark report after nested parameter-key validation changed

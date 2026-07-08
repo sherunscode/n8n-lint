@@ -54,8 +54,8 @@ REST claims.
 - `npm run quality` passed: build, ESLint, Prettier format check, example
   check, bundled-schema check, metadata check, security hygiene check,
   README/CLI docs-contract check, package-content check, claims hygiene check,
-  core fixture tests, CLI fixture tests, production dependency audit, and
-  packed-install smoke.
+  Markdown link check, core fixture tests, CLI fixture tests, production
+  dependency audit, and packed-install smoke.
 - Package dry-runs reviewed:
   - `@n8nproof/core@0.0.0`: 11 files, 204.4 kB package, includes `dist` and
     compact schema artifacts only.
@@ -74,6 +74,8 @@ REST claims.
 - `npm run check:claims` now enforces the current-truth strategy banner and
   blocks old owner paths, placeholder launch URLs, and present-tense live REST
   claims outside the strategy-history boundary.
+- `npm run check:links` now enforces tracked Markdown local link and anchor
+  integrity.
 - Stale-claim scan found no old benchmark numbers, fake-growth language,
   invalid old GitHub owner path, or public-report placeholders.
 - `git diff --check` passed.
