@@ -34,6 +34,9 @@ Report files:
 
 - Markdown summary: `docs/benchmark-zie619-report.md`
 - Raw JSON results: `docs/benchmark-zie619-report.json`
+- Dashboard SVG: `docs/assets/benchmark-dashboard.svg`
+
+![Generated n8n-lint Zie619 benchmark dashboard](assets/benchmark-dashboard.svg)
 
 ## Methodology
 

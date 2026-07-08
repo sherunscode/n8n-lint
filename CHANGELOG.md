@@ -55,6 +55,9 @@
 - Added an executable benchmark-report gate that reconciles the raw JSON,
   Markdown report, README/audit/launch references, failure-category math, and
   non-execution/live REST boundaries.
+- Added a generated benchmark dashboard SVG plus an executable gate that keeps
+  pass, fail, skipped, and failure-category counts aligned to the real
+  `Zie619/n8n-workflows` report.
 - Added an executable GitHub Action gate and hardened action path handling with
   a quoted bash array before invoking the CLI.
 - Added an executable strategy-checklist gate that reconciles `STRATEGY.md`

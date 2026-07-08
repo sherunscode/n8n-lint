@@ -63,6 +63,7 @@ if (strategy === undefined) {
     "Terminal output: full color pass",
     "Pre-commit hook rejecting",
     "Video or GIF demonstrates the multi-version matrix result",
+    "Benchmark dashboard: bar chart",
     "Demo SVG assets are tiny",
     "README badge states",
     "At least one example `workflow.json` fixture is committed",

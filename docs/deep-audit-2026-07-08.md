@@ -81,6 +81,9 @@ REST claims.
 - Benchmark report artifacts are reconciled from raw JSON to Markdown,
   README/audit/launch references, failure-category math, and non-execution/live
   REST boundaries by `npm run check:benchmark-report`.
+- Benchmark dashboard asset `docs/assets/benchmark-dashboard.svg` is generated
+  from the checked `Zie619/n8n-workflows` benchmark JSON and checked by
+  `npm run check:benchmark-dashboard`.
 - Architecture and support/rollback docs exist for the current MVP.
 - Dependabot is configured for npm and GitHub Actions.
 - CodeQL is configured for JavaScript/TypeScript analysis.
@@ -92,7 +95,8 @@ REST claims.
   check, bundled-schema check, `check:schema-config`, `check:type-hygiene`,
   `check:cli-output`, `check:precommit`, `check:community`,
   `check:precommit-rejection-demo`, `check:release-readiness`, `check:live-rest-boundary`,
-  `check:launch-content`, `check:benchmark-report`, `check:github-action`,
+  `check:launch-content`, `check:benchmark-report`,
+  `check:benchmark-dashboard`, `check:github-action`,
   `check:strategy-checklist`, `check:github-rendered-readme`,
   `check:github-profile`, `check:readme-demo`, `check:animated-demo`,
   `check:terminal-output-demo`, `check:matrix-demo`, `check:matrix-gif`,
@@ -160,6 +164,9 @@ REST claims.
 - `npm run check:benchmark-report` now enforces raw benchmark JSON totals,
   failure-category math, relative result paths, Markdown render parity,
   README/audit/launch proof phrases, and non-execution/live REST boundaries.
+- `npm run check:benchmark-dashboard` now enforces that the benchmark dashboard
+  SVG is generated from the checked `Zie619/n8n-workflows` report and keeps
+  pass, fail, skipped, and failure-category counts aligned.
 - `npm run check:github-action` now enforces composite action metadata, safe
   paths array expansion, `--format github` invocation, job-summary output, CI
   dogfooding, tool metadata, and Marketplace non-claim boundaries.
@@ -256,6 +263,8 @@ Current checked behavior:
   `npm run check:github-profile`.
 - `docs/assets/architecture.svg` provides a generated architecture diagram for
   the README.
+- `docs/assets/benchmark-dashboard.svg` provides a generated benchmark
+  dashboard for the README and launch content.
 - `docs/assets/terminal-output-demo.svg` provides generated pass/fail terminal
   output proof for the README.
 - `docs/assets/precommit-rejection-demo.svg` provides generated pre-commit

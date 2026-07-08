@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">n8n-lint Zie619 benchmark dashboard</title>
+  <desc id="desc">Generated from the checked Zie619/n8n-workflows benchmark JSON. Shows pass, fail, skipped, and failure category counts without claiming workflow execution or live REST validation.</desc>
+  <rect width="1200" height="760" fill="#f8fafc"/>
+  <text x="56" y="72" fill="#0f172a" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="34" font-weight="800">Zie619/n8n-workflows benchmark</text>
+  <text x="56" y="108" fill="#475569" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17">Generated from docs/benchmark-zie619-report.json by npm run generate:benchmark-dashboard.</text>
+  <rect x="56" y="142" width="242" height="112" rx="14" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="80" y="180" fill="#64748b" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">WORKFLOW INPUTS</text>
+  <text x="80" y="224" fill="#1d4ed8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="38" font-weight="800">2,066</text>
+  <rect x="338" y="142" width="242" height="112" rx="14" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="362" y="180" fill="#64748b" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">PASSED</text>
+  <text x="362" y="224" fill="#047857" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="38" font-weight="800">762</text>
+  <rect x="620" y="142" width="242" height="112" rx="14" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="644" y="180" fill="#64748b" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">FAILED</text>
+  <text x="644" y="224" fill="#b91c1c" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="38" font-weight="800">1,304</text>
+  <rect x="902" y="142" width="242" height="112" rx="14" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="926" y="180" fill="#64748b" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">SKIPPED JSON</text>
+  <text x="926" y="224" fill="#b45309" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="38" font-weight="800">11</text>
+  <rect x="56" y="302" width="1088" height="164" rx="14" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="86" y="344" fill="#0f172a" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="800">Pass/fail split</text>
+  <rect x="86" y="378" width="379" height="34" rx="8" fill="#10b981"/>
+  <rect x="465" y="378" width="649" height="34" rx="8" fill="#ef4444"/>
+  <text x="86" y="442" fill="#334155" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18">36.9% passed / 63.1% failed across 2,066 checked workflow inputs.</text>
+  <text x="760" y="442" fill="#64748b" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">0.5% of discovered JSON skipped as non-workflow JSON.</text>
+  <rect x="56" y="500" width="1088" height="184" rx="14" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="86" y="542" fill="#0f172a" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="800">Top failure categories</text>
+  <text x="86" y="576" fill="#334155" font-family="Consolas, Menlo, Monaco, monospace" font-size="15">workflow.node_parameter_unknown</text>
+  <rect x="520" y="562" width="360" height="18" rx="9" fill="#e2e8f0"/>
+  <rect x="520" y="562" width="360" height="18" rx="9" fill="#2563eb"/>
+  <text x="906" y="576" fill="#475569" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15">1,088 workflows / 2,218 issues</text>
+  <text x="86" y="606" fill="#334155" font-family="Consolas, Menlo, Monaco, monospace" font-size="15">workflow.credential_type_unknown</text>
+  <rect x="520" y="592" width="360" height="18" rx="9" fill="#e2e8f0"/>
+  <rect x="520" y="592" width="92" height="18" rx="9" fill="#2563eb"/>
+  <text x="906" y="606" fill="#475569" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15">277 workflows / 666 issues</text>
+  <text x="86" y="636" fill="#334155" font-family="Consolas, Menlo, Monaco, monospace" font-size="15">workflow.node_type_unknown</text>
+  <rect x="520" y="622" width="360" height="18" rx="9" fill="#e2e8f0"/>
+  <rect x="520" y="622" width="43" height="18" rx="9" fill="#2563eb"/>
+  <text x="906" y="636" fill="#475569" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15">129 workflows / 377 issues</text>
+  <text x="86" y="666" fill="#334155" font-family="Consolas, Menlo, Monaco, monospace" font-size="15">workflow.node_parameter_nested_unknown</text>
+  <rect x="520" y="652" width="360" height="18" rx="9" fill="#e2e8f0"/>
+  <rect x="520" y="652" width="4" height="18" rx="9" fill="#2563eb"/>
+  <text x="906" y="666" fill="#475569" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15">5 workflows / 14 issues</text>
+  <text x="56" y="724" fill="#64748b" font-family="Consolas, Menlo, Monaco, monospace" font-size="15">source 94007c1445d9 | n8n-lint de5675d75899 | no workflow execution | no live REST validation</text>
+</svg>

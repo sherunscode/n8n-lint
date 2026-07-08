@@ -68,6 +68,9 @@ same real matrix CLI and JSON output, then checked by
   and `n8n-nodes-base@2.30.0`, plus matrix mode.
 - Benchmark: `docs/benchmark-zie619-report.md` records the reproducible
   `Zie619/n8n-workflows` run and exact source commit.
+- Benchmark dashboard: `docs/assets/benchmark-dashboard.svg` is generated from
+  the checked `Zie619/n8n-workflows` report and shows pass/fail/skipped counts
+  plus top failure categories.
 - Launch visual: `docs/assets/social-preview.svg` is generated from the checked
   benchmark, schema config, and repo metadata.
 - Terminal visual: `docs/assets/terminal-output-demo.svg` is generated from
@@ -89,6 +92,8 @@ same real matrix CLI and JSON output, then checked by
   marketplace.
 
 ![Generated n8n-lint architecture diagram](docs/assets/architecture.svg)
+
+![Generated n8n-lint Zie619 benchmark dashboard](docs/assets/benchmark-dashboard.svg)
 
 ![Generated n8n-lint last-verified badge decay states](docs/assets/last-verified-badges.svg)
 
@@ -265,6 +270,7 @@ npm run check:release-readiness
 npm run check:live-rest-boundary
 npm run check:launch-content
 npm run check:benchmark-report
+npm run check:benchmark-dashboard
 npm run check:github-action
 npm run check:strategy-checklist
 npm run check:github-rendered-readme
@@ -348,6 +354,10 @@ categories, relative result paths, Markdown report, README references, audit
 references, and launch-pack references all match the committed
 `Zie619/n8n-workflows` report. The benchmark does not execute workflows and
 does not claim live REST validation.
+
+`npm run check:benchmark-dashboard` proves the benchmark dashboard SVG is
+generated from the committed `Zie619/n8n-workflows` report and keeps pass,
+fail, skipped, and failure-category counts aligned.
 
 `npm run check:github-action` proves the composite action metadata, safe paths
 array expansion, `--format github` invocation, last-verified badge summary, CI

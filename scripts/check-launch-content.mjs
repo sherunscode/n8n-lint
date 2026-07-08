@@ -46,6 +46,7 @@ for (const phrase of [
   "Use `docs/assets/precommit-rejection-demo.svg` only after `npm run check:precommit-rejection-demo`",
   "Use `docs/assets/matrix-compatibility-demo.svg` only after `npm run check:matrix-demo`",
   "Use `docs/assets/matrix-compatibility-demo.gif` only after `npm run check:matrix-gif`",
+  "Use `docs/assets/benchmark-dashboard.svg` only after `npm run check:benchmark-dashboard`",
   "Run `npm run check:benchmark-report` before publishing benchmark-number claims.",
   "Do not mention stars, followers, installs, traffic, or engagement unless a current source is attached.",
   "Run `npm run check:launch-content` before approving any launch copy changes."
@@ -69,7 +70,8 @@ for (const evidenceId of [
   "E13",
   "E14",
   "E15",
-  "E16"
+  "E16",
+  "E17"
 ]) {
   expect(
     new RegExp(`\\| ${evidenceId}\\s+\\|`).test(launchContentPack),

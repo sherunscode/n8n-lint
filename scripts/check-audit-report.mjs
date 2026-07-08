@@ -19,6 +19,7 @@ const requiredQualityGates = [
   "check:live-rest-boundary",
   "check:launch-content",
   "check:benchmark-report",
+  "check:benchmark-dashboard",
   "check:github-action",
   "check:strategy-checklist",
   "check:github-rendered-readme",
@@ -76,6 +77,8 @@ expect(audit.includes("docs/live-rest-threat-model.md"), "audit must mention the
 expect(audit.includes("fail-closed TLS"), "audit must mention live REST TLS threat handling");
 expect(audit.includes("npm run check:launch-content"), "audit must mention the launch-content checker");
 expect(audit.includes("npm run check:benchmark-report"), "audit must mention the benchmark-report checker");
+expect(audit.includes("docs/assets/benchmark-dashboard.svg"), "audit must mention the checked benchmark dashboard");
+expect(audit.includes("npm run check:benchmark-dashboard"), "audit must mention the benchmark dashboard checker");
 expect(audit.includes("npm run check:github-action"), "audit must mention the GitHub Action checker");
 expect(audit.includes("last-verified badge"), "audit must mention last-verified badge proof");
 expect(audit.includes("npm run check:strategy-checklist"), "audit must mention the strategy checklist checker");
@@ -144,6 +147,7 @@ console.log(
         "live REST threat model proof",
         "launch content proof",
         "benchmark report proof",
+        "benchmark dashboard proof",
         "GitHub Action proof",
         "strategy checklist proof",
         "GitHub-rendered README proof",

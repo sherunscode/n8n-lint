@@ -202,6 +202,9 @@ Report files:
 
 - Markdown summary: \`${benchmarkMarkdownPath}\`
 - Raw JSON results: \`${benchmarkJsonPath}\`
+- Dashboard SVG: \`docs/assets/benchmark-dashboard.svg\`
+
+![Generated n8n-lint Zie619 benchmark dashboard](assets/benchmark-dashboard.svg)
 
 ## Methodology
 

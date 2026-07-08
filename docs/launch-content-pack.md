@@ -35,6 +35,7 @@ Evidence IDs used below:
 | E14 | `docs/assets/precommit-rejection-demo.svg`              | Generated from an actual temporary Git commit rejected by `.githooks/pre-commit` by `npm run generate:precommit-rejection-demo`; freshness is enforced by `npm run check:precommit-rejection-demo`.                                                                                                                                                                                                                                                                                                                                                                   |
 | E15 | `docs/assets/matrix-compatibility-demo.svg`             | Generated from real `check --n8n-version=matrix` CLI and JSON output by `npm run generate:matrix-demo`; freshness is enforced by `npm run check:matrix-demo`. It proves the checked fixture fails under `n8n-nodes-base@2.29.6` and passes under `n8n-nodes-base@2.30.0`.                                                                                                                                                                                                                                 |
 | E16 | `docs/assets/matrix-compatibility-demo.gif`             | Generated from the same real matrix CLI and JSON output by `npm run generate:matrix-gif`; freshness is enforced by `npm run check:matrix-gif`. It provides the animated pass/fail matrix proof for README and launch drafts.                                                                                                                                                                                                                                                                                |
+| E17 | `docs/assets/benchmark-dashboard.svg`                   | Generated from `docs/benchmark-zie619-report.json` by `npm run generate:benchmark-dashboard`; freshness is enforced by `npm run check:benchmark-dashboard`. It visualizes the checked 2,066-workflow benchmark, pass/fail/skipped counts, and top failure categories without claiming workflow execution or live REST validation.                                                                                                                                                                           |
 
 The benchmark report records the source SHA used for benchmark generation. For
 launch posts, re-check current `main` CI and the public benchmark report URL
@@ -206,6 +207,8 @@ Before any external post:
    `npm run check:matrix-demo` passes on the same commit.
 10. Use `docs/assets/matrix-compatibility-demo.gif` only after
    `npm run check:matrix-gif` passes on the same commit.
+11. Use `docs/assets/benchmark-dashboard.svg` only after
+    `npm run check:benchmark-dashboard` passes on the same commit.
 9. Use `docs/assets/terminal-output-demo.svg` only after
    `npm run check:terminal-output-demo` passes on the same commit.
 10. Use `docs/assets/precommit-rejection-demo.svg` only after

@@ -41,6 +41,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:live-rest-boundary") &&
     packageJson.scripts.quality.includes("npm run check:launch-content") &&
     packageJson.scripts.quality.includes("npm run check:benchmark-report") &&
+    packageJson.scripts.quality.includes("npm run check:benchmark-dashboard") &&
     packageJson.scripts.quality.includes("npm run check:github-action") &&
     packageJson.scripts.quality.includes("npm run check:strategy-checklist") &&
     packageJson.scripts.quality.includes("npm run check:github-rendered-readme") &&
@@ -61,7 +62,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:claims") &&
     packageJson.scripts.quality.includes("npm run check:links") &&
     packageJson.scripts.quality.includes("npm run check:exit-codes"),
-  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, release readiness, live REST boundary, launch content, benchmark report, GitHub Action, strategy checklist, GitHub-rendered README, GitHub profile, README demo, animated demo, terminal output demo, matrix demo, matrix GIF, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
+  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, release readiness, live REST boundary, launch content, benchmark report, benchmark dashboard, GitHub Action, strategy checklist, GitHub-rendered README, GitHub profile, README demo, animated demo, terminal output demo, matrix demo, matrix GIF, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
 );
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 
@@ -76,6 +77,7 @@ await expectFile("docs/assets/readme-failure-demo.svg");
 await expectFile("docs/assets/animated-failure-demo.svg");
 await expectFile("docs/assets/terminal-output-demo.svg");
 await expectFile("docs/assets/precommit-rejection-demo.svg");
+await expectFile("docs/assets/benchmark-dashboard.svg");
 await expectFile("docs/assets/matrix-compatibility-demo.svg");
 await expectFile("docs/assets/matrix-compatibility-demo.gif");
 await expectFile("docs/assets/social-preview.svg");
@@ -94,6 +96,7 @@ await expectFile("scripts/check-release-readiness.mjs");
 await expectFile("scripts/check-live-rest-boundary.mjs");
 await expectFile("scripts/check-launch-content.mjs");
 await expectFile("scripts/check-benchmark-report.mjs");
+await expectFile("scripts/check-benchmark-dashboard.mjs");
 await expectFile("scripts/check-github-action.mjs");
 await expectFile("scripts/check-strategy-checklist.mjs");
 await expectFile("scripts/check-github-rendered-readme.mjs");
@@ -136,6 +139,7 @@ console.log(
         "docs/assets/animated-failure-demo.svg",
         "docs/assets/terminal-output-demo.svg",
         "docs/assets/precommit-rejection-demo.svg",
+        "docs/assets/benchmark-dashboard.svg",
         "docs/assets/matrix-compatibility-demo.svg",
         "docs/assets/matrix-compatibility-demo.gif",
         "docs/assets/social-preview.svg",
@@ -154,6 +158,7 @@ console.log(
         "scripts/check-live-rest-boundary.mjs",
         "scripts/check-launch-content.mjs",
         "scripts/check-benchmark-report.mjs",
+        "scripts/check-benchmark-dashboard.mjs",
         "scripts/check-github-action.mjs",
         "scripts/check-strategy-checklist.mjs",
         "scripts/check-github-rendered-readme.mjs",
