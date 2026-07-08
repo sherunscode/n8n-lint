@@ -14,7 +14,7 @@ Evidence IDs used below:
 | ID  | Evidence                                                | Status                                                                                                                                                                                                                                                                                                              |
 | --- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | E1  | `README.md` and package READMEs in `C:\dev\Stars`       | Local repo states the current product is a local MVP, not published to npm, with CLI checks for workflow structure, node type names, credential type names, top-level node parameter names, structured nested collection/fixedCollection/filter parameter keys, and trigger graph/type-version shape.               |
-| E2  | `npm run quality` from `C:\dev\Stars`                   | Passed build, ESLint, Prettier format check, example check, bundled-schema check, metadata check, security hygiene check, core fixture tests, CLI fixture tests, production dependency audit with 0 vulnerabilities, and packed-install smoke.                                                                      |
+| E2  | `npm run quality` from `C:\dev\Stars`                   | Passed build, ESLint, Prettier format check, example check, bundled-schema check, metadata check, security hygiene check, README/CLI docs-contract check, core fixture tests, CLI fixture tests, production dependency audit with 0 vulnerabilities, and packed-install smoke.                                      |
 | E3  | `npm run check:bundled-schema` inside `npm run quality` | Passed; reported `n8n-nodes-base@2.29.6`, 439 node types, 402 credential types, 437 parameterized node types, 437 nested-parameterized node types, and 106 trigger node types.                                                                                                                                      |
 | E4  | `npm pack --workspace packages/core --dry-run`          | Passed; package dry-run for `@n8nproof/core@0.0.0` listed 11 files: dist, schema, package metadata, README, and LICENSE.                                                                                                                                                                                            |
 | E5  | `npm pack --workspace packages/cli --dry-run`           | Passed; package dry-run for `n8n-lint@0.0.0` listed 6 files: dist, package metadata, README, and LICENSE.                                                                                                                                                                                                           |
@@ -93,7 +93,7 @@ Those stay gated until release and endpoint proof exist.
 4/5
 Public CI proof is live through the repo badge and Actions tab.
 
-The quality path covers build, lint, format, example/schema checks, security hygiene, tests, and production dependency audit.
+The quality path covers build, lint, format, example/schema checks, security hygiene, README/CLI docs-contract checks, tests, and production dependency audit.
 
 https://github.com/sherunscode/n8n-lint/actions
 ```

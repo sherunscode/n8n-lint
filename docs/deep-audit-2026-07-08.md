@@ -52,9 +52,9 @@ REST claims.
 - `n8n@2.29.7` still resolves to `n8n-nodes-base@2.29.6` and
   `n8n-workflow@2.29.2`.
 - `npm run quality` passed: build, ESLint, Prettier format check, example
-  check, bundled-schema check, metadata check, security hygiene check, core
-  fixture tests, CLI fixture tests, production dependency audit, and
-  packed-install smoke.
+  check, bundled-schema check, metadata check, security hygiene check,
+  README/CLI docs-contract check, core fixture tests, CLI fixture tests,
+  production dependency audit, and packed-install smoke.
 - Package dry-runs reviewed:
   - `@n8nproof/core@0.0.0`: 11 files, 204.4 kB package, includes `dist` and
     compact schema artifacts only.
@@ -66,6 +66,8 @@ REST claims.
   n8n token pattern in tracked public surfaces.
 - `npm run check:security` now enforces ignored local secret/config files, public
   token-pattern scanning, and no bare API-key CLI option.
+- `npm run check:docs` now enforces README `--help` parity with the built CLI
+  and required CLI option documentation.
 - Stale-claim scan found no old benchmark numbers, fake-growth language,
   invalid old GitHub owner path, or public-report placeholders.
 - `git diff --check` passed.

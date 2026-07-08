@@ -187,6 +187,7 @@ npm run check:example
 npm run check:bundled-schema
 npm run check:metadata
 npm run check:security
+npm run check:docs
 npm test
 npm run audit:prod
 npm run smoke:pack
@@ -206,6 +207,9 @@ packages.
 `npm run check:security` proves local secret/config paths are ignored, scans
 tracked public files for common token patterns, and verifies the CLI does not
 accept a bare API key option.
+
+`npm run check:docs` proves the README's documented `--help` output matches the
+built CLI and that required CLI options remain documented.
 
 `npm run smoke:pack` packs `@n8nproof/core` and `n8n-lint`, installs both
 tarballs into a fresh temp project, and runs `npx n8n-lint check workflow.json`.

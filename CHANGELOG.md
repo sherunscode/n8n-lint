@@ -17,6 +17,8 @@
 - Added an executable security hygiene gate that verifies ignored secret/config
   paths, scans tracked public files for token patterns, and blocks bare API-key
   CLI options.
+- Added an executable docs contract gate that compares the README `--help`
+  block against the built CLI and verifies required CLI options are documented.
 - Added a reproducible `Zie619/n8n-workflows` benchmark report with exact
   pass/fail and skipped-file counts.
 - Refreshed the benchmark report after nested parameter-key validation changed

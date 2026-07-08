@@ -31,8 +31,9 @@ expect(
   typeof packageJson.scripts?.quality === "string" &&
     packageJson.scripts.quality.includes("npm run lint") &&
     packageJson.scripts.quality.includes("npm run format:check") &&
-    packageJson.scripts.quality.includes("npm run check:security"),
-  "package.json quality gate must include lint, format, and security hygiene checks"
+    packageJson.scripts.quality.includes("npm run check:security") &&
+    packageJson.scripts.quality.includes("npm run check:docs"),
+  "package.json quality gate must include lint, format, security hygiene, and docs contract checks"
 );
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 
@@ -45,6 +46,7 @@ await expectFile("examples/pre-commit-setup/.pre-commit-config.yaml");
 await expectFile("examples/failing-nested-dead-parameter.json");
 await expectFile("scripts/smoke-packed-install.mjs");
 await expectFile("scripts/check-security-hygiene.mjs");
+await expectFile("scripts/check-docs-contract.mjs");
 
 if (failures.length > 0) {
   throw new Error(`metadata check failed:\n${failures.map((failure) => `- ${failure}`).join("\n")}`);
@@ -64,7 +66,8 @@ console.log(
         "examples/pre-commit-setup/.pre-commit-config.yaml",
         "examples/failing-nested-dead-parameter.json",
         "scripts/smoke-packed-install.mjs",
-        "scripts/check-security-hygiene.mjs"
+        "scripts/check-security-hygiene.mjs",
+        "scripts/check-docs-contract.mjs"
       ]
     },
     null,
