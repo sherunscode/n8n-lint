@@ -7,6 +7,7 @@
     "workflows": 1,
     "passed": 1,
     "failed": 0,
+    "warnings": 0,
     "skipped": 1,
     "errors": 0
   },

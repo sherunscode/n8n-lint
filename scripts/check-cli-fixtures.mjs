@@ -75,7 +75,7 @@ const checks = [
       "FAIL examples/failing-dead-parameter.json",
       "workflow.node_parameter_unknown",
       "SKIP examples/not-a-workflow.json",
-      "Summary: 1 passed, 1 failed, 1 skipped, 0 errors"
+      "Summary: 1 passed, 1 failed, 2 warnings, 1 skipped, 0 errors"
     ]
   },
   {
@@ -89,13 +89,16 @@ const checks = [
       "--json"
     ],
     exitCode: 1,
-    stdoutIncludes: ['"summary"', '"passed": 1', '"failed": 1', '"skipped": 1', '"status": "skipped"']
+    stdoutIncludes: ['"summary"', '"passed": 1', '"failed": 1', '"warnings": 2', '"skipped": 1', '"status": "skipped"']
   },
   {
     name: "batch glob mode can skip ordinary json without failing",
     args: [cliPath, "check", "examples/not-a-*.json"],
     exitCode: 0,
-    stdoutIncludes: ["SKIP examples/not-a-workflow.json", "Summary: 0 passed, 0 failed, 1 skipped, 0 errors"]
+    stdoutIncludes: [
+      "SKIP examples/not-a-workflow.json",
+      "Summary: 0 passed, 0 failed, 0 warnings, 1 skipped, 0 errors"
+    ]
   },
   {
     name: "badge markdown output uses checked json result",
@@ -161,7 +164,7 @@ const checks = [
     stdoutIncludes: [
       "::error file=examples/failing-dead-parameter.json,title=workflow.node_parameter_unknown::",
       "::warning file=examples/failing-dead-parameter.json,title=schema_source.warning::",
-      "Summary: 0 passed, 1 failed, 0 skipped, 0 errors"
+      "Summary: 0 passed, 1 failed, 1 warnings, 0 skipped, 0 errors"
     ]
   },
   {

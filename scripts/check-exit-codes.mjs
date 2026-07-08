@@ -42,7 +42,7 @@ try {
       name: "unmatched batch glob exits 1",
       args: [cliPath, "check", "examples/no-match-*.json"],
       exitCode: 1,
-      stdoutIncludes: ["ERROR examples/no-match-*.json", "Summary: 0 passed, 0 failed, 0 skipped, 1 errors"]
+      stdoutIncludes: ["ERROR examples/no-match-*.json", "Summary: 0 passed, 0 failed, 0 warnings, 0 skipped, 1 errors"]
     },
     {
       name: "missing command exits 2",

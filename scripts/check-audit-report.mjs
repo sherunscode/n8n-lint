@@ -48,6 +48,8 @@ expect(audit.includes("docs/assets/social-preview.svg"), "audit must mention the
 expect(audit.includes("npm run check:social-preview"), "audit must mention the social preview checker");
 expect(audit.includes("npm run check:release-readiness"), "audit must mention the release-readiness checker");
 expect(audit.includes("npm run check:cli-output"), "audit must mention the CLI output checker");
+expect(audit.includes("final JSON summary"), "audit must mention final JSON summary proof");
+expect(audit.includes("warning summary counts"), "audit must mention warning summary counts");
 expect(audit.includes("npm run check:live-rest-boundary"), "audit must mention the live REST boundary checker");
 expect(audit.includes("npm run check:launch-content"), "audit must mention the launch-content checker");
 expect(audit.includes("npm run check:benchmark-report"), "audit must mention the benchmark-report checker");

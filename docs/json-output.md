@@ -17,30 +17,31 @@ service behavior.
 
 ## Top-Level Fields
 
-| Field | Type | Description |
-|---|---|---|
-| `filePath` | `string` | The workflow file path passed to the CLI. |
-| `ok` | `boolean` | `true` when no `error` severity issues are present. |
-| `checkedAt` | `string` | ISO timestamp for the validation run. |
-| `source` | `string` | Schema source used by the run. Current CLI values are `bundled-n8n-package` and `local-placeholder`. |
-| `issues` | `array` | Validation issues and warnings. Empty only when no errors or warnings were emitted. |
+| Field       | Type      | Description                                                                                          |
+| ----------- | --------- | ---------------------------------------------------------------------------------------------------- |
+| `filePath`  | `string`  | The workflow file path passed to the CLI.                                                            |
+| `ok`        | `boolean` | `true` when no `error` severity issues are present.                                                  |
+| `checkedAt` | `string`  | ISO timestamp for the validation run.                                                                |
+| `source`    | `string`  | Schema source used by the run. Current CLI values are `bundled-n8n-package` and `local-placeholder`. |
+| `issues`    | `array`   | Validation issues and warnings. Empty only when no errors or warnings were emitted.                  |
+| `summary`   | `object`  | Final top-level field with pass/fail/warning/skipped/error counts for the run.                       |
 
 ## Issue Fields
 
-| Field | Type | Description |
-|---|---|---|
-| `severity` | `"error"` or `"warning"` | Errors fail the run. Warnings are informational. |
-| `code` | `string` | Stable issue code for CI filtering. |
-| `message` | `string` | Human-readable explanation. Do not parse this as a stable API. |
-| `path` | `string` | JSONPath-like location in the workflow document, or `$` for whole-document messages. |
+| Field      | Type                     | Description                                                                          |
+| ---------- | ------------------------ | ------------------------------------------------------------------------------------ |
+| `severity` | `"error"` or `"warning"` | Errors fail the run. Warnings are informational.                                     |
+| `code`     | `string`                 | Stable issue code for CI filtering.                                                  |
+| `message`  | `string`                 | Human-readable explanation. Do not parse this as a stable API.                       |
+| `path`     | `string`                 | JSONPath-like location in the workflow document, or `$` for whole-document messages. |
 
 ## Exit Codes
 
-| Exit | Meaning |
-|---:|---|
-| `0` | Workflow passed validation. |
-| `1` | Workflow failed validation or the file could not be read/parsed. |
-| `2` | CLI usage error, such as an unknown flag or missing command. |
+| Exit | Meaning                                                          |
+| ---: | ---------------------------------------------------------------- |
+|  `0` | Workflow passed validation.                                      |
+|  `1` | Workflow failed validation or the file could not be read/parsed. |
+|  `2` | CLI usage error, such as an unknown flag or missing command.     |
 
 `npm run check:exit-codes` proves the exit-code contract against the built CLI.
 The current MVP does not ship a live REST/network schema source, so network
@@ -74,32 +75,34 @@ Representative output:
       "message": "Bundled n8n package metadata is loaded from a compact checked-in artifact; this is not live REST validation.",
       "path": "$"
     }
-  ]
+  ],
+  "summary": {
+    "totalFiles": 1,
+    "workflows": 1,
+    "passed": 0,
+    "failed": 1,
+    "warnings": 1,
+    "skipped": 0,
+    "errors": 0
+  }
 }
 ```
 
 `checkedAt` changes on each run. The message text can improve in future minor
-versions, but `severity`, `code`, and `path` are the intended fields for
-automation.
+versions, but `severity`, `code`, and `path` are the intended issue fields for
+automation. `summary` is always the final top-level field in JSON check output.
 
 ## Batch JSON
 
 Batch mode runs when `check` receives multiple inputs, a directory, or a glob.
-The top-level object adds a summary and per-file results:
+The top-level object adds per-file results and keeps `summary` as the final
+top-level field:
 
 ```json
 {
   "ok": false,
   "checkedAt": "2026-07-08T00:00:00.000Z",
   "source": "bundled-n8n-package",
-  "summary": {
-    "totalFiles": 3,
-    "workflows": 2,
-    "passed": 1,
-    "failed": 1,
-    "skipped": 1,
-    "errors": 0
-  },
   "results": [
     {
       "filePath": "examples/known-http-request-workflow.json",
@@ -124,6 +127,12 @@ The top-level object adds a summary and per-file results:
           "code": "workflow.node_parameter_unknown",
           "message": "Unknown or dead parameter \"notARealParameter\" for node type \"n8n-nodes-base.httpRequest\".",
           "path": "$.nodes[0].parameters.notARealParameter"
+        },
+        {
+          "severity": "warning",
+          "code": "schema_source.warning",
+          "message": "Bundled n8n package metadata is loaded from a compact checked-in artifact; this is not live REST validation.",
+          "path": "$"
         }
       ]
     },
@@ -133,18 +142,27 @@ The top-level object adds a summary and per-file results:
       "ok": true,
       "reason": "nodes_missing"
     }
-  ]
+  ],
+  "summary": {
+    "totalFiles": 3,
+    "workflows": 2,
+    "passed": 1,
+    "failed": 1,
+    "warnings": 2,
+    "skipped": 1,
+    "errors": 0
+  }
 }
 ```
 
 Batch statuses:
 
-| Status | Meaning |
-|---|---|
-| `passed` | File is an n8n workflow and has no `error` severity issues. |
-| `failed` | File is an n8n workflow and has one or more `error` severity issues. |
+| Status    | Meaning                                                                              |
+| --------- | ------------------------------------------------------------------------------------ |
+| `passed`  | File is an n8n workflow and has no `error` severity issues.                          |
+| `failed`  | File is an n8n workflow and has one or more `error` severity issues.                 |
 | `skipped` | File is valid JSON but is not an n8n workflow object with a top-level `nodes` array. |
-| `error` | File could not be read, parsed, or resolved. |
+| `error`   | File could not be read, parsed, or resolved.                                         |
 
 Skipped files do not fail the run. Failed workflows and read/parse/input errors
 produce exit code `1`.
@@ -172,6 +190,7 @@ results plus compatibility differences:
         "workflows": 1,
         "passed": 0,
         "failed": 1,
+        "warnings": 1,
         "skipped": 0,
         "errors": 0
       },
@@ -189,6 +208,7 @@ results plus compatibility differences:
         "workflows": 1,
         "passed": 1,
         "failed": 0,
+        "warnings": 1,
         "skipped": 0,
         "errors": 0
       },
@@ -203,18 +223,27 @@ results plus compatibility differences:
         "2.30.0": "passed"
       },
       "errorSignaturesByVersion": {
-        "2.29.6": [
-          "workflow.node_parameter_unknown:$.nodes[0].parameters.clearWarning"
-        ],
+        "2.29.6": ["workflow.node_parameter_unknown:$.nodes[0].parameters.clearWarning"],
         "2.30.0": []
       }
     }
-  ]
+  ],
+  "summary": {
+    "totalFiles": 2,
+    "workflows": 2,
+    "passed": 1,
+    "failed": 1,
+    "warnings": 2,
+    "skipped": 0,
+    "errors": 0
+  }
 }
 ```
 
 Matrix `ok` is `true` only when every pinned version passes. `differences`
 contains files whose status or error signatures differ across versions.
+Top-level matrix `summary` aggregates the per-version file checks and is the
+final top-level JSON field.
 
 ## Repair JSON
 
@@ -239,8 +268,8 @@ Repair mode emits a conservative change model. It is diff-only by default; the
 
 Current repair codes:
 
-| Code | Meaning |
-|---|---|
+| Code                       | Meaning                                                                                                            |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | `remove_unknown_parameter` | Remove a top-level node parameter that the selected bundled schema artifact does not recognize for that node type. |
 
 Repair exits `0` only when the repaired workflow validates with no remaining

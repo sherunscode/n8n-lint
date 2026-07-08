@@ -251,8 +251,8 @@ blocks `any`, `@ts-ignore`, and `@ts-expect-error` in `packages/core/src`.
 
 `npm run check:cli-output` proves interactive human output uses consistent
 status colors, `NO_COLOR` and piped output stay plain, JSON remains
-machine-readable, GitHub annotations stay uncolored, and batch summaries remain
-the final human output line.
+machine-readable, GitHub annotations stay uncolored, and human plus JSON
+summaries stay last with warning counts.
 
 `npm run check:precommit` proves the local Git hook is executable, quiet on
 success, preserves failure exit codes, and replays captured quality output only

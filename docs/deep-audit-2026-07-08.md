@@ -85,7 +85,7 @@ REST claims.
 - Package dry-runs reviewed:
   - `@n8nproof/core@0.0.0`: 12 files, 205.9 kB package, includes `dist`,
     `schema`, package metadata, README, and LICENSE only.
-  - `n8n-lint@0.0.0`: 6 files, 16.2 kB package, includes `dist` only plus
+  - `n8n-lint@0.0.0`: 6 files, 17.0 kB package, includes `dist` only plus
     package metadata, README, and LICENSE.
 - Fresh temp-project tarball install is automated by `npm run smoke:pack` and
   passed with `npx n8n-lint check workflow.json`.
@@ -113,7 +113,8 @@ REST claims.
   blocks `any` or TypeScript suppression directives in the validation core.
 - `npm run check:cli-output` now enforces interactive color semantics,
   `NO_COLOR` override behavior, piped plain text, JSON no-color safety, GitHub
-  annotation no-color safety, and batch final-summary ordering.
+  annotation no-color safety, final human-summary ordering, final JSON summary
+  fields, and warning summary counts.
 - `npm run check:precommit` now enforces the local Git hook's executable mode,
   quiet success path, failure exit-code propagation, and failure-output replay.
 - `npm run check:community` now enforces issue/PR template fields, contribution
@@ -137,8 +138,9 @@ REST claims.
   paths array expansion, `--format github` invocation, job-summary output, CI
   dogfooding, tool metadata, and Marketplace non-claim boundaries.
 - `npm run check:strategy-checklist` now enforces that `STRATEGY.md` marks only
-  repo-proven checklist boxes as complete and leaves owner-gated, external UI,
-  and future live REST/release checklist boxes unchecked.
+  repo-proven checklist boxes as complete, including final human/JSON summary
+  proof, and leaves owner-gated, external UI, and future live REST/release
+  checklist boxes unchecked.
 - `npm run check:readme-demo` now enforces that the README SVG demo is generated
   from a real failing CLI command and matches the current output.
 - `npm run check:animated-demo` now enforces that the animated failure demo SVG
@@ -177,10 +179,11 @@ Current checked behavior:
 - GitHub Action contract check for action metadata, safe paths handling,
   `--format github` invocation, job-summary output, CI dogfooding, tool
   metadata, and Marketplace non-claim boundaries.
-- Batch human and JSON output with stable summary counts.
+- Single-file and batch human/JSON output with final summary counts, including
+  warning totals.
 - Local badge generation from checked JSON output.
-- Matrix human and JSON output with per-version summaries and compatibility
-  differences.
+- Matrix human and JSON output with per-version summaries, aggregate final
+  summary counts, and compatibility differences.
 - Repair human and JSON output for schema-proven unknown top-level parameters,
   with non-repairable failures kept blocked.
 - `docs/json-output.md` documents the current JSON output contract.

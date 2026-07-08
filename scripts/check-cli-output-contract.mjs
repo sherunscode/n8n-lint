@@ -14,7 +14,8 @@ const checks = [
     args: [cliPath, "check", "examples/known-http-request-workflow.json"],
     env: { FORCE_COLOR: "1" },
     exitCode: 0,
-    stdoutIncludes: ["\u001B[32mPASS\u001B[0m examples/known-http-request-workflow.json", "\u001B[33mWARN\u001B[0m"]
+    stdoutIncludes: ["\u001B[32mPASS\u001B[0m examples/known-http-request-workflow.json", "\u001B[33mWARN\u001B[0m"],
+    stdoutLastLine: "Summary: 1 passed, 0 failed, 1 warnings, 0 skipped, 0 errors"
   },
   {
     name: "interactive failure uses red FAIL and red ERROR",
@@ -24,7 +25,8 @@ const checks = [
     stderrIncludes: [
       "\u001B[31mFAIL\u001B[0m examples/failing-dead-parameter.json",
       "\u001B[31mERROR\u001B[0m workflow.node_parameter_unknown"
-    ]
+    ],
+    stderrLastLine: "Summary: 0 passed, 1 failed, 1 warnings, 0 skipped, 0 errors"
   },
   {
     name: "NO_COLOR disables colors even when FORCE_COLOR is set",
@@ -32,6 +34,7 @@ const checks = [
     env: { FORCE_COLOR: "1", NO_COLOR: "1" },
     exitCode: 0,
     stdoutIncludes: ["PASS examples/known-http-request-workflow.json", "WARN schema_source.warning"],
+    stdoutLastLine: "Summary: 1 passed, 0 failed, 1 warnings, 0 skipped, 0 errors",
     noAnsi: true
   },
   {
@@ -39,6 +42,7 @@ const checks = [
     args: [cliPath, "check", "examples/known-http-request-workflow.json"],
     exitCode: 0,
     stdoutIncludes: ["PASS examples/known-http-request-workflow.json", "WARN schema_source.warning"],
+    stdoutLastLine: "Summary: 1 passed, 0 failed, 1 warnings, 0 skipped, 0 errors",
     noAnsi: true
   },
   {
@@ -47,6 +51,8 @@ const checks = [
     env: { FORCE_COLOR: "1" },
     exitCode: 0,
     jsonStdout: true,
+    jsonSummaryLast: true,
+    summaryWarnings: 1,
     noAnsi: true
   },
   {
@@ -55,6 +61,7 @@ const checks = [
     env: { FORCE_COLOR: "1" },
     exitCode: 1,
     stdoutIncludes: ["::error file=examples/failing-dead-parameter.json,title=workflow.node_parameter_unknown::"],
+    stdoutLastLine: "Summary: 0 passed, 1 failed, 1 warnings, 0 skipped, 0 errors",
     noAnsi: true
   },
   {
@@ -67,7 +74,32 @@ const checks = [
       "examples/not-a-workflow.json"
     ],
     exitCode: 1,
-    stdoutLastLine: "Summary: 1 passed, 1 failed, 1 skipped, 0 errors",
+    stdoutLastLine: "Summary: 1 passed, 1 failed, 2 warnings, 1 skipped, 0 errors",
+    noAnsi: true
+  },
+  {
+    name: "batch JSON summary remains the final top-level field",
+    args: [
+      cliPath,
+      "check",
+      "examples/known-http-request-workflow.json",
+      "examples/failing-dead-parameter.json",
+      "examples/not-a-workflow.json",
+      "--json"
+    ],
+    exitCode: 1,
+    jsonStdout: true,
+    jsonSummaryLast: true,
+    summaryWarnings: 2,
+    noAnsi: true
+  },
+  {
+    name: "matrix JSON summary remains the final top-level field",
+    args: [cliPath, "check", "examples/matrix-2-30-parameter-workflow.json", "--n8n-version=matrix", "--json"],
+    exitCode: 1,
+    jsonStdout: true,
+    jsonSummaryLast: true,
+    summaryWarnings: 2,
     noAnsi: true
   }
 ];
@@ -99,12 +131,25 @@ for (const check of checks) {
     fail(check, `stdout final line was ${JSON.stringify(lastLine(result.stdout))}`);
   }
 
+  if (check.stderrLastLine !== undefined && lastLine(result.stderr) !== check.stderrLastLine) {
+    fail(check, `stderr final line was ${JSON.stringify(lastLine(result.stderr))}`);
+  }
+
+  let parsedStdout;
   if (check.jsonStdout === true) {
     try {
-      JSON.parse(result.stdout);
+      parsedStdout = JSON.parse(result.stdout);
     } catch {
       fail(check, "stdout was not valid JSON");
     }
+  }
+
+  if (check.jsonSummaryLast === true) {
+    expectJsonSummaryLast(check, result.stdout);
+  }
+
+  if (check.summaryWarnings !== undefined && parsedStdout?.summary?.warnings !== check.summaryWarnings) {
+    fail(check, `summary warnings was ${JSON.stringify(parsedStdout?.summary?.warnings)}`);
   }
 
   if (check.noAnsi === true && ansiPattern.test(`${result.stdout}\n${result.stderr}`)) {
@@ -126,7 +171,9 @@ console.log(
         "piped plain text",
         "JSON no-color safety",
         "GitHub annotation no-color safety",
-        "batch final summary line"
+        "human final summary lines",
+        "JSON final summary field",
+        "warning summary counts"
       ]
     },
     null,
@@ -148,4 +195,18 @@ function testEnv(overrides = {}) {
 function lastLine(output) {
   const lines = output.replace(/\r\n/g, "\n").trimEnd().split("\n");
   return lines.at(-1) ?? "";
+}
+
+function expectJsonSummaryLast(check, stdout) {
+  const normalized = stdout.replace(/\r\n/g, "\n").trimEnd();
+  const summaryIndex = normalized.lastIndexOf('\n  "summary": {');
+  if (summaryIndex === -1) {
+    fail(check, "JSON output did not include a top-level summary field");
+    return;
+  }
+
+  const afterSummary = normalized.slice(summaryIndex);
+  if (!/"errors": \d+\n  }\n}$/.test(afterSummary)) {
+    fail(check, "JSON summary was not the final top-level field");
+  }
 }

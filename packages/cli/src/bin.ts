@@ -52,6 +52,7 @@ interface BatchSummary {
   workflows: number;
   passed: number;
   failed: number;
+  warnings: number;
   skipped: number;
   errors: number;
 }
@@ -79,6 +80,7 @@ interface MatrixRunResult {
     results: BatchFileResult[];
   }>;
   differences: MatrixDifference[];
+  summary: BatchSummary;
 }
 
 interface MatrixDifference {
@@ -404,15 +406,29 @@ async function runSingleFile(filePath: string, schemaSource: SchemaSource, forma
     const raw = await readFile(filePath, "utf8");
     const workflow = JSON.parse(raw) as unknown;
     const validation = await validateWorkflow(workflow, schemaSource);
+    const summary = summarizeSingleValidation(validation);
 
     if (format === "json") {
-      console.log(JSON.stringify({ filePath, ...validation }, null, 2));
+      console.log(
+        JSON.stringify(
+          {
+            filePath,
+            ok: validation.ok,
+            checkedAt: validation.checkedAt,
+            source: validation.source,
+            issues: validation.issues,
+            summary
+          },
+          null,
+          2
+        )
+      );
       return validation.ok ? 0 : 1;
     }
 
     if (format === "github") {
       printGithubValidationResult(filePath, validation.issues);
-      console.log(`Summary: ${validation.ok ? 1 : 0} passed, ${validation.ok ? 0 : 1} failed, 0 skipped, 0 errors`);
+      console.log(formatSummary(summary));
       return validation.ok ? 0 : 1;
     }
 
@@ -422,6 +438,7 @@ async function runSingleFile(filePath: string, schemaSource: SchemaSource, forma
       for (const issue of validation.issues.filter((item) => item.severity === "warning")) {
         console.log(`${statusText("warn", "WARN")} ${issue.code}: ${issue.message}`);
       }
+      console.log(formatSummary(summary));
       return 0;
     }
 
@@ -430,21 +447,38 @@ async function runSingleFile(filePath: string, schemaSource: SchemaSource, forma
     for (const issue of validation.issues) {
       console.error(`${issueStatusText(issue.severity, process.stderr)} ${issue.code} ${issue.path}: ${issue.message}`);
     }
+    console.error(formatSummary(summary));
     return 1;
   } catch (error) {
-    if (format === "github") {
-      printGithubAnnotation(
-        "error",
-        displayPath(filePath),
-        "input_error",
-        error instanceof Error ? error.message : String(error)
+    const summary = summarizeInputError();
+    const message = error instanceof Error ? error.message : String(error);
+    if (format === "json") {
+      console.log(
+        JSON.stringify(
+          {
+            filePath,
+            ok: false,
+            checkedAt: new Date().toISOString(),
+            source: schemaSource.kind,
+            error: message,
+            summary
+          },
+          null,
+          2
+        )
       );
-      console.log("Summary: 0 passed, 0 failed, 0 skipped, 1 errors");
+      return 1;
+    }
+
+    if (format === "github") {
+      printGithubAnnotation("error", displayPath(filePath), "input_error", message);
+      console.log(formatSummary(summary));
       return 1;
     }
 
     console.error(`${statusText("fail", "FAIL", process.stderr)} ${filePath}`);
-    console.error(error instanceof Error ? error.message : String(error));
+    console.error(message);
+    console.error(formatSummary(summary));
     return 1;
   }
 }
@@ -710,7 +744,7 @@ async function checkBatchFile(filePath: string, schemaSource: SchemaSource): Pro
 
 function printBatchResult(result: BatchRunResult, format: CheckFormat): void {
   if (format === "json") {
-    console.log(JSON.stringify(result, null, 2));
+    console.log(JSON.stringify(createBatchJsonResult(result), null, 2));
     return;
   }
 
@@ -742,8 +776,7 @@ function printBatchResult(result: BatchRunResult, format: CheckFormat): void {
     }
   }
 
-  const { passed, failed, skipped, errors } = result.summary;
-  console.log(`Summary: ${passed} passed, ${failed} failed, ${skipped} skipped, ${errors} errors`);
+  console.log(formatSummary(result.summary));
 }
 
 async function runMatrix(inputs: string[]): Promise<MatrixRunResult> {
@@ -765,7 +798,8 @@ async function runMatrix(inputs: string[]): Promise<MatrixRunResult> {
     checkedAt: new Date().toISOString(),
     source: "bundled-n8n-package",
     versions,
-    differences: collectMatrixDifferences(versions)
+    differences: collectMatrixDifferences(versions),
+    summary: summarizeMatrixVersions(versions)
   };
 }
 
@@ -785,8 +819,7 @@ function printMatrixResult(result: MatrixRunResult, format: CheckFormat): void {
       ? `${version.packageInfo.name}@${version.packageInfo.version}`
       : `n8n-nodes-base@${version.packageVersion}`;
     console.log(`MATRIX ${packageLabel}: ${version.ok ? statusText("pass", "PASS") : statusText("fail", "FAIL")}`);
-    const { passed, failed, skipped, errors } = version.summary;
-    console.log(`  Summary: ${passed} passed, ${failed} failed, ${skipped} skipped, ${errors} errors`);
+    console.log(`  ${formatSummary(version.summary)}`);
   }
 
   for (const difference of result.differences) {
@@ -797,7 +830,9 @@ function printMatrixResult(result: MatrixRunResult, format: CheckFormat): void {
   }
 
   console.log(
-    `Matrix summary: ${result.versions.length} versions, ${result.differences.length} compatibility differences`
+    `Matrix summary: ${result.versions.length} versions, ${result.differences.length} compatibility differences, ${formatSummaryCounts(
+      result.summary
+    )}`
   );
 }
 
@@ -885,8 +920,7 @@ function printGithubBatchResult(result: BatchRunResult): void {
     printGithubValidationResult(fileResult.filePath, fileResult.issues ?? []);
   }
 
-  const { passed, failed, skipped, errors } = result.summary;
-  console.log(`Summary: ${passed} passed, ${failed} failed, ${skipped} skipped, ${errors} errors`);
+  console.log(formatSummary(result.summary));
 }
 
 function printGithubMatrixResult(result: MatrixRunResult): void {
@@ -930,7 +964,9 @@ function printGithubMatrixResult(result: MatrixRunResult): void {
   }
 
   console.log(
-    `Matrix summary: ${result.versions.length} versions, ${result.differences.length} compatibility differences`
+    `Matrix summary: ${result.versions.length} versions, ${result.differences.length} compatibility differences, ${formatSummaryCounts(
+      result.summary
+    )}`
   );
 }
 
@@ -1157,6 +1193,7 @@ function readOptionalBatchSummary(value: unknown): BatchSummary | undefined {
     workflows: readNonNegativeInteger(value.workflows, "summary.workflows"),
     passed: readNonNegativeInteger(value.passed, "summary.passed"),
     failed: readNonNegativeInteger(value.failed, "summary.failed"),
+    warnings: value.warnings === undefined ? 0 : readNonNegativeInteger(value.warnings, "summary.warnings"),
     skipped: readNonNegativeInteger(value.skipped, "summary.skipped"),
     errors: readNonNegativeInteger(value.errors, "summary.errors")
   };
@@ -1255,6 +1292,7 @@ function summarizeBatch(results: BatchFileResult[]): BatchSummary {
     workflows: 0,
     passed: 0,
     failed: 0,
+    warnings: 0,
     skipped: 0,
     errors: 0
   };
@@ -1263,9 +1301,11 @@ function summarizeBatch(results: BatchFileResult[]): BatchSummary {
     if (result.status === "passed") {
       summary.passed += 1;
       summary.workflows += 1;
+      summary.warnings += countWarnings(result.issues);
     } else if (result.status === "failed") {
       summary.failed += 1;
       summary.workflows += 1;
+      summary.warnings += countWarnings(result.issues);
     } else if (result.status === "skipped") {
       summary.skipped += 1;
     } else {
@@ -1274,6 +1314,77 @@ function summarizeBatch(results: BatchFileResult[]): BatchSummary {
   }
 
   return summary;
+}
+
+function summarizeMatrixVersions(versions: MatrixRunResult["versions"]): BatchSummary {
+  return versions.reduce<BatchSummary>(
+    (aggregate, version) => ({
+      totalFiles: aggregate.totalFiles + version.summary.totalFiles,
+      workflows: aggregate.workflows + version.summary.workflows,
+      passed: aggregate.passed + version.summary.passed,
+      failed: aggregate.failed + version.summary.failed,
+      warnings: aggregate.warnings + version.summary.warnings,
+      skipped: aggregate.skipped + version.summary.skipped,
+      errors: aggregate.errors + version.summary.errors
+    }),
+    {
+      totalFiles: 0,
+      workflows: 0,
+      passed: 0,
+      failed: 0,
+      warnings: 0,
+      skipped: 0,
+      errors: 0
+    }
+  );
+}
+
+function summarizeSingleValidation(validation: Awaited<ReturnType<typeof validateWorkflow>>): BatchSummary {
+  return {
+    totalFiles: 1,
+    workflows: 1,
+    passed: validation.ok ? 1 : 0,
+    failed: validation.ok ? 0 : 1,
+    warnings: countWarnings(validation.issues),
+    skipped: 0,
+    errors: 0
+  };
+}
+
+function summarizeInputError(): BatchSummary {
+  return {
+    totalFiles: 1,
+    workflows: 0,
+    passed: 0,
+    failed: 0,
+    warnings: 0,
+    skipped: 0,
+    errors: 1
+  };
+}
+
+function countWarnings(issues: readonly ValidationIssue[] | undefined): number {
+  return (issues ?? []).filter((issue) => issue.severity === "warning").length;
+}
+
+function formatSummary(summary: BatchSummary): string {
+  return `Summary: ${formatSummaryCounts(summary)}`;
+}
+
+function formatSummaryCounts(summary: BatchSummary): string {
+  return `${summary.passed} passed, ${summary.failed} failed, ${summary.warnings} warnings, ${summary.skipped} skipped, ${summary.errors} errors`;
+}
+
+function createBatchJsonResult(result: BatchRunResult): Record<string, unknown> {
+  return {
+    ok: result.ok,
+    checkedAt: result.checkedAt,
+    source: result.source,
+    ...(result.packageInfo === undefined ? {} : { packageInfo: result.packageInfo }),
+    ...(result.selection === undefined ? {} : { selection: result.selection }),
+    results: result.results,
+    summary: result.summary
+  };
 }
 
 function createSchemaSource(source: CliSchemaSource, packageVersion: BundledN8nPackageVersion): SchemaSource {

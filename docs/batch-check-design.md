@@ -31,12 +31,12 @@ n8n-lint check workflows/a.json workflows/b.json package.json
 
 Each `.json` file becomes one of:
 
-| Status | Meaning |
-|---|---|
-| `passed` | File is an n8n workflow and has no `error` severity issues. |
-| `failed` | File is an n8n workflow and has one or more `error` severity issues. |
+| Status    | Meaning                                                                        |
+| --------- | ------------------------------------------------------------------------------ |
+| `passed`  | File is an n8n workflow and has no `error` severity issues.                    |
+| `failed`  | File is an n8n workflow and has one or more `error` severity issues.           |
 | `skipped` | File is JSON but is not an n8n workflow object with a top-level `nodes` array. |
-| `error` | File could not be read or parsed. |
+| `error`   | File could not be read or parsed.                                              |
 
 Skipped files are counted and reported, not treated as validation failures by
 default. Parse/read/input errors fail the run.
@@ -51,28 +51,22 @@ FAIL workflows/dead-parameter.json
   ERROR workflow.node_parameter_unknown $.nodes[0].parameters.oldName
 SKIP package.json
 
-Summary: 1 passed, 1 failed, 1 skipped, 0 errors
+Summary: 1 passed, 1 failed, 2 warnings, 1 skipped, 0 errors
 ```
 
-The final summary line must always be printed last.
+The final summary line must always be printed last. The warning count is the
+total number of warning-severity issues across checked workflow files.
 
 ## JSON Output
 
-Batch JSON keeps the single-file issue object intact and adds a summary:
+Batch JSON keeps the per-file issue objects intact and adds `summary` as the
+final top-level field:
 
 ```json
 {
   "ok": false,
   "checkedAt": "2026-07-08T00:00:00.000Z",
   "source": "bundled-n8n-package",
-  "summary": {
-    "totalFiles": 3,
-    "workflows": 2,
-    "passed": 1,
-    "failed": 1,
-    "skipped": 1,
-    "errors": 0
-  },
   "results": [
     {
       "filePath": "workflows/passing.json",
@@ -97,6 +91,12 @@ Batch JSON keeps the single-file issue object intact and adds a summary:
           "code": "workflow.node_parameter_unknown",
           "message": "Unknown or dead parameter \"oldName\" for node type \"n8n-nodes-base.httpRequest\".",
           "path": "$.nodes[0].parameters.oldName"
+        },
+        {
+          "severity": "warning",
+          "code": "schema_source.warning",
+          "message": "Bundled n8n package metadata is loaded from a compact checked-in artifact; this is not live REST validation.",
+          "path": "$"
         }
       ]
     },
@@ -105,17 +105,26 @@ Batch JSON keeps the single-file issue object intact and adds a summary:
       "status": "skipped",
       "reason": "nodes_missing"
     }
-  ]
+  ],
+  "summary": {
+    "totalFiles": 3,
+    "workflows": 2,
+    "passed": 1,
+    "failed": 1,
+    "warnings": 2,
+    "skipped": 1,
+    "errors": 0
+  }
 }
 ```
 
 ## Exit Codes
 
-| Exit | Meaning |
-|---:|---|
-| `0` | All discovered workflows passed; skipped files are allowed. |
-| `1` | One or more workflows failed validation, or one or more files had read/parse errors. |
-| `2` | CLI usage or configuration error. |
+| Exit | Meaning                                                                              |
+| ---: | ------------------------------------------------------------------------------------ |
+|  `0` | All discovered workflows passed; skipped files are allowed.                          |
+|  `1` | One or more workflows failed validation, or one or more files had read/parse errors. |
+|  `2` | CLI usage or configuration error.                                                    |
 
 ## Non-Goals
 
@@ -128,4 +137,6 @@ Batch JSON keeps the single-file issue object intact and adds a summary:
 
 - `npm run test:cli` covers mixed explicit inputs, JSON summary output, and glob
   skip behavior.
+- `npm run check:cli-output` proves warning counts and final summary ordering
+  for human and JSON output.
 - `npm run quality` runs the batch fixture checks through the normal CI gate.
