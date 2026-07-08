@@ -22,6 +22,7 @@ const requiredQualityGates = [
   "check:github-action",
   "check:strategy-checklist",
   "check:github-rendered-readme",
+  "check:github-profile",
   "check:readme-demo",
   "check:animated-demo",
   "check:terminal-output-demo",
@@ -77,6 +78,8 @@ expect(audit.includes("last-verified badge"), "audit must mention last-verified 
 expect(audit.includes("npm run check:strategy-checklist"), "audit must mention the strategy checklist checker");
 expect(audit.includes("npm run check:github-rendered-readme"), "audit must mention the GitHub-rendered README checker");
 expect(audit.includes("public GitHub-rendered README page"), "audit must mention public README render proof");
+expect(audit.includes("npm run check:github-profile"), "audit must mention the GitHub profile checker");
+expect(audit.includes("public She Runs Code organization profile"), "audit must mention public profile proof");
 expect(audit.includes("npm run check:claims"), "audit must mention the claims checker");
 
 for (const gate of requiredQualityGates) {
@@ -140,6 +143,7 @@ console.log(
         "GitHub Action proof",
         "strategy checklist proof",
         "GitHub-rendered README proof",
+        "GitHub profile proof",
         "CLI output proof"
       ]
     },

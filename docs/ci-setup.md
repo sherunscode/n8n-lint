@@ -20,7 +20,7 @@ pre-commit hook contract verification, community-readiness verification,
 release-readiness verification, live REST boundary verification, launch-content
 verification, benchmark-report verification, GitHub Action contract
 verification, strategy-checklist verification, GitHub-rendered README
-verification, README demo verification, animated-demo verification,
+verification, GitHub profile verification, README demo verification, animated-demo verification,
 terminal-output demo verification, precommit-rejection demo verification,
 matrix-demo verification, social-preview verification, audit-report verification, status-doc
 verification, README/CLI docs-contract verification, package-content

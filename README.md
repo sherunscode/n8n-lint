@@ -259,6 +259,7 @@ npm run check:benchmark-report
 npm run check:github-action
 npm run check:strategy-checklist
 npm run check:github-rendered-readme
+npm run check:github-profile
 npm run check:readme-demo
 npm run check:animated-demo
 npm run check:terminal-output-demo
@@ -350,6 +351,11 @@ steps, external UI checks, and future live REST work unchecked.
 README page loads, renders the README body, resolves checked image assets from
 the public commit, resolves local README links on GitHub, and does not expose
 escaped raw image/SVG markup.
+
+`npm run check:github-profile` proves the public She Runs Code organization
+profile features `n8n-lint` as the flagship, links the canonical repo, keeps
+the n8nproof positioning, and preserves the real-growth rules plus email/X
+contact details.
 
 `npm run check:readme-demo` proves the README demo asset was generated from a
 real failing CLI command and still matches the current output.

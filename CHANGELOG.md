@@ -63,6 +63,9 @@
 - Added an executable GitHub-rendered README gate that checks the public repo
   page, rendered README body, image assets, and local links against public
   `main`.
+- Added an executable GitHub profile gate that verifies the She Runs Code
+  organization profile features `n8n-lint` as the flagship and preserves
+  contact plus real-growth proof rules.
 - Added a generated README failure-demo SVG plus an executable demo gate that
   proves it still matches real CLI output.
 - Added a generated animated failure-demo SVG plus an executable demo gate that

@@ -91,7 +91,7 @@ REST claims.
   `check:precommit-rejection-demo`, `check:release-readiness`, `check:live-rest-boundary`,
   `check:launch-content`, `check:benchmark-report`, `check:github-action`,
   `check:strategy-checklist`, `check:github-rendered-readme`,
-  `check:readme-demo`, `check:animated-demo`,
+  `check:github-profile`, `check:readme-demo`, `check:animated-demo`,
   `check:terminal-output-demo`, `check:matrix-demo`, `check:social-preview`,
   `check:architecture-diagram`, `check:last-verified-badges`, `check:audit-report`, `check:status-docs`,
   `check:metadata`, `check:security`, `check:docs`, `check:pack`,
@@ -167,6 +167,10 @@ REST claims.
 - `npm run check:github-rendered-readme` now verifies the public
   GitHub-rendered repo page, README body, checked image assets, local README
   links, and absence of escaped raw image/SVG markup against public `main`.
+- `npm run check:github-profile` now verifies the public She Runs Code
+  organization profile features `n8n-lint` as flagship, links the canonical
+  repo, preserves n8nproof positioning, and includes real-growth rules plus
+  email/X contact details.
 - `npm run check:readme-demo` now enforces that the README SVG demo is generated
   from a real failing CLI command and matches the current output.
 - `npm run check:animated-demo` now enforces that the animated failure demo SVG
@@ -241,6 +245,8 @@ Current checked behavior:
   and implementation gates without claiming live REST is built.
 - The public GitHub-rendered README page is checked by
   `npm run check:github-rendered-readme`.
+- The public She Runs Code organization profile is checked by
+  `npm run check:github-profile`.
 - `docs/assets/architecture.svg` provides a generated architecture diagram for
   the README.
 - `docs/assets/terminal-output-demo.svg` provides generated pass/fail terminal
