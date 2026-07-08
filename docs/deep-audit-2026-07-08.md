@@ -120,8 +120,8 @@ Rerun completed against `Zie619/n8n-workflows`.
   `94007c1445d9258a7da116646b79473e7c7c3282`
 - Benchmark source dirty: `false`
 - n8n-lint source commit used for benchmark:
-  `332ed3291de05e56001983c342c7de20d37628b9`
-- n8n-lint source dirty: `true`
+  `de5675d758997ce917cb9eef48adee30577b48d0`
+- n8n-lint source dirty: `false`
 - JSON files discovered: 2,077
 - Workflow inputs checked: 2,066
 - Passed: 762

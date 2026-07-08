@@ -19,12 +19,12 @@ Evidence IDs used below:
 | E4 | `npm pack --workspace packages/core --dry-run` | Passed; package dry-run for `@n8nproof/core@0.0.0` listed 11 files: dist, schema, package metadata, README, and LICENSE. |
 | E5 | `npm pack --workspace packages/cli --dry-run` | Passed; package dry-run for `n8n-lint@0.0.0` listed 6 files: dist, package metadata, README, and LICENSE. |
 | E6 | GitHub Actions for `sherunscode/n8n-lint` | Use the README badge or Actions tab to verify the latest public `main` quality run before posting. Public `main` run `28924023403` passed for commit `332ed32`; re-check before posting newer claims. |
-| E7 | `docs/benchmark-zie619-report.md` | Local benchmark report generated 2026-07-08T07:21:10.323Z from `Zie619/n8n-workflows` commit `94007c1445d9258a7da116646b79473e7c7c3282` using `n8n-lint` commit `332ed3291de05e56001983c342c7de20d37628b9` with dirty local nested-validation changes: 2,077 JSON files discovered, 2,066 workflow inputs checked, 762 passed, 1,304 failed, 11 skipped. |
+| E7 | `docs/benchmark-zie619-report.md` | Local benchmark report generated 2026-07-08T07:31:31.989Z from `Zie619/n8n-workflows` commit `94007c1445d9258a7da116646b79473e7c7c3282` using clean `n8n-lint` commit `de5675d758997ce917cb9eef48adee30577b48d0`: 2,077 JSON files discovered, 2,066 workflow inputs checked, 762 passed, 1,304 failed, 11 skipped. |
 | E8 | Public benchmark report URL | Use `https://github.com/sherunscode/n8n-lint/blob/main/docs/benchmark-zie619-report.md` after the benchmark-report commit is pushed. Re-check the URL before posting benchmark numbers. |
 | E9 | `docs/release-checklist.md` | npm publish, tags, GitHub release creation, and public posting remain owner-gated. |
 | E10 | `git remote -v` | Canonical repo remote is `https://github.com/sherunscode/n8n-lint.git`. |
 
-Local workspace base SHA at latest verification: `332ed3291de05e56001983c342c7de20d37628b9`.
+Local workspace base SHA at latest verification: `de5675d758997ce917cb9eef48adee30577b48d0`.
 If this pack is committed after that SHA, re-check public `main` CI and the
 benchmark report URL before posting.
 

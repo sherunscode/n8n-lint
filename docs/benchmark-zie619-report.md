@@ -1,6 +1,6 @@
 # Zie619 n8n-workflows Benchmark Report
 
-Generated: 2026-07-08T07:24:33.452Z
+Generated: 2026-07-08T07:34:51.126Z
 
 ## Summary
 
@@ -10,15 +10,15 @@ Generated: 2026-07-08T07:24:33.452Z
 | Source commit | `94007c1445d9258a7da116646b79473e7c7c3282` |
 | Source ref | `main` |
 | Source dirty | false |
-| n8n-lint commit | `332ed3291de05e56001983c342c7de20d37628b9` |
+| n8n-lint commit | `de5675d758997ce917cb9eef48adee30577b48d0` |
 | n8n-lint ref | `main` |
-| n8n-lint dirty | true |
+| n8n-lint dirty | false |
 | JSON files discovered | 2077 |
 | Input workflows | 2066 |
 | Passed | 762 |
 | Failed | 1304 |
 | Skipped non-workflow JSON | 11 |
-| Runtime | 203128.27 ms |
+| Runtime | 199136.53 ms |
 
 ## Reproduce
 
