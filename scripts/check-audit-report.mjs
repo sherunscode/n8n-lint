@@ -22,6 +22,7 @@ const requiredQualityGates = [
   "check:benchmark-dashboard",
   "check:batch-benchmark-output",
   "check:github-action",
+  "check:github-pr-gate-proof",
   "check:strategy-checklist",
   "check:github-rendered-readme",
   "check:github-profile",
@@ -86,6 +87,12 @@ expect(
 );
 expect(audit.includes("npm run check:batch-benchmark-output"), "audit must mention the batch benchmark output checker");
 expect(audit.includes("npm run check:github-action"), "audit must mention the GitHub Action checker");
+expect(
+  audit.includes("docs/assets/github-pr-merge-gate-proof.png"),
+  "audit must mention the checked PR gate screenshot"
+);
+expect(audit.includes("npm run check:github-pr-gate-proof"), "audit must mention the PR gate proof checker");
+expect(audit.includes("proof-only PR #5"), "audit must mention proof-only PR #5");
 expect(audit.includes("last-verified badge"), "audit must mention last-verified badge proof");
 expect(audit.includes("npm run check:strategy-checklist"), "audit must mention the strategy checklist checker");
 expect(audit.includes("npm run check:github-rendered-readme"), "audit must mention the GitHub-rendered README checker");
@@ -156,6 +163,7 @@ console.log(
         "benchmark dashboard proof",
         "batch benchmark output proof",
         "GitHub Action proof",
+        "GitHub PR gate proof",
         "strategy checklist proof",
         "GitHub-rendered README proof",
         "GitHub profile proof",

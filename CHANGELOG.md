@@ -63,6 +63,10 @@
   boundary text aligned to the real `Zie619/n8n-workflows` report.
 - Added an executable GitHub Action gate and hardened action path handling with
   a quoted bash array before invoking the CLI.
+- Added a real GitHub PR checks-tab screenshot proof plus an executable gate
+  that validates proof-only PR #5, failed `quality`, successful CodeQL, unstable
+  merge state, closed PR state, and deleted proof branch cleanup through public
+  GitHub metadata.
 - Added an executable strategy-checklist gate that reconciles `STRATEGY.md`
   checklist status against repo proof while keeping owner/external/future gates
   unchecked.

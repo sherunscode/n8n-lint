@@ -87,6 +87,12 @@ REST claims.
 - Batch benchmark output asset `docs/assets/batch-benchmark-output.svg` is
   generated from the checked `Zie619/n8n-workflows` benchmark JSON and checked
   by `npm run check:batch-benchmark-output`.
+- GitHub PR gate proof `docs/github-pr-merge-gate-proof.md` records a real
+  GitHub PR checks-tab screenshot at
+  `docs/assets/github-pr-merge-gate-proof.png` and is checked by
+  `npm run check:github-pr-gate-proof` against public PR/run metadata. The
+  proof-only PR #5 had a failed `quality` job, successful CodeQL run, unstable
+  merge state, closed PR state, and deleted proof branch.
 - Architecture and support/rollback docs exist for the current MVP.
 - Dependabot is configured for npm and GitHub Actions.
 - CodeQL is configured for JavaScript/TypeScript analysis.
@@ -100,7 +106,7 @@ REST claims.
   `check:precommit-rejection-demo`, `check:release-readiness`, `check:live-rest-boundary`,
   `check:launch-content`, `check:benchmark-report`,
   `check:benchmark-dashboard`, `check:batch-benchmark-output`,
-  `check:github-action`,
+  `check:github-action`, `check:github-pr-gate-proof`,
   `check:strategy-checklist`, `check:github-rendered-readme`,
   `check:github-profile`, `check:readme-demo`, `check:animated-demo`,
   `check:terminal-output-demo`, `check:matrix-demo`, `check:matrix-gif`,
@@ -178,6 +184,10 @@ REST claims.
 - `npm run check:github-action` now enforces composite action metadata, safe
   paths array expansion, `--format github` invocation, job-summary output, CI
   dogfooding, tool metadata, and Marketplace non-claim boundaries.
+- `npm run check:github-pr-gate-proof` now enforces that the PR merge-gate
+  screenshot is a real PNG asset backed by public GitHub metadata for proof-only
+  PR #5, including failed `quality`, successful CodeQL, unstable merge state,
+  closed PR state, and deleted proof branch cleanup.
 - `npm run check:strategy-checklist` now enforces that `STRATEGY.md` marks only
   repo-proven checklist boxes as complete, including final human/JSON summary
   proof, and leaves owner-gated, external UI, and future live REST/release
@@ -275,6 +285,9 @@ Current checked behavior:
   dashboard for the README and launch content.
 - `docs/assets/batch-benchmark-output.svg` provides generated full-repo batch
   benchmark output proof for the README and launch content.
+- `docs/assets/github-pr-merge-gate-proof.png` provides a real GitHub PR
+  checks-tab screenshot with a failed `quality` job and public run metadata in
+  `docs/github-pr-merge-gate-proof.md`.
 - `docs/assets/terminal-output-demo.svg` provides generated pass/fail terminal
   output proof for the README.
 - `docs/assets/precommit-rejection-demo.svg` provides generated pre-commit

@@ -72,6 +72,7 @@ if (strategy === undefined) {
     "All demo assets are hosted in-repo",
     "Architecture diagram",
     "Demo commands and checked assets are re-verified",
+    "Screenshot of the GitHub PR merge-gate",
     "n8n API key material is never logged",
     "API keys are not accepted as bare CLI arguments",
     "`.gitignore` explicitly excludes local config/credentials/log file patterns",
@@ -106,7 +107,6 @@ if (strategy === undefined) {
 
   for (const phrase of [
     "`npx n8n-lint check workflow.json` works on a clean machine",
-    "Screenshot of the GitHub PR merge-gate",
     "Tool fails closed on TLS/certificate errors",
     "GitHub Discussions or an equivalent",
     "Social preview image configured in repo settings",

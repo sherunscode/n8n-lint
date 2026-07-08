@@ -44,6 +44,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:benchmark-dashboard") &&
     packageJson.scripts.quality.includes("npm run check:batch-benchmark-output") &&
     packageJson.scripts.quality.includes("npm run check:github-action") &&
+    packageJson.scripts.quality.includes("npm run check:github-pr-gate-proof") &&
     packageJson.scripts.quality.includes("npm run check:strategy-checklist") &&
     packageJson.scripts.quality.includes("npm run check:github-rendered-readme") &&
     packageJson.scripts.quality.includes("npm run check:github-profile") &&
@@ -63,7 +64,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:claims") &&
     packageJson.scripts.quality.includes("npm run check:links") &&
     packageJson.scripts.quality.includes("npm run check:exit-codes"),
-  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, release readiness, live REST boundary, launch content, benchmark report, benchmark dashboard, batch benchmark output, GitHub Action, strategy checklist, GitHub-rendered README, GitHub profile, README demo, animated demo, terminal output demo, matrix demo, matrix GIF, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
+  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, release readiness, live REST boundary, launch content, benchmark report, benchmark dashboard, batch benchmark output, GitHub Action, GitHub PR gate proof, strategy checklist, GitHub-rendered README, GitHub profile, README demo, animated demo, terminal output demo, matrix demo, matrix GIF, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
 );
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 
@@ -72,6 +73,7 @@ await expectFile(".prettierrc.json");
 await expectFile("action.yml");
 await expectFile("docs/ci-setup.md");
 await expectFile("docs/live-rest-threat-model.md");
+await expectFile("docs/github-pr-merge-gate-proof.md");
 await expectFile("eslint.config.js");
 await expectFile("examples/pre-commit-setup/.pre-commit-config.yaml");
 await expectFile("docs/assets/readme-failure-demo.svg");
@@ -80,6 +82,7 @@ await expectFile("docs/assets/terminal-output-demo.svg");
 await expectFile("docs/assets/precommit-rejection-demo.svg");
 await expectFile("docs/assets/benchmark-dashboard.svg");
 await expectFile("docs/assets/batch-benchmark-output.svg");
+await expectFile("docs/assets/github-pr-merge-gate-proof.png");
 await expectFile("docs/assets/matrix-compatibility-demo.svg");
 await expectFile("docs/assets/matrix-compatibility-demo.gif");
 await expectFile("docs/assets/social-preview.svg");
@@ -101,6 +104,7 @@ await expectFile("scripts/check-benchmark-report.mjs");
 await expectFile("scripts/check-benchmark-dashboard.mjs");
 await expectFile("scripts/check-batch-benchmark-output.mjs");
 await expectFile("scripts/check-github-action.mjs");
+await expectFile("scripts/check-github-pr-gate-proof.mjs");
 await expectFile("scripts/check-strategy-checklist.mjs");
 await expectFile("scripts/check-github-rendered-readme.mjs");
 await expectFile("scripts/check-github-profile-feature.mjs");
@@ -136,6 +140,7 @@ console.log(
         "action.yml",
         "docs/ci-setup.md",
         "docs/live-rest-threat-model.md",
+        "docs/github-pr-merge-gate-proof.md",
         "eslint.config.js",
         "examples/pre-commit-setup/.pre-commit-config.yaml",
         "docs/assets/readme-failure-demo.svg",
@@ -144,6 +149,7 @@ console.log(
         "docs/assets/precommit-rejection-demo.svg",
         "docs/assets/benchmark-dashboard.svg",
         "docs/assets/batch-benchmark-output.svg",
+        "docs/assets/github-pr-merge-gate-proof.png",
         "docs/assets/matrix-compatibility-demo.svg",
         "docs/assets/matrix-compatibility-demo.gif",
         "docs/assets/social-preview.svg",
@@ -165,6 +171,7 @@ console.log(
         "scripts/check-benchmark-dashboard.mjs",
         "scripts/check-batch-benchmark-output.mjs",
         "scripts/check-github-action.mjs",
+        "scripts/check-github-pr-gate-proof.mjs",
         "scripts/check-strategy-checklist.mjs",
         "scripts/check-github-rendered-readme.mjs",
         "scripts/check-github-profile-feature.mjs",
