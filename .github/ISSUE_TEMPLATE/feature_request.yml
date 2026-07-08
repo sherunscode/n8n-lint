@@ -4,11 +4,32 @@ title: "feat: "
 labels:
   - enhancement
 body:
+  - type: input
+    id: n8n_lint_version
+    attributes:
+      label: n8n-lint version
+      placeholder: "0.0.0"
+    validations:
+      required: true
+  - type: input
+    id: n8n_version
+    attributes:
+      label: n8n version or version range
+      placeholder: "2.29.x"
+    validations:
+      required: true
   - type: textarea
     id: problem
     attributes:
       label: Problem
       description: What workflow validation gap should this close?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction or example
+      description: Link docs, fixtures, or redacted workflow JSON that prove the need.
     validations:
       required: true
   - type: textarea
@@ -18,17 +39,3 @@ body:
       description: Describe the smallest useful behavior change.
     validations:
       required: true
-  - type: input
-    id: n8n_version
-    attributes:
-      label: n8n version or version range
-      placeholder: "2.29.x"
-    validations:
-      required: false
-  - type: textarea
-    id: evidence
-    attributes:
-      label: Evidence
-      description: Link docs, fixtures, or command output that prove the need.
-    validations:
-      required: false

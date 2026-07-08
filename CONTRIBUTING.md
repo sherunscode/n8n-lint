@@ -29,3 +29,9 @@ compact schema artifact from the pinned dev-time `n8n-nodes-base` package.
 - Do not include secrets, workflow credentials, `.env` files, or local logs.
 - Do not claim live REST validation, benchmark numbers, npm publication, or
   GitHub Action marketplace availability until those are proven by artifacts.
+
+## Maintainer Expectations
+
+Issues and pull requests are triaged on a best-effort 72-hour target after
+public launch. Security reports should follow `SECURITY.md` and stay out of
+public issues until reviewed.
