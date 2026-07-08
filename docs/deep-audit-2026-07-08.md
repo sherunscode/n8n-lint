@@ -39,7 +39,8 @@ REST claims.
 - GitHub Actions annotation output is implemented with `check --format github`.
 - `tool.json`, issue-template routing, CI setup docs, and a pre-commit framework
   example exist without claiming npm publication.
-- A composite GitHub Action exists at `action.yml` and is dogfooded by CI.
+- A composite GitHub Action exists at `action.yml`, writes a reviewer-facing job
+  summary, and is dogfooded by CI.
 - Owner-review launch drafts exist under `docs/launch-drafts.md` and are based
   only on verified repo, CI, package, and benchmark proof.
 - Architecture and support/rollback docs exist for the current MVP.
@@ -76,7 +77,8 @@ Current checked behavior:
 - Stable `--json` output mode.
 - GitHub annotation output with native `::error`, `::warning`, and `::notice`
   commands.
-- Composite GitHub Action path that runs `check --format github`.
+- Composite GitHub Action path that runs `check --format github` and writes a
+  Markdown job summary.
 - Batch human and JSON output with stable summary counts.
 - Local badge generation from checked JSON output.
 - Matrix human and JSON output with per-version summaries and compatibility

@@ -29,7 +29,8 @@ Verified:
   parameters and requires `--apply --confirm` before mutation.
 - Machine-readable `tool.json`, issue-template routing, CI setup docs, and a
   pre-commit framework example exist without claiming npm publication.
-- Composite GitHub Action exists at `action.yml` and is dogfooded by CI.
+- Composite GitHub Action exists at `action.yml`, writes job summaries, and is
+  dogfooded by CI.
 
 Still gated or unproven:
 

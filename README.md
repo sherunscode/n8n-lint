@@ -48,7 +48,8 @@ will only be documented after npm publication.
 - Unknown or dead top-level node parameter detection.
 - Stale trigger graph/type-version shape detection.
 - JSON output mode for CI tooling.
-- GitHub Actions annotation output with `--format github`.
+- GitHub Actions annotation output with `--format github` and action job
+  summaries.
 - Multi-version schema selector and matrix compatibility report.
 - Batch checks for multiple files, directories, and simple globs, with skipped
   ordinary JSON files reported separately.

@@ -47,6 +47,7 @@
       "n8n-version"
     ],
     "outputFormat": "github-annotations",
+    "jobSummary": true,
     "releaseBoundary": "Use a commit SHA or owner-approved semver tag; GitHub Marketplace listing is not claimed."
   },
   "verifiedClaims": [

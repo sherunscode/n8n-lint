@@ -32,5 +32,27 @@ runs:
         N8N_LINT_SOURCE: ${{ inputs.source }}
         N8N_LINT_VERSION: ${{ inputs.n8n-version }}
       run: |
+        set +e
         cd "$GITHUB_WORKSPACE"
-        node "$GITHUB_ACTION_PATH/packages/cli/dist/bin.js" check $N8N_LINT_PATHS --source "$N8N_LINT_SOURCE" --n8n-version "$N8N_LINT_VERSION" --format github
+        output_file="$RUNNER_TEMP/n8n-lint-output.txt"
+        node "$GITHUB_ACTION_PATH/packages/cli/dist/bin.js" check $N8N_LINT_PATHS --source "$N8N_LINT_SOURCE" --n8n-version "$N8N_LINT_VERSION" --format github 2>&1 | tee "$output_file"
+        status=${PIPESTATUS[0]}
+
+        {
+          echo "## n8n-lint"
+          echo
+          echo "| Field | Value |"
+          echo "|---|---|"
+          echo "| Status | $([ "$status" -eq 0 ] && echo "Passed" || echo "Failed") |"
+          echo "| Paths | \`$N8N_LINT_PATHS\` |"
+          echo "| Source | \`$N8N_LINT_SOURCE\` |"
+          echo "| n8n version selector | \`$N8N_LINT_VERSION\` |"
+          echo
+          echo "### Output"
+          echo
+          echo "\`\`\`text"
+          tail -n 200 "$output_file"
+          echo "\`\`\`"
+        } >> "$GITHUB_STEP_SUMMARY"
+
+        exit "$status"

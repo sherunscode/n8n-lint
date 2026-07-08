@@ -27,5 +27,6 @@
   framework example.
 - Added a composite GitHub Action and CI dogfood step without claiming
   Marketplace release.
+- Added Markdown job summaries to the composite GitHub Action.
 - Added publishable package metadata, package README files, and an owner-gated
   npm release checklist.
