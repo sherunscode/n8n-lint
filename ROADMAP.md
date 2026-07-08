@@ -18,10 +18,11 @@ Verified:
   hygiene, schema-config integrity, type hygiene, pre-commit hook behavior,
   community readiness, release readiness, live REST boundary enforcement,
   launch-content proof, benchmark-report reconciliation, GitHub Action contract,
-  README demo freshness, animated-demo freshness, social-preview freshness,
-  audit-report freshness, superseded-status note clarity, README/CLI docs
-  contract, package contents, claims hygiene, Markdown link integrity,
-  executable exit-code behavior, tests, and production dependency audit status.
+  strategy-checklist reconciliation, README demo freshness, animated-demo
+  freshness, social-preview freshness, audit-report freshness,
+  superseded-status note clarity, README/CLI docs contract, package contents,
+  claims hygiene, Markdown link integrity, executable exit-code behavior, tests,
+  and production dependency audit status.
 - Packed-package install smoke has proven the source checkout and local tarball
   path, and `npm run smoke:pack` now enforces it in quality checks.
 - The real `Zie619/n8n-workflows` benchmark report exists under `docs/`.

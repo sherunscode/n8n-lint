@@ -18,6 +18,7 @@ const requiredQualityGates = [
   "check:launch-content",
   "check:benchmark-report",
   "check:github-action",
+  "check:strategy-checklist",
   "check:readme-demo",
   "check:animated-demo",
   "check:social-preview",
@@ -49,6 +50,7 @@ expect(audit.includes("npm run check:live-rest-boundary"), "audit must mention t
 expect(audit.includes("npm run check:launch-content"), "audit must mention the launch-content checker");
 expect(audit.includes("npm run check:benchmark-report"), "audit must mention the benchmark-report checker");
 expect(audit.includes("npm run check:github-action"), "audit must mention the GitHub Action checker");
+expect(audit.includes("npm run check:strategy-checklist"), "audit must mention the strategy checklist checker");
 expect(audit.includes("npm run check:claims"), "audit must mention the claims checker");
 
 for (const gate of requiredQualityGates) {
@@ -103,7 +105,8 @@ console.log(
         "live REST boundary proof",
         "launch content proof",
         "benchmark report proof",
-        "GitHub Action proof"
+        "GitHub Action proof",
+        "strategy checklist proof"
       ]
     },
     null,

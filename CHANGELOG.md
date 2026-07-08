@@ -50,6 +50,9 @@
   non-execution/live REST boundaries.
 - Added an executable GitHub Action gate and hardened action path handling with
   a quoted bash array before invoking the CLI.
+- Added an executable strategy-checklist gate that reconciles `STRATEGY.md`
+  checklist status against repo proof while keeping owner/external/future gates
+  unchecked.
 - Added a generated README failure-demo SVG plus an executable demo gate that
   proves it still matches real CLI output.
 - Added a generated animated failure-demo SVG plus an executable demo gate that

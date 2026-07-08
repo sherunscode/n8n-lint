@@ -211,6 +211,7 @@ npm run check:live-rest-boundary
 npm run check:launch-content
 npm run check:benchmark-report
 npm run check:github-action
+npm run check:strategy-checklist
 npm run check:readme-demo
 npm run check:animated-demo
 npm run check:social-preview
@@ -276,6 +277,10 @@ does not claim live REST validation.
 `npm run check:github-action` proves the composite action metadata, safe paths
 array expansion, `--format github` invocation, job summary, CI dogfood step,
 tool metadata, and Marketplace boundary stay aligned.
+
+`npm run check:strategy-checklist` checks the local strategy checklist when
+present, keeps executable repo proof aligned, and leaves owner-gated release
+steps, external UI checks, and future live REST work unchecked.
 
 `npm run check:readme-demo` proves the README demo asset was generated from a
 real failing CLI command and still matches the current output.

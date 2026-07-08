@@ -43,6 +43,11 @@ REST claims.
 - A composite GitHub Action exists at `action.yml`, writes a reviewer-facing job
   summary, handles paths via a quoted bash array, is dogfooded by CI, and is
   checked by `npm run check:github-action`.
+- The strategy checklist reconciliation is complete for the local-only
+  `STRATEGY.md` repo-proof items when that ignored planning file is present:
+  `npm run check:strategy-checklist` keeps proven boxes checked and confirms
+  the remaining unchecked checklist boxes are owner-gated, external UI proof, or
+  future live REST/release gates.
 - Owner-review launch drafts exist under `docs/launch-drafts.md` and are based
   only on verified repo, CI, package, and benchmark proof.
 - README embeds `docs/assets/readme-failure-demo.svg`, generated from real CLI
@@ -70,10 +75,11 @@ REST claims.
   check, bundled-schema check, `check:schema-config`, `check:type-hygiene`,
   `check:precommit`, `check:community`, `check:release-readiness`,
   `check:live-rest-boundary`, `check:launch-content`,
-  `check:benchmark-report`, `check:github-action`, `check:readme-demo`,
-  `check:animated-demo`, `check:social-preview`, `check:audit-report`,
-  `check:status-docs`, `check:metadata`, `check:security`, `check:docs`,
-  `check:pack`, `check:claims`, `check:links`,
+  `check:benchmark-report`, `check:github-action`,
+  `check:strategy-checklist`, `check:readme-demo`, `check:animated-demo`,
+  `check:social-preview`, `check:audit-report`, `check:status-docs`,
+  `check:metadata`, `check:security`, `check:docs`, `check:pack`,
+  `check:claims`, `check:links`,
   `check:exit-codes`, core fixture tests, CLI fixture tests, production
   dependency audit, and packed-install smoke.
 - Package dry-runs reviewed:
@@ -127,6 +133,9 @@ REST claims.
 - `npm run check:github-action` now enforces composite action metadata, safe
   paths array expansion, `--format github` invocation, job-summary output, CI
   dogfooding, tool metadata, and Marketplace non-claim boundaries.
+- `npm run check:strategy-checklist` now enforces that `STRATEGY.md` marks only
+  repo-proven checklist boxes as complete and leaves owner-gated, external UI,
+  and future live REST/release checklist boxes unchecked.
 - `npm run check:readme-demo` now enforces that the README SVG demo is generated
   from a real failing CLI command and matches the current output.
 - `npm run check:animated-demo` now enforces that the animated failure demo SVG
