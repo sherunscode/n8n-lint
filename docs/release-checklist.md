@@ -34,7 +34,9 @@ The CLI package depends on `@n8nproof/core` at the same exact version, so publis
 6. Update `docs/release-command-plan-v0.1.0.md` or create the matching command
    plan for the chosen version. Run `npm run check:release-command-plan` before
    publish approval.
-7. Ensure README examples do not claim registry-backed `npx` usage until after
+7. Run `npm run check:npm-registry-boundary` before publish approval. The
+   expected first-release npm state is both package lookups return `E404`.
+8. Ensure README examples do not claim registry-backed `npx` usage until after
    publication is complete.
 
 ## Local Gates
@@ -44,6 +46,7 @@ Run from `C:\dev\Stars`:
 ```powershell
 npm ci
 npm run quality
+npm run check:npm-registry-boundary
 npm run check:release-readiness
 npm run check:release-notes
 npm run check:release-command-plan
@@ -69,6 +72,15 @@ node packages/cli/dist/bin.js repair examples/failing-dead-parameter.json --appl
 
 The first command should print a patch without mutating the fixture. The second
 command should fail with exit code `2` because `--confirm` was not supplied.
+
+Before first public release, verify npm package names are still unpublished:
+
+```powershell
+npm view @n8nproof/core version
+npm view n8n-lint version
+```
+
+Expected first-release npm state: both package lookups return `E404`.
 
 ## Fresh Install Smoke
 

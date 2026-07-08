@@ -69,8 +69,12 @@ for (const phrase of [
   "Confirm npm auth only after owner approval",
   "prefer npm provenance through OIDC",
   "npm run quality",
+  "npm run check:npm-registry-boundary",
   "npm run check:release-notes",
   "Run `npm run check:release-command-plan` before publish approval.",
+  "npm view @n8nproof/core version",
+  "npm view n8n-lint version",
+  "Expected first-release npm state: both package lookups return `E404`.",
   "npm run smoke:pack",
   "npm pack --workspace packages/core --dry-run",
   "npm pack --workspace packages/cli --dry-run",
@@ -88,6 +92,7 @@ for (const phrase of [
   "`n8n-lint` v0.1.0 is the first n8nproof release",
   "Benchmark proof phrase: 2,066 workflow inputs, 762 passed, 1,304 failed, 11 skipped",
   "The benchmark does not execute workflows and does not use live n8n REST validation.",
+  "npm run check:npm-registry-boundary",
   "Publish `@n8nproof/core` first, then `n8n-lint`."
 ]) {
   expect(hasPhrase(releaseNotesDraft, phrase), `release notes draft must include: ${phrase}`);
@@ -98,6 +103,8 @@ for (const phrase of [
   "This plan does not grant permission to publish, tag, create a GitHub Release, or post launch copy.",
   "Stop immediately if any of these are true:",
   "Owner approval for the exact release version is missing.",
+  "npm run check:npm-registry-boundary",
+  "npm view @n8nproof/core version",
   "npm run check:release-command-plan",
   "npm publish --workspace packages/core --access public",
   "npm publish --workspace packages/cli",
@@ -209,6 +216,7 @@ console.log(
         "tool.json non-claims",
         "README release boundaries",
         "CHANGELOG unreleased heading",
+        "npm registry boundary owner gates",
         "release checklist owner gates",
         "draft release notes owner gates",
         "release command plan owner gates",

@@ -29,11 +29,11 @@ Stop immediately if any of these are true:
 - `git status --short --branch` is not clean before publish.
 - Local `HEAD` does not equal `origin/main` before publish.
 - The latest required GitHub `quality` check is not green for the exact commit.
-- `npm view n8n-lint version` returns an existing version before the first
-  public publish attempt.
+- `npm view @n8nproof/core version` or `npm view n8n-lint version` returns an
+  existing version before the first public publish attempt.
 - `npm run quality` fails.
-- `npm run check:release-readiness`, `npm run check:release-notes`, or
-  `npm run check:release-command-plan` fails.
+- `npm run check:npm-registry-boundary`, `npm run check:release-readiness`,
+  `npm run check:release-notes`, or `npm run check:release-command-plan` fails.
 - Any command asks for or prints a token, registry auth value, cookie, or `.env`
   value.
 
@@ -62,11 +62,12 @@ git status --short --branch
 git rev-parse HEAD
 git rev-parse origin/main
 gh run list --repo sherunscode/n8n-lint --branch main --limit 5 --json databaseId,workflowName,status,conclusion,headSha,url
+npm view @n8nproof/core version
 npm view n8n-lint version
 ```
 
-Expected first-release npm state: `npm view n8n-lint version` returns `E404`.
-If it returns a version, stop and reconcile ownership, package name, and
+Expected first-release npm state: both package lookups return `E404`. If either
+lookup returns a version, stop and reconcile ownership, package name, and
 changelog state before continuing.
 
 ## Phase 1 - Version PR
@@ -97,6 +98,7 @@ Required PR checks:
 ```powershell
 npm ci
 npm run quality
+npm run check:npm-registry-boundary
 npm run check:release-readiness
 npm run check:release-notes
 npm run check:release-command-plan
@@ -117,6 +119,7 @@ git rev-parse origin/main
 gh run list --repo sherunscode/n8n-lint --branch main --limit 5 --json databaseId,workflowName,status,conclusion,headSha,url
 npm ci
 npm run quality
+npm run check:npm-registry-boundary
 npm run check:release-readiness
 npm run check:release-notes
 npm run check:release-command-plan

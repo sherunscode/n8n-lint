@@ -21,6 +21,10 @@ expect(
   "package.json must expose the release command plan checker"
 );
 expect(
+  packageJson.scripts?.["check:npm-registry-boundary"] === "node scripts/check-npm-registry-boundary.mjs",
+  "package.json must expose the npm registry boundary checker"
+);
+expect(
   typeof packageJson.scripts?.quality === "string" &&
     packageJson.scripts.quality.includes("npm run check:release-command-plan"),
   "quality must include the release command plan checker"
@@ -35,7 +39,7 @@ for (const phrase of [
   "Owner approval for the exact release version is missing.",
   "Local `HEAD` does not equal `origin/main` before publish.",
   "The latest required GitHub `quality` check is not green for the exact commit.",
-  "`npm view n8n-lint version` returns an existing version before the first public publish attempt.",
+  "`npm view @n8nproof/core version` or `npm view n8n-lint version` returns an existing version before the first public publish attempt.",
   "Do not print tokens, npm config values, environment variables, cookies, or secret file contents.",
   "Do not update README with registry-backed `npx` instructions until this smoke passes.",
   "The tag must point to the same commit that passed final pre-publish `quality` and CodeQL checks.",
@@ -51,9 +55,11 @@ for (const command of [
   "git rev-parse HEAD",
   "git rev-parse origin/main",
   "gh run list --repo sherunscode/n8n-lint --branch main",
+  "npm view @n8nproof/core version",
   "npm view n8n-lint version",
   "npm ci",
   "npm run quality",
+  "npm run check:npm-registry-boundary",
   "npm run check:release-readiness",
   "npm run check:release-notes",
   "npm run check:release-command-plan",
@@ -107,6 +113,10 @@ expect(!plan.includes("gh release create --draft=false"), "release command plan 
 expect(
   hasPhrase(releaseChecklist, "Run `npm run check:release-command-plan` before publish approval."),
   "release checklist must point at the release command plan checker"
+);
+expect(
+  hasPhrase(releaseChecklist, "Run `npm run check:npm-registry-boundary` before publish approval."),
+  "release checklist must point at the npm registry boundary checker"
 );
 expect(
   releaseReadiness.includes("docs/release-command-plan-v0.1.0.md") &&

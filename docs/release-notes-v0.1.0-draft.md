@@ -37,6 +37,7 @@ workflow reaches production.
 - Full quality gate: `npm run quality`.
 - Package smoke proof: `npm run smoke:pack`.
 - Package content proof: `npm run check:pack`.
+- npm registry boundary proof: `npm run check:npm-registry-boundary`.
 - Release-readiness proof: `npm run check:release-readiness`.
 - Community proof: `npm run check:community` verifies live GitHub Discussion #8.
 - Public README proof: `npm run check:github-rendered-readme` verifies the
@@ -98,11 +99,12 @@ Before publishing this release body:
    and launch posts.
 2. Run `npm ci`.
 3. Run `npm run quality`.
-4. Run `npm run check:release-notes`.
-5. Publish `@n8nproof/core` first, then `n8n-lint`.
-6. Verify a clean-machine registry-backed `npx n8n-lint check workflow.json`
+4. Run `npm run check:npm-registry-boundary`.
+5. Run `npm run check:release-notes`.
+6. Publish `@n8nproof/core` first, then `n8n-lint`.
+7. Verify a clean-machine registry-backed `npx n8n-lint check workflow.json`
    install.
-7. Create the semver tag and GitHub Release only after the exact commit is
+8. Create the semver tag and GitHub Release only after the exact commit is
    green on public CI.
 
 ## Rollback

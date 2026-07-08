@@ -100,15 +100,15 @@ REST claims.
 - Architecture and support/rollback docs exist for the current MVP.
 - Dependabot is configured for npm and GitHub Actions.
 - CodeQL is configured for JavaScript/TypeScript analysis.
-- npm package name `n8n-lint` returned registry `E404`, so it was not already
-  published at audit time.
+- both publishable package names return npm `E404`: `@n8nproof/core` and
+  `n8n-lint` were not already published at audit time.
 - `n8n@2.29.7` still resolves to `n8n-nodes-base@2.29.6` and
   `n8n-workflow@2.29.2`.
 - `npm run quality` passed: build, ESLint, Prettier format check, example
   check, bundled-schema check, `check:schema-config`, `check:type-hygiene`,
   `check:cli-output`, `check:precommit`, `check:community`,
-  `check:precommit-rejection-demo`, `check:release-readiness`,
-  `check:release-notes`, `check:release-command-plan`,
+  `check:precommit-rejection-demo`, `check:npm-registry-boundary`,
+  `check:release-readiness`, `check:release-notes`, `check:release-command-plan`,
   `check:live-rest-boundary`, `check:launch-content`, `check:benchmark-report`,
   `check:benchmark-dashboard`, `check:batch-benchmark-output`,
   `check:github-action`, `check:github-pr-gate-proof`,
@@ -162,6 +162,10 @@ REST claims.
   setup, 72-hour triage target, code-of-conduct presence, security contact plus
   API-key boundaries, and live GitHub Discussion #8 support/badge channel
   proof without npm-publish, live-REST, or workflow-execution claims.
+- `npm run check:npm-registry-boundary` now proves the pre-publication boundary
+  by checking the npm registry for both publishable package names,
+  `@n8nproof/core` and `n8n-lint`, and requiring both to return `E404` while
+  `tool.json` still lists npm registry publication as not claimed.
 - `npm run check:release-readiness` now enforces package-version alignment,
   pre-release npm boundaries, owner-gated publish/tag/release/posting language,
   and rollback/support documentation.
