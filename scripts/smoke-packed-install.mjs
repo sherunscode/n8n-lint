@@ -50,10 +50,10 @@ try {
 }
 
 function run(command, args, cwd, options = {}) {
-  const result = spawnSync(command, args, {
+  const resolved = resolveCommand(command, args);
+  const result = spawnSync(resolved.executable, resolved.args, {
     cwd,
     encoding: "utf8",
-    shell: process.platform === "win32",
     stdio: options.capture ? "pipe" : "inherit"
   });
 
@@ -66,6 +66,14 @@ function run(command, args, cwd, options = {}) {
     stdout: result.stdout ?? "",
     stderr: result.stderr ?? ""
   };
+}
+
+function resolveCommand(command, args) {
+  if (process.platform === "win32" && (command === "npm" || command === "npx")) {
+    return { executable: "cmd.exe", args: ["/d", "/s", "/c", command, ...args] };
+  }
+
+  return { executable: command, args };
 }
 
 function readJson(filePath) {

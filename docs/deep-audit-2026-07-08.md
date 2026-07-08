@@ -59,6 +59,10 @@ REST claims.
 - Terminal output demo asset `docs/assets/terminal-output-demo.svg` is generated
   from real colored pass and fail CLI output and checked by
   `npm run check:terminal-output-demo`.
+- Pre-commit rejection demo asset `docs/assets/precommit-rejection-demo.svg` is
+  generated from an actual temporary Git commit rejected by the repo's real
+  `.githooks/pre-commit` hook and checked by
+  `npm run check:precommit-rejection-demo`.
 - Launch/social preview asset `docs/assets/social-preview.svg` is generated
   from the current benchmark report, bundled schema config, and canonical repo
   metadata, then checked by `npm run check:social-preview`.
@@ -84,7 +88,7 @@ REST claims.
 - `npm run quality` passed: build, ESLint, Prettier format check, example
   check, bundled-schema check, `check:schema-config`, `check:type-hygiene`,
   `check:cli-output`, `check:precommit`, `check:community`,
-  `check:release-readiness`, `check:live-rest-boundary`,
+  `check:precommit-rejection-demo`, `check:release-readiness`, `check:live-rest-boundary`,
   `check:launch-content`, `check:benchmark-report`, `check:github-action`,
   `check:strategy-checklist`, `check:readme-demo`, `check:animated-demo`,
   `check:terminal-output-demo`, `check:social-preview`, `check:architecture-diagram`,
@@ -128,6 +132,9 @@ REST claims.
   fields, and warning summary counts.
 - `npm run check:precommit` now enforces the local Git hook's executable mode,
   quiet success path, failure exit-code propagation, and failure-output replay.
+- `npm run check:precommit-rejection-demo` now enforces that the pre-commit
+  rejection proof SVG is generated from an actual temporary Git commit rejected
+  by the repo's real `.githooks/pre-commit` hook.
 - `npm run check:community` now enforces issue/PR template fields, contribution
   setup, 72-hour triage target, code-of-conduct presence, and security contact
   plus API-key boundaries.
@@ -223,6 +230,8 @@ Current checked behavior:
   the README.
 - `docs/assets/terminal-output-demo.svg` provides generated pass/fail terminal
   output proof for the README.
+- `docs/assets/precommit-rejection-demo.svg` provides generated pre-commit
+  rejection proof for the README.
 - `docs/assets/last-verified-badges.svg` provides generated green/yellow/red
   last-verified badge-state proof for the README.
 - `docs/badge-output.md` documents badge formats and status rules.
@@ -283,8 +292,8 @@ These are intentionally not complete:
 - Arbitrary custom nested parameter semantics beyond bundled structured
   collection/fixedCollection/filter metadata.
 - Additional video/GIF captures beyond the checked README, animated demo,
-  terminal output, social preview, architecture SVG, and last-verified
-  badge-state SVG assets.
+  terminal output, pre-commit rejection, social preview, architecture SVG, and
+  last-verified badge-state SVG assets.
 - Public X, Reddit, HN, or n8n forum launch posts.
 - Broader repair transforms for credential renames, node rewrites, trigger
   rewiring, and nested parameter-shape changes.

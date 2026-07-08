@@ -44,8 +44,7 @@ console.log(
 function listTrackedFiles() {
   const result = spawnSync("git", ["ls-files"], {
     cwd: process.cwd(),
-    encoding: "utf8",
-    shell: process.platform === "win32"
+    encoding: "utf8"
   });
 
   if (result.status !== 0) {

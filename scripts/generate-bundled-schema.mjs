@@ -262,15 +262,15 @@ function readRequiredString(value, label, configPath) {
 }
 
 function npmExecutable() {
-  return process.platform === "win32" ? "npm.cmd" : "npm";
+  return "npm";
 }
 
 function runCommand(command, args) {
-  const result = spawnSync(command, args, {
+  const resolved = resolveCommand(command, args);
+  const result = spawnSync(resolved.executable, resolved.args, {
     cwd: repoRoot,
     encoding: "utf8",
     stdio: ["ignore", "pipe", "pipe"],
-    shell: process.platform === "win32",
     maxBuffer: 1024 * 1024 * 128
   });
 
@@ -280,6 +280,14 @@ function runCommand(command, args) {
   }
 
   return result;
+}
+
+function resolveCommand(command, args) {
+  if (process.platform === "win32" && (command === "npm" || command === "npx")) {
+    return { executable: "cmd.exe", args: ["/d", "/s", "/c", command, ...args] };
+  }
+
+  return { executable: command, args };
 }
 
 async function readJsonArray(filePath, label) {

@@ -105,10 +105,10 @@ console.log(
 );
 
 function runPack(workspace) {
-  const result = spawnSync("npm", ["pack", "--workspace", workspace, "--json", "--dry-run"], {
+  const command = npmCommand(["pack", "--workspace", workspace, "--json", "--dry-run"]);
+  const result = spawnSync(command.executable, command.args, {
     cwd: process.cwd(),
-    encoding: "utf8",
-    shell: process.platform === "win32"
+    encoding: "utf8"
   });
 
   if (result.status !== 0) {
@@ -122,6 +122,14 @@ function runPack(workspace) {
   }
 
   return parsed[0];
+}
+
+function npmCommand(args) {
+  if (process.platform === "win32") {
+    return { executable: "cmd.exe", args: ["/d", "/s", "/c", "npm", ...args] };
+  }
+
+  return { executable: "npm", args };
 }
 
 function isPackResult(value) {

@@ -13,6 +13,7 @@ const requiredQualityGates = [
   "check:type-hygiene",
   "check:cli-output",
   "check:precommit",
+  "check:precommit-rejection-demo",
   "check:community",
   "check:release-readiness",
   "check:live-rest-boundary",
@@ -49,6 +50,8 @@ expect(audit.includes("docs/assets/animated-failure-demo.svg"), "audit must ment
 expect(audit.includes("npm run check:animated-demo"), "audit must mention the animated demo checker");
 expect(audit.includes("docs/assets/terminal-output-demo.svg"), "audit must mention the checked terminal output asset");
 expect(audit.includes("npm run check:terminal-output-demo"), "audit must mention the terminal output checker");
+expect(audit.includes("docs/assets/precommit-rejection-demo.svg"), "audit must mention the checked pre-commit asset");
+expect(audit.includes("npm run check:precommit-rejection-demo"), "audit must mention the pre-commit rejection checker");
 expect(audit.includes("docs/assets/social-preview.svg"), "audit must mention the checked social preview asset");
 expect(audit.includes("npm run check:social-preview"), "audit must mention the social preview checker");
 expect(audit.includes("docs/assets/architecture.svg"), "audit must mention the checked architecture diagram asset");
@@ -85,9 +88,9 @@ for (const pack of [runPack("packages/core"), runPack("packages/cli")]) {
 expect(
   hasPhrase(
     audit,
-    "Additional video/GIF captures beyond the checked README, animated demo, terminal output, social preview, architecture SVG, and last-verified badge-state SVG assets."
+    "Additional video/GIF captures beyond the checked README, animated demo, terminal output, pre-commit rejection, social preview, architecture SVG, and last-verified badge-state SVG assets."
   ),
-  "remaining gates must distinguish extra visual launch assets from the checked README, animated demo, terminal output, social preview, architecture SVG, and last-verified badge-state SVGs"
+  "remaining gates must distinguish extra visual launch assets from the checked README, animated demo, terminal output, pre-commit rejection, social preview, architecture SVG, and last-verified badge-state SVGs"
 );
 
 for (const remainingGate of [
@@ -117,6 +120,7 @@ console.log(
         "README demo proof",
         "animated demo proof",
         "terminal output proof",
+        "pre-commit rejection proof",
         "social preview proof",
         "architecture diagram proof",
         "last-verified badge visual proof",
@@ -134,10 +138,10 @@ console.log(
 );
 
 function runPack(workspace) {
-  const result = spawnSync("npm", ["pack", "--workspace", workspace, "--json", "--dry-run"], {
+  const command = npmCommand(["pack", "--workspace", workspace, "--json", "--dry-run"]);
+  const result = spawnSync(command.executable, command.args, {
     cwd: process.cwd(),
-    encoding: "utf8",
-    shell: process.platform === "win32"
+    encoding: "utf8"
   });
 
   if (result.status !== 0) {
@@ -151,6 +155,14 @@ function runPack(workspace) {
   }
 
   return parsed[0];
+}
+
+function npmCommand(args) {
+  if (process.platform === "win32") {
+    return { executable: "cmd.exe", args: ["/d", "/s", "/c", "npm", ...args] };
+  }
+
+  return { executable: "npm", args };
 }
 
 function isPackResult(value) {

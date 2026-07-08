@@ -20,7 +20,8 @@ pre-commit hook contract verification, community-readiness verification,
 release-readiness verification, live REST boundary verification, launch-content
 verification, benchmark-report verification, GitHub Action contract
 verification, README demo verification, animated-demo verification,
-terminal-output demo verification, social-preview verification, audit-report verification, status-doc
+terminal-output demo verification, precommit-rejection demo verification,
+social-preview verification, audit-report verification, status-doc
 verification, README/CLI docs-contract verification, package-content
 verification, claims hygiene verification, Markdown link verification, fixture
 tests, the executable exit-code contract, the production dependency audit, and

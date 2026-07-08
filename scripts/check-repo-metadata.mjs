@@ -35,6 +35,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:type-hygiene") &&
     packageJson.scripts.quality.includes("npm run check:cli-output") &&
     packageJson.scripts.quality.includes("npm run check:precommit") &&
+    packageJson.scripts.quality.includes("npm run check:precommit-rejection-demo") &&
     packageJson.scripts.quality.includes("npm run check:community") &&
     packageJson.scripts.quality.includes("npm run check:release-readiness") &&
     packageJson.scripts.quality.includes("npm run check:live-rest-boundary") &&
@@ -56,7 +57,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:claims") &&
     packageJson.scripts.quality.includes("npm run check:links") &&
     packageJson.scripts.quality.includes("npm run check:exit-codes"),
-  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, community readiness, release readiness, live REST boundary, launch content, benchmark report, GitHub Action, strategy checklist, README demo, animated demo, terminal output demo, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
+  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, release readiness, live REST boundary, launch content, benchmark report, GitHub Action, strategy checklist, README demo, animated demo, terminal output demo, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
 );
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 
@@ -69,6 +70,7 @@ await expectFile("examples/pre-commit-setup/.pre-commit-config.yaml");
 await expectFile("docs/assets/readme-failure-demo.svg");
 await expectFile("docs/assets/animated-failure-demo.svg");
 await expectFile("docs/assets/terminal-output-demo.svg");
+await expectFile("docs/assets/precommit-rejection-demo.svg");
 await expectFile("docs/assets/social-preview.svg");
 await expectFile("docs/assets/architecture.svg");
 await expectFile("docs/assets/last-verified-badges.svg");
@@ -79,6 +81,7 @@ await expectFile("scripts/check-schema-config.mjs");
 await expectFile("scripts/check-type-hygiene.mjs");
 await expectFile("scripts/check-cli-output-contract.mjs");
 await expectFile("scripts/check-precommit-hook.mjs");
+await expectFile("scripts/check-precommit-rejection-demo.mjs");
 await expectFile("scripts/check-community-readiness.mjs");
 await expectFile("scripts/check-release-readiness.mjs");
 await expectFile("scripts/check-live-rest-boundary.mjs");
@@ -120,6 +123,7 @@ console.log(
         "docs/assets/readme-failure-demo.svg",
         "docs/assets/animated-failure-demo.svg",
         "docs/assets/terminal-output-demo.svg",
+        "docs/assets/precommit-rejection-demo.svg",
         "docs/assets/social-preview.svg",
         "docs/assets/architecture.svg",
         "docs/assets/last-verified-badges.svg",
@@ -130,6 +134,7 @@ console.log(
         "scripts/check-type-hygiene.mjs",
         "scripts/check-cli-output-contract.mjs",
         "scripts/check-precommit-hook.mjs",
+        "scripts/check-precommit-rejection-demo.mjs",
         "scripts/check-community-readiness.mjs",
         "scripts/check-release-readiness.mjs",
         "scripts/check-live-rest-boundary.mjs",

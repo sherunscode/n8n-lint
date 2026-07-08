@@ -176,10 +176,9 @@ async function expectLiveRestRuntimeBoundary() {
 }
 
 function runBuiltCliHelp() {
-  const result = spawnSync("node", ["packages/cli/dist/bin.js", "--help"], {
+  const result = spawnSync(process.execPath, ["packages/cli/dist/bin.js", "--help"], {
     cwd: process.cwd(),
-    encoding: "utf8",
-    shell: process.platform === "win32"
+    encoding: "utf8"
   });
 
   if (result.status !== 0) {

@@ -63,6 +63,8 @@
   proves it still matches real CLI output and preserves the live REST boundary.
 - Added a generated terminal-output SVG plus an executable demo gate that proves
   it still matches real colored pass and fail CLI output.
+- Added a generated pre-commit rejection SVG plus an executable demo gate that
+  proves the repo hook rejects an actual temporary Git commit on quality failure.
 - Added a generated social-preview SVG plus an executable visual proof gate that
   ties it to the current benchmark, schema config, and repo metadata.
 - Added a generated architecture SVG plus an executable visual proof gate that
