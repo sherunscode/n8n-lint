@@ -195,6 +195,7 @@ npm run check:schema-config
 npm run check:type-hygiene
 npm run check:precommit
 npm run check:community
+npm run check:release-readiness
 npm run check:metadata
 npm run check:security
 npm run check:docs
@@ -232,6 +233,10 @@ when the hook fails.
 
 `npm run check:community` proves the issue templates, PR template, contributing
 guide, code of conduct, and security contact/API-key boundaries stay launchable.
+
+`npm run check:release-readiness` proves package versions and release docs stay
+aligned while npm publish, tags/releases, public posts, Marketplace listing, and
+live REST claims remain owner-gated.
 
 `npm run check:security` proves local secret/config paths are ignored, scans
 tracked public files for common token patterns, and verifies the CLI does not

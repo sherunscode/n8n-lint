@@ -52,10 +52,12 @@ REST claims.
 - `n8n@2.29.7` still resolves to `n8n-nodes-base@2.29.6` and
   `n8n-workflow@2.29.2`.
 - `npm run quality` passed: build, ESLint, Prettier format check, example
-  check, bundled-schema check, metadata check, security hygiene check,
-  README/CLI docs-contract check, package-content check, claims hygiene check,
-  Markdown link check, core fixture tests, CLI fixture tests, production
-  dependency audit, and packed-install smoke.
+  check, bundled-schema check, schema-config check, type-hygiene check,
+  pre-commit hook contract check, community-readiness check, release-readiness
+  check, metadata check, security hygiene check, README/CLI docs-contract check,
+  package-content check, claims hygiene check, Markdown link check, executable
+  exit-code check, core fixture tests, CLI fixture tests, production dependency
+  audit, and packed-install smoke.
 - Package dry-runs reviewed:
   - `@n8nproof/core@0.0.0`: 11 files, 204.4 kB package, includes `dist` and
     compact schema artifacts only.
@@ -90,6 +92,9 @@ REST claims.
 - `npm run check:community` now enforces issue/PR template fields, contribution
   setup, 72-hour triage target, code-of-conduct presence, and security contact
   plus API-key boundaries.
+- `npm run check:release-readiness` now enforces package-version alignment,
+  pre-release npm boundaries, owner-gated publish/tag/release/posting language,
+  and rollback/support documentation.
 - Stale-claim scan found no old benchmark numbers, fake-growth language,
   invalid old GitHub owner path, or public-report placeholders.
 - `git diff --check` passed.

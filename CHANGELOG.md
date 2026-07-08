@@ -38,6 +38,8 @@
   loud failure output, exit-code propagation, and executable hook mode.
 - Added an executable community-readiness gate for issue templates, PR template,
   contribution docs, code of conduct, and security contact/API-key boundaries.
+- Added an executable release-readiness gate for package-version alignment,
+  owner-gated publish/tag/release/posting language, and rollback/support docs.
 - Added a reproducible `Zie619/n8n-workflows` benchmark report with exact
   pass/fail and skipped-file counts.
 - Refreshed the benchmark report after nested parameter-key validation changed

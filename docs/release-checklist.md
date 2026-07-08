@@ -39,6 +39,7 @@ Run from `C:\dev\Stars`:
 ```powershell
 npm ci
 npm run quality
+npm run check:release-readiness
 npm run smoke:pack
 npm pack --workspace packages/core --dry-run
 npm pack --workspace packages/cli --dry-run
