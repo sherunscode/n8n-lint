@@ -19,7 +19,7 @@ Evidence IDs used below:
 | E4 | `npm pack --workspace packages/core --dry-run` | Passed; package dry-run for `@n8nproof/core@0.0.0` listed 10 files: dist, schema, package metadata, README, and LICENSE. |
 | E5 | `npm pack --workspace packages/cli --dry-run` | Passed; package dry-run for `n8n-lint@0.0.0` listed 6 files: dist, package metadata, README, and LICENSE. |
 | E6 | GitHub Actions for `sherunscode/n8n-lint` | Use the README badge or Actions tab to verify the latest public `main` quality run before posting. Earlier public `main` run `28913776240` completed with conclusion `success`; do not cite it as proof for newer commits. |
-| E7 | `docs/benchmark-zie619-report.md` | Local benchmark report generated 2026-07-08T04:40:49.579Z from `Zie619/n8n-workflows` commit `94007c1445d9258a7da116646b79473e7c7c3282`: 2,077 JSON files discovered, 2,066 workflow inputs checked, 766 passed, 1,300 failed, 11 skipped. |
+| E7 | `docs/benchmark-zie619-report.md` | Local benchmark report generated 2026-07-08T05:09:51.955Z from `Zie619/n8n-workflows` commit `94007c1445d9258a7da116646b79473e7c7c3282` using clean `n8n-lint` commit `f3107548492c598600b213968defc634616c5115`: 2,077 JSON files discovered, 2,066 workflow inputs checked, 766 passed, 1,300 failed, 11 skipped. |
 | E8 | Public benchmark report URL | Use `https://github.com/sherunscode/n8n-lint/blob/main/docs/benchmark-zie619-report.md` after the benchmark-report commit is pushed. Re-check the URL before posting benchmark numbers. |
 | E9 | `docs/release-checklist.md` | npm publish, tags, GitHub release creation, and public posting remain owner-gated. |
 | E10 | `git remote -v` | Canonical repo remote is `https://github.com/sherunscode/n8n-lint.git`. |

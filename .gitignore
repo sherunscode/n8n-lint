@@ -4,6 +4,8 @@ coverage/
 .env
 .env.*
 !.env.example
+.n8nlintrc.json
+.n8n-lint.local.json
 *.log
 *.tsbuildinfo
 

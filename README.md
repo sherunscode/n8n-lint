@@ -1,6 +1,7 @@
 # n8n-lint
 
 [![CI](https://github.com/sherunscode/n8n-lint/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/sherunscode/n8n-lint/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Validate n8n workflow JSON before it reaches production.
 
@@ -8,6 +9,10 @@ Validate n8n workflow JSON before it reaches production.
 production n8n workflows can fail from stale node names, renamed credential
 types, dead top-level parameters, stale trigger graph shapes, and schema drift
 that static template collections do not catch.
+
+The project came out of ERLV Inc operating n8n in production at
+`n8n.erlvinc.com`, where minor-version workflow drift is an operator problem,
+not an abstract template-quality problem.
 
 This repository is still a local MVP. It is not published to npm yet and does
 not claim live REST schema validation yet. Today the verified paths are a source
@@ -67,6 +72,12 @@ WARN schema_source.warning: Bundled n8n package metadata is loaded from a compac
 
 ```bash
 n8n-lint check <workflow.json> [--source bundled-n8n-package|local-placeholder] [--json]
+```
+
+`n8n-lint --help` output:
+
+```text
+Usage: n8n-lint check <workflow.json> [--source bundled-n8n-package|local-placeholder] [--json]
 ```
 
 | Option | Default | Description |
