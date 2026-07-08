@@ -1,6 +1,6 @@
 # Zie619 n8n-workflows Benchmark Report
 
-Generated: 2026-07-08T04:40:49.579Z
+Generated: 2026-07-08T05:02:59.129Z
 
 ## Summary
 
@@ -15,7 +15,7 @@ Generated: 2026-07-08T04:40:49.579Z
 | Passed | 766 |
 | Failed | 1300 |
 | Skipped non-workflow JSON | 11 |
-| Runtime | 330379.61 ms |
+| Runtime | 364657.14 ms |
 
 ## Reproduce
 

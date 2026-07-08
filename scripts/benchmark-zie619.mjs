@@ -249,6 +249,9 @@ Generated: ${report.completedAt}
 | Source commit | \`${report.benchmarkSource.commit ?? "unknown"}\` |
 | Source ref | \`${report.benchmarkSource.ref ?? "unknown"}\` |
 | Source dirty | ${String(report.benchmarkSource.dirty)} |
+| n8n-lint commit | \`${report.n8nLintSource.commit ?? "unknown"}\` |
+| n8n-lint ref | \`${report.n8nLintSource.ref ?? "unknown"}\` |
+| n8n-lint dirty | ${String(report.n8nLintSource.dirty)} |
 | JSON files discovered | ${report.totalJsonFiles} |
 | Input workflows | ${report.total} |
 | Passed | ${report.passed} |
