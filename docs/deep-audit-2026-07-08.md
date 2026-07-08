@@ -164,6 +164,10 @@ REST claims.
 - `npm run check:release-readiness` now enforces package-version alignment,
   pre-release npm boundaries, owner-gated publish/tag/release/posting language,
   and rollback/support documentation.
+- `npm run check:release-notes` now enforces that
+  `docs/release-notes-v0.1.0-draft.md` is a substantive, owner-gated draft
+  GitHub Release body aligned to current benchmark counts, quality proof,
+  publish order, rollback boundaries, and current non-claims.
 - `npm run check:live-rest-boundary` now enforces that the live REST source
   boundary stays locked: public CLI help exposes only verified local sources,
   the internal placeholder stays unimplemented, API-key material is not echoed,
@@ -357,6 +361,7 @@ These are intentionally not complete:
 
 - npm publish and registry-backed `npx n8n-lint`.
 - Semver tag and GitHub release.
+- Publishing the checked draft release notes as an actual GitHub Release.
 - GitHub Action Marketplace listing.
 - Live REST schema validation.
 - Arbitrary custom nested parameter semantics beyond bundled structured

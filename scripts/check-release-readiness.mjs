@@ -10,6 +10,7 @@ const tool = await readJson("tool.json");
 const readme = await readText("README.md");
 const changelog = await readText("CHANGELOG.md");
 const releaseChecklist = await readText("docs/release-checklist.md");
+const releaseNotesDraft = await readText("docs/release-notes-v0.1.0-draft.md");
 const launchContentPack = await readText("docs/launch-content-pack.md");
 const launchDrafts = await readText("docs/launch-drafts.md");
 const supportRollback = await readText("docs/support-rollback.md");
@@ -67,6 +68,7 @@ for (const phrase of [
   "Confirm npm auth only after owner approval",
   "prefer npm provenance through OIDC",
   "npm run quality",
+  "npm run check:release-notes",
   "npm run smoke:pack",
   "npm pack --workspace packages/core --dry-run",
   "npm pack --workspace packages/cli --dry-run",
@@ -76,6 +78,17 @@ for (const phrase of [
   "Prefer a patch release over unpublish"
 ]) {
   expect(hasPhrase(releaseChecklist, phrase), `release checklist must include: ${phrase}`);
+}
+
+for (const phrase of [
+  "Status: draft only",
+  "Do not publish, tag, or announce this release until the owner approves",
+  "`n8n-lint` v0.1.0 is the first n8nproof release",
+  "Benchmark proof phrase: 2,066 workflow inputs, 762 passed, 1,304 failed, 11 skipped",
+  "The benchmark does not execute workflows and does not use live n8n REST validation.",
+  "Publish `@n8nproof/core` first, then `n8n-lint`."
+]) {
+  expect(hasPhrase(releaseNotesDraft, phrase), `release notes draft must include: ${phrase}`);
 }
 
 expect(
@@ -180,6 +193,7 @@ console.log(
         "README release boundaries",
         "CHANGELOG unreleased heading",
         "release checklist owner gates",
+        "draft release notes owner gates",
         "launch content owner gates",
         "animated demo freshness gate",
         "terminal output demo freshness gate",
@@ -190,6 +204,7 @@ console.log(
         "batch benchmark output freshness gate",
         "GitHub PR gate proof freshness gate",
         "launch visual freshness gate",
+        "substantive release notes draft",
         "support and rollback plan"
       ]
     },

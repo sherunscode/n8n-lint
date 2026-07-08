@@ -16,6 +16,7 @@ const requiredQualityGates = [
   "check:precommit-rejection-demo",
   "check:community",
   "check:release-readiness",
+  "check:release-notes",
   "check:live-rest-boundary",
   "check:launch-content",
   "check:benchmark-report",
@@ -70,6 +71,8 @@ expect(audit.includes("npm run check:architecture-diagram"), "audit must mention
 expect(audit.includes("docs/assets/last-verified-badges.svg"), "audit must mention the checked badge-state asset");
 expect(audit.includes("npm run check:last-verified-badges"), "audit must mention the badge-state checker");
 expect(audit.includes("npm run check:release-readiness"), "audit must mention the release-readiness checker");
+expect(audit.includes("npm run check:release-notes"), "audit must mention the release-notes checker");
+expect(audit.includes("docs/release-notes-v0.1.0-draft.md"), "audit must mention the checked draft release notes");
 expect(audit.includes("GitHub Discussion #8"), "audit must mention the live GitHub Discussion proof");
 expect(
   audit.includes("live GitHub Discussion #8 support/badge channel"),
@@ -134,6 +137,7 @@ expect(
 for (const remainingGate of [
   "npm publish and registry-backed `npx n8n-lint`",
   "Semver tag and GitHub release",
+  "Publishing the checked draft release notes as an actual GitHub Release",
   "GitHub Action Marketplace listing",
   "Live REST schema validation",
   "Public X, Reddit, HN, or n8n forum launch posts"
@@ -155,6 +159,7 @@ console.log(
         "quality gate list",
         "current package dry-run counts",
         "owner-gated remaining items",
+        "release notes draft proof",
         "README demo proof",
         "animated demo proof",
         "terminal output proof",
