@@ -19,6 +19,8 @@ import {
 type CliSchemaSource = Extract<SchemaSourceKind, "bundled-n8n-package" | "local-placeholder">;
 type BatchStatus = "passed" | "failed" | "skipped" | "error";
 type BadgeFormat = "markdown" | "json" | "svg";
+type OutputFormat = BadgeFormat | "github";
+type CheckFormat = "human" | "json" | "github";
 type N8nVersionSelection = BundledN8nPackageVersion | "matrix";
 
 interface ParsedArgs {
@@ -27,7 +29,8 @@ interface ParsedArgs {
   source: CliSchemaSource;
   json: boolean;
   help: boolean;
-  format: BadgeFormat;
+  format: OutputFormat;
+  formatWasSet: boolean;
   outputPath?: string;
   label: string;
   n8nVersion: N8nVersionSelection;
@@ -103,13 +106,16 @@ if (parsed.help) {
   printHelp();
   process.exitCode = 0;
 } else if (parsed.command === "check" && parsed.inputs.length > 0) {
-  if (parsed.n8nVersion === "matrix") {
+  const checkFormat = readCheckFormat(parsed);
+  if (checkFormat === undefined) {
+    process.exitCode = 2;
+  } else if (parsed.n8nVersion === "matrix") {
     if (parsed.source !== "bundled-n8n-package") {
       console.error("--n8n-version matrix requires --source bundled-n8n-package.");
       process.exitCode = 2;
     } else {
       const result = await runMatrix(parsed.inputs);
-      printMatrixResult(result, parsed.json);
+      printMatrixResult(result, checkFormat);
       process.exitCode = result.ok ? 0 : 1;
     }
   } else if (parsed.source !== "bundled-n8n-package" && parsed.n8nVersion !== defaultBundledN8nPackageVersion) {
@@ -122,7 +128,7 @@ if (parsed.help) {
     if (shouldUseBatch) {
       try {
         const result = await runBatch(parsed.inputs, schemaSource);
-        printBatchResult(result, parsed.json);
+        printBatchResult(result, checkFormat);
         process.exitCode = result.ok ? 0 : 1;
       } catch (error) {
         console.error(error instanceof Error ? error.message : String(error));
@@ -130,11 +136,14 @@ if (parsed.help) {
       }
     } else {
       const filePath = parsed.inputs[0] as string;
-      process.exitCode = await runSingleFile(filePath, schemaSource, parsed.json);
+      process.exitCode = await runSingleFile(filePath, schemaSource, checkFormat);
     }
   }
 } else if (parsed.command === "repair" && parsed.inputs.length === 1) {
-  if (parsed.n8nVersion === "matrix") {
+  if (parsed.formatWasSet) {
+    console.error("repair does not support --format; use --json for machine-readable output.");
+    process.exitCode = 2;
+  } else if (parsed.n8nVersion === "matrix") {
     console.error("repair does not support --n8n-version matrix; choose one pinned version.");
     process.exitCode = 2;
   } else {
@@ -142,7 +151,12 @@ if (parsed.help) {
     process.exitCode = await runRepair(parsed.inputs[0] as string, schemaSource, parsed);
   }
 } else if (parsed.command === "badge" && parsed.inputs.length === 1) {
-  process.exitCode = await runBadge(parsed.inputs[0] as string, parsed);
+  if (parsed.format === "github") {
+    console.error("badge --format must be markdown, json, or svg.");
+    process.exitCode = 2;
+  } else {
+    process.exitCode = await runBadge(parsed.inputs[0] as string, parsed);
+  }
 } else {
   printHelp();
   process.exitCode = 2;
@@ -155,6 +169,7 @@ function parseArgs(args: string[]): ParsedArgs {
     json: false,
     help: false,
     format: "markdown",
+    formatWasSet: false,
     label: "n8n-lint",
     n8nVersion: defaultBundledN8nPackageVersion,
     apply: false,
@@ -208,22 +223,24 @@ function parseArgs(args: string[]): ParsedArgs {
 
     if (arg === "--format") {
       const format = args[index + 1];
-      if (format !== "markdown" && format !== "json" && format !== "svg") {
-        throw new Error("--format must be markdown, json, or svg.");
+      if (format !== "markdown" && format !== "json" && format !== "svg" && format !== "github") {
+        throw new Error("--format must be markdown, json, svg, or github.");
       }
 
       parsedArgs.format = format;
+      parsedArgs.formatWasSet = true;
       index += 1;
       continue;
     }
 
     if (arg.startsWith("--format=")) {
       const format = arg.slice("--format=".length);
-      if (format !== "markdown" && format !== "json" && format !== "svg") {
-        throw new Error("--format must be markdown, json, or svg.");
+      if (format !== "markdown" && format !== "json" && format !== "svg" && format !== "github") {
+        throw new Error("--format must be markdown, json, svg, or github.");
       }
 
       parsedArgs.format = format;
+      parsedArgs.formatWasSet = true;
       continue;
     }
 
@@ -305,6 +322,24 @@ function parseArgs(args: string[]): ParsedArgs {
   return parsedArgs;
 }
 
+function readCheckFormat(options: ParsedArgs): CheckFormat | undefined {
+  if (options.json && options.format === "github") {
+    console.error("check cannot combine --json with --format github.");
+    return undefined;
+  }
+
+  if (options.formatWasSet && options.format !== "github") {
+    console.error("check --format only supports github; use --json for JSON output.");
+    return undefined;
+  }
+
+  if (options.json) {
+    return "json";
+  }
+
+  return options.format === "github" ? "github" : "human";
+}
+
 function parseN8nVersionSelection(value: string): N8nVersionSelection {
   if (value === "matrix") {
     return value;
@@ -329,14 +364,20 @@ async function inputRequiresBatch(input: string): Promise<boolean> {
   }
 }
 
-async function runSingleFile(filePath: string, schemaSource: SchemaSource, json: boolean): Promise<number> {
+async function runSingleFile(filePath: string, schemaSource: SchemaSource, format: CheckFormat): Promise<number> {
   try {
     const raw = await readFile(filePath, "utf8");
     const workflow = JSON.parse(raw) as unknown;
     const validation = await validateWorkflow(workflow, schemaSource);
 
-    if (json) {
+    if (format === "json") {
       console.log(JSON.stringify({ filePath, ...validation }, null, 2));
+      return validation.ok ? 0 : 1;
+    }
+
+    if (format === "github") {
+      printGithubValidationResult(filePath, validation.issues);
+      console.log(`Summary: ${validation.ok ? 1 : 0} passed, ${validation.ok ? 0 : 1} failed, 0 skipped, 0 errors`);
       return validation.ok ? 0 : 1;
     }
 
@@ -356,6 +397,17 @@ async function runSingleFile(filePath: string, schemaSource: SchemaSource, json:
     }
     return 1;
   } catch (error) {
+    if (format === "github") {
+      printGithubAnnotation(
+        "error",
+        displayPath(filePath),
+        "input_error",
+        error instanceof Error ? error.message : String(error)
+      );
+      console.log("Summary: 0 passed, 0 failed, 0 skipped, 1 errors");
+      return 1;
+    }
+
     console.error(`FAIL ${filePath}`);
     console.error(error instanceof Error ? error.message : String(error));
     return 1;
@@ -367,7 +419,7 @@ async function runBadge(resultPath: string, options: ParsedArgs): Promise<number
     const raw = await readFile(resultPath, "utf8");
     const parsedResult = JSON.parse(raw) as unknown;
     const badge = createBadgeModel(parsedResult, options.label, displayPath(resultPath));
-    const rendered = renderBadge(badge, options.format);
+    const rendered = renderBadge(badge, readBadgeFormat(options.format));
 
     if (options.outputPath !== undefined) {
       await writeFile(options.outputPath, `${rendered}\n`, "utf8");
@@ -381,6 +433,14 @@ async function runBadge(resultPath: string, options: ParsedArgs): Promise<number
     console.error(error instanceof Error ? error.message : String(error));
     return 1;
   }
+}
+
+function readBadgeFormat(format: OutputFormat): BadgeFormat {
+  if (format === "github") {
+    throw new Error("badge --format must be markdown, json, or svg.");
+  }
+
+  return format;
 }
 
 async function runRepair(filePath: string, schemaSource: SchemaSource, options: ParsedArgs): Promise<number> {
@@ -602,9 +662,14 @@ async function checkBatchFile(filePath: string, schemaSource: SchemaSource): Pro
   }
 }
 
-function printBatchResult(result: BatchRunResult, json: boolean): void {
-  if (json) {
+function printBatchResult(result: BatchRunResult, format: CheckFormat): void {
+  if (format === "json") {
     console.log(JSON.stringify(result, null, 2));
+    return;
+  }
+
+  if (format === "github") {
+    printGithubBatchResult(result);
     return;
   }
 
@@ -658,9 +723,14 @@ async function runMatrix(inputs: string[]): Promise<MatrixRunResult> {
   };
 }
 
-function printMatrixResult(result: MatrixRunResult, json: boolean): void {
-  if (json) {
+function printMatrixResult(result: MatrixRunResult, format: CheckFormat): void {
+  if (format === "json") {
     console.log(JSON.stringify(result, null, 2));
+    return;
+  }
+
+  if (format === "github") {
+    printGithubMatrixResult(result);
     return;
   }
 
@@ -733,6 +803,105 @@ function readErrorSignatures(fileResult: BatchFileResult | undefined): string[] 
     .filter((issue) => issue.severity === "error")
     .map((issue) => `${issue.code}:${issue.path}`)
     .sort((left, right) => left.localeCompare(right));
+}
+
+function printGithubValidationResult(filePath: string, issues: readonly ValidationIssue[], titlePrefix = ""): void {
+  for (const issue of issues) {
+    printGithubAnnotation(
+      issue.severity === "error" ? "error" : "warning",
+      displayPath(filePath),
+      `${titlePrefix}${issue.code}`,
+      `${issue.message} (${issue.path})`
+    );
+  }
+}
+
+function printGithubBatchResult(result: BatchRunResult): void {
+  for (const fileResult of result.results) {
+    if (fileResult.status === "skipped") {
+      printGithubAnnotation(
+        "notice",
+        fileResult.filePath,
+        "workflow.skipped",
+        `Skipped non-workflow JSON file: ${fileResult.reason ?? "not an n8n workflow"}`
+      );
+      continue;
+    }
+
+    if (fileResult.status === "error") {
+      printGithubAnnotation("error", fileResult.filePath, "input_error", fileResult.error ?? "Unknown read or parse error.");
+      continue;
+    }
+
+    printGithubValidationResult(fileResult.filePath, fileResult.issues ?? []);
+  }
+
+  const { passed, failed, skipped, errors } = result.summary;
+  console.log(`Summary: ${passed} passed, ${failed} failed, ${skipped} skipped, ${errors} errors`);
+}
+
+function printGithubMatrixResult(result: MatrixRunResult): void {
+  for (const version of result.versions) {
+    const packageLabel = version.packageInfo
+      ? `${version.packageInfo.name}@${version.packageInfo.version}`
+      : `n8n-nodes-base@${version.packageVersion}`;
+    console.log(`MATRIX ${packageLabel}: ${version.ok ? "PASS" : "FAIL"}`);
+
+    for (const fileResult of version.results) {
+      const titlePrefix = `${version.packageVersion}:`;
+      if (fileResult.status === "skipped") {
+        printGithubAnnotation(
+          "notice",
+          fileResult.filePath,
+          `${titlePrefix}workflow.skipped`,
+          `Skipped non-workflow JSON file: ${fileResult.reason ?? "not an n8n workflow"}`
+        );
+        continue;
+      }
+
+      if (fileResult.status === "error") {
+        printGithubAnnotation(
+          "error",
+          fileResult.filePath,
+          `${titlePrefix}input_error`,
+          fileResult.error ?? "Unknown read or parse error."
+        );
+        continue;
+      }
+
+      printGithubValidationResult(fileResult.filePath, fileResult.issues ?? [], titlePrefix);
+    }
+  }
+
+  for (const difference of result.differences) {
+    const statusSummary = Object.entries(difference.statusByVersion)
+      .map(([version, status]) => `${version}=${status}`)
+      .join(", ");
+    console.log(`DIFF ${difference.filePath}: ${statusSummary}`);
+  }
+
+  console.log(
+    `Matrix summary: ${result.versions.length} versions, ${result.differences.length} compatibility differences`
+  );
+}
+
+function printGithubAnnotation(
+  kind: "error" | "warning" | "notice",
+  filePath: string,
+  title: string,
+  message: string
+): void {
+  console.log(
+    `::${kind} file=${escapeGithubProperty(filePath)},title=${escapeGithubProperty(title)}::${escapeGithubData(message)}`
+  );
+}
+
+function escapeGithubProperty(value: string): string {
+  return escapeGithubData(value).replace(/:/g, "%3A").replace(/,/g, "%2C");
+}
+
+function escapeGithubData(value: string): string {
+  return value.replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A");
 }
 
 async function resolveBatchInputs(inputs: string[]): Promise<{
@@ -1070,7 +1239,7 @@ function printHelp(): void {
   console.log(
     [
       "Usage:",
-      "  n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0|matrix] [--json]",
+      "  n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0|matrix] [--json|--format github]",
       "  n8n-lint repair <workflow.json> [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0] [--output fix.patch] [--apply --confirm] [--json]",
       "  n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]"
     ].join("\n")

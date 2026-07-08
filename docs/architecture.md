@@ -72,7 +72,17 @@ This keeps the product honest:
 
 - Human output is optimized for terminal and CI logs.
 - JSON output is documented in `docs/json-output.md`.
+- GitHub Actions annotation output is available with `check --format github`;
+  it emits workflow commands for native PR annotations without changing exit
+  codes.
 - Exit codes are documented there as the automation contract.
+
+## Agent Metadata
+
+`tool.json` is a machine-readable summary of the current CLI commands,
+capabilities, exit codes, verified claims, and non-claims. It is metadata for
+agents, registries, and future tool discovery. It is not an MCP server and does
+not add a hosted runtime surface.
 
 ## Repair Boundary
 

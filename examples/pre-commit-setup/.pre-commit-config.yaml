@@ -1,0 +1,8 @@
+repos:
+  - repo: local
+    hooks:
+      - id: n8n-lint-check
+        name: n8n-lint check example workflows
+        entry: node packages/cli/dist/bin.js check examples/known-http-request-workflow.json
+        language: system
+        pass_filenames: false

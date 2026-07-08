@@ -36,6 +36,9 @@ REST claims.
 - Human-gated repair mode is implemented for schema-proven unknown top-level
   parameters, emits patches by default, and requires `--apply --confirm` before
   mutating workflow files.
+- GitHub Actions annotation output is implemented with `check --format github`.
+- `tool.json`, issue-template routing, CI setup docs, and a pre-commit framework
+  example exist without claiming npm publication.
 - Owner-review launch drafts exist under `docs/launch-drafts.md` and are based
   only on verified repo, CI, package, and benchmark proof.
 - Architecture and support/rollback docs exist for the current MVP.
@@ -50,7 +53,7 @@ REST claims.
 - Package dry-runs reviewed:
   - `@n8nproof/core@0.0.0`: 11 files, 57.2 kB package, includes `dist` and
     compact schema artifacts only.
-  - `n8n-lint@0.0.0`: 6 files, 14.0 kB package, includes `dist` only plus
+  - `n8n-lint@0.0.0`: 6 files, 15.5 kB package, includes `dist` only plus
     package metadata, README, and LICENSE.
 - Fresh temp-project tarball install passed with `npx n8n-lint check
   workflow.json`.
@@ -70,6 +73,8 @@ Current checked behavior:
 - Unknown or dead top-level node parameter detection.
 - Stale trigger graph/type-version shape detection.
 - Stable `--json` output mode.
+- GitHub annotation output with native `::error`, `::warning`, and `::notice`
+  commands.
 - Batch human and JSON output with stable summary counts.
 - Local badge generation from checked JSON output.
 - Matrix human and JSON output with per-version summaries and compatibility
@@ -78,6 +83,7 @@ Current checked behavior:
   with non-repairable failures kept blocked.
 - `docs/json-output.md` documents the current JSON output contract.
 - `docs/batch-check-design.md` documents batch behavior and proof gates.
+- `docs/ci-setup.md` documents GitHub annotation output and CI setup paths.
 - `docs/badge-output.md` documents badge formats and status rules.
 - `docs/schema-matrix.md` documents pinned schema artifacts and matrix behavior.
 - `docs/repair.md` documents diff-only repair behavior and apply confirmation

@@ -7,6 +7,10 @@ When `--n8n-version=matrix` is used, it emits the matrix JSON object documented
 below. `n8n-lint repair <workflow.json> --json` emits the repair JSON object
 documented below.
 
+GitHub Actions annotations are a separate output mode: use
+`check --format github`, not `--json`, when native PR annotations are desired.
+The CLI rejects `--json --format github` because those are separate contracts.
+
 This contract documents the current local MVP. It does not claim npm registry
 installation, live REST schema validation, workflow execution, or hosted
 service behavior.

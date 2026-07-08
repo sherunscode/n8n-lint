@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and usage help
+    url: https://github.com/sherunscode/n8n-lint/discussions
+    about: Ask questions or share workflow validation use cases in Discussions.
+  - name: Security issue
+    url: mailto:ashley@sherunscode.com
+    about: Please report security issues privately by email.

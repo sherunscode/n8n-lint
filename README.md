@@ -48,6 +48,7 @@ will only be documented after npm publication.
 - Unknown or dead top-level node parameter detection.
 - Stale trigger graph/type-version shape detection.
 - JSON output mode for CI tooling.
+- GitHub Actions annotation output with `--format github`.
 - Multi-version schema selector and matrix compatibility report.
 - Batch checks for multiple files, directories, and simple globs, with skipped
   ordinary JSON files reported separately.
@@ -81,7 +82,7 @@ WARN schema_source.warning: Bundled n8n package metadata is loaded from a compac
 ## CLI
 
 ```bash
-n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0|matrix] [--json]
+n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0|matrix] [--json|--format github]
 n8n-lint repair <workflow.json> [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0] [--output fix.patch] [--apply --confirm] [--json]
 n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]
 ```
@@ -90,7 +91,7 @@ n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lin
 
 ```text
 Usage:
-  n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0|matrix] [--json]
+  n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0|matrix] [--json|--format github]
   n8n-lint repair <workflow.json> [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0] [--output fix.patch] [--apply --confirm] [--json]
   n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]
 ```
@@ -103,12 +104,14 @@ Usage:
 | `--n8n-version 2.30.0` | no | Uses the second pinned bundled artifact. |
 | `--n8n-version matrix` | no | Runs all pinned bundled artifacts and reports compatibility differences. |
 | `--json` | no | Emits a stable JSON result object and exits non-zero on validation errors. |
+| `--format github` | no | Emits GitHub Actions annotations for check errors, warnings, and skipped files. |
 
 Local development currently runs the built CLI directly:
 
 ```bash
 node packages/cli/dist/bin.js check examples/failing-unknown-node.json
 node packages/cli/dist/bin.js check examples/failing-unknown-credential.json --json
+node packages/cli/dist/bin.js check examples/failing-dead-parameter.json --format github
 node packages/cli/dist/bin.js check "examples/*.json"
 node packages/cli/dist/bin.js check examples/matrix-2-30-parameter-workflow.json --n8n-version=matrix
 node packages/cli/dist/bin.js repair examples/failing-dead-parameter.json
@@ -132,6 +135,8 @@ WARNING schema_source.warning $: Bundled n8n package metadata is loaded from a c
 See `docs/json-output.md` for the current `--json` output contract.
 See `docs/batch-check-design.md` for batch mode behavior, skipped-file rules,
 and exit codes.
+See `docs/ci-setup.md` for GitHub Actions annotation output and current CI
+boundaries.
 See `docs/badge-output.md` for local badge generation from checked output.
 See `docs/schema-matrix.md` for pinned schema artifacts and matrix behavior.
 See `docs/repair.md` for human-gated repair boundaries.
@@ -226,6 +231,7 @@ See `docs/pre-commit.md`.
   validation contract.
 - `docs/json-output.md`: stable JSON output contract for CI tooling.
 - `docs/batch-check-design.md`: batch-check behavior and V1.1 proof gates.
+- `docs/ci-setup.md`: GitHub Actions annotation output and CI setup paths.
 - `docs/badge-output.md`: local badge generation from real check results.
 - `docs/schema-matrix.md`: pinned schema artifacts and matrix compatibility
   reporting.

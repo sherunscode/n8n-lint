@@ -1,0 +1,59 @@
+{
+  "name": "n8n-lint",
+  "version": "0.0.0",
+  "description": "Validate n8n workflow JSON with artifact-backed schema checks.",
+  "owner": "sherunscode",
+  "repository": "https://github.com/sherunscode/n8n-lint",
+  "license": "MIT",
+  "runtime": {
+    "node": ">=18.18.0"
+  },
+  "commands": [
+    {
+      "name": "check",
+      "usage": "n8n-lint check <workflow.json|directory|glob> [...inputs]",
+      "exitCodes": {
+        "0": "All checked workflows passed.",
+        "1": "At least one workflow failed validation or an input could not be read.",
+        "2": "CLI usage error."
+      },
+      "outputs": [
+        "human",
+        "json",
+        "github-annotations"
+      ]
+    },
+    {
+      "name": "repair",
+      "usage": "n8n-lint repair <workflow.json>",
+      "safety": "Diff-only by default; mutation requires --apply --confirm."
+    },
+    {
+      "name": "badge",
+      "usage": "n8n-lint badge <check-result.json>",
+      "outputs": [
+        "markdown",
+        "json",
+        "svg"
+      ]
+    }
+  ],
+  "verifiedClaims": [
+    "workflow structure validation",
+    "bundled node type validation",
+    "bundled credential type validation",
+    "top-level node parameter validation",
+    "trigger graph/type-version validation",
+    "batch checks",
+    "two-version bundled schema matrix",
+    "local badge generation",
+    "human-gated repair patches"
+  ],
+  "notClaimed": [
+    "npm registry publication",
+    "live REST schema validation",
+    "workflow execution",
+    "hosted SaaS",
+    "GitHub Marketplace listing"
+  ]
+}

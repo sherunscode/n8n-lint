@@ -22,5 +22,8 @@
   parameters, with mutation blocked unless `--apply --confirm` is supplied.
 - Added owner-review launch drafts grounded in the benchmark, CI, and package
   dry-run proof, without posting or claiming npm publication.
+- Added GitHub Actions annotation output via `check --format github`.
+- Added `tool.json`, issue-template routing, CI setup docs, and a pre-commit
+  framework example.
 - Added publishable package metadata, package README files, and an owner-gated
   npm release checklist.

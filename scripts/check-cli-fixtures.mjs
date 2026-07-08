@@ -145,6 +145,50 @@ const checks = [
     ]
   },
   {
+    name: "github format emits actions annotations for validation failures",
+    args: [cliPath, "check", "examples/failing-dead-parameter.json", "--format=github"],
+    exitCode: 1,
+    stdoutIncludes: [
+      "::error file=examples/failing-dead-parameter.json,title=workflow.node_parameter_unknown::",
+      "::warning file=examples/failing-dead-parameter.json,title=schema_source.warning::",
+      "Summary: 0 passed, 1 failed, 0 skipped, 0 errors"
+    ]
+  },
+  {
+    name: "github format emits matrix annotations with version-prefixed titles",
+    args: [cliPath, "check", "examples/matrix-2-30-parameter-workflow.json", "--n8n-version=matrix", "--format=github"],
+    exitCode: 1,
+    stdoutIncludes: [
+      "MATRIX n8n-nodes-base@2.29.6: FAIL",
+      "::error file=examples/matrix-2-30-parameter-workflow.json,title=2.29.6%3Aworkflow.node_parameter_unknown::",
+      "Matrix summary: 2 versions, 1 compatibility differences"
+    ]
+  },
+  {
+    name: "github format cannot be combined with json check output",
+    args: [cliPath, "check", "examples/failing-dead-parameter.json", "--json", "--format=github"],
+    exitCode: 2,
+    stderrIncludes: ["check cannot combine --json with --format github."]
+  },
+  {
+    name: "check rejects badge-only format values",
+    args: [cliPath, "check", "examples/failing-dead-parameter.json", "--format=json"],
+    exitCode: 2,
+    stderrIncludes: ["check --format only supports github; use --json for JSON output."]
+  },
+  {
+    name: "badge rejects github output format",
+    args: [cliPath, "badge", "examples/badge-batch-result.json", "--format=github"],
+    exitCode: 2,
+    stderrIncludes: ["badge --format must be markdown, json, or svg."]
+  },
+  {
+    name: "repair rejects format output options",
+    args: [cliPath, "repair", "examples/failing-dead-parameter.json", "--format=github"],
+    exitCode: 2,
+    stderrIncludes: ["repair does not support --format; use --json for machine-readable output."]
+  },
+  {
     name: "repair emits a diff without mutating the workflow",
     args: [cliPath, "repair", "examples/failing-dead-parameter.json"],
     exitCode: 0,

@@ -12,6 +12,7 @@ Verified:
 - Bundled compact schema artifact rejects unknown top-level node parameters and
   stale trigger graph/type-version shapes.
 - CLI output truthfully labels `bundled-n8n-package` or `local-placeholder`.
+- GitHub Actions annotation output is available through `--format github`.
 - Local quality gates prove build, fixtures, tests, and production dependency
   audit status.
 - Packed-package install smoke has proven the source checkout and local tarball
@@ -26,6 +27,8 @@ Verified:
   `n8n-nodes-base@2.29.6` and `n8n-nodes-base@2.30.0`.
 - Repair mode emits human-gated patches for schema-proven unknown top-level
   parameters and requires `--apply --confirm` before mutation.
+- Machine-readable `tool.json`, issue-template routing, CI setup docs, and a
+  pre-commit framework example exist without claiming npm publication.
 
 Still gated or unproven:
 
