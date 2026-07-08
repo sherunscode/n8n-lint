@@ -54,15 +54,15 @@ REST claims.
 - `n8n@2.29.7` still resolves to `n8n-nodes-base@2.29.6` and
   `n8n-workflow@2.29.2`.
 - `npm run quality` passed: build, ESLint, Prettier format check, example
-  check, bundled-schema check, schema-config check, type-hygiene check,
-  pre-commit hook contract check, community-readiness check, release-readiness
-  check, README demo check, metadata check, security hygiene check, README/CLI
-  docs-contract check, package-content check, claims hygiene check, Markdown
-  link check, executable exit-code check, core fixture tests, CLI fixture tests,
+  check, bundled-schema check, `check:schema-config`, `check:type-hygiene`,
+  `check:precommit`, `check:community`, `check:release-readiness`,
+  `check:readme-demo`, `check:audit-report`, `check:metadata`,
+  `check:security`, `check:docs`, `check:pack`, `check:claims`,
+  `check:links`, `check:exit-codes`, core fixture tests, CLI fixture tests,
   production dependency audit, and packed-install smoke.
 - Package dry-runs reviewed:
-  - `@n8nproof/core@0.0.0`: 11 files, 204.4 kB package, includes `dist` and
-    compact schema artifacts only.
+  - `@n8nproof/core@0.0.0`: 12 files, 205.9 kB package, includes `dist`,
+    `schema`, package metadata, README, and LICENSE only.
   - `n8n-lint@0.0.0`: 6 files, 15.7 kB package, includes `dist` only plus
     package metadata, README, and LICENSE.
 - Fresh temp-project tarball install is automated by `npm run smoke:pack` and
@@ -99,6 +99,9 @@ REST claims.
   and rollback/support documentation.
 - `npm run check:readme-demo` now enforces that the README SVG demo is generated
   from a real failing CLI command and matches the current output.
+- `npm run check:audit-report` now enforces that this audit report retains the
+  conditional/no-go verdicts, current package dry-run counts, quality gate list,
+  owner-gated remaining items, and README demo proof.
 - Stale-claim scan found no old benchmark numbers, fake-growth language,
   invalid old GitHub owner path, or public-report placeholders.
 - `git diff --check` passed.
@@ -183,7 +186,7 @@ These are intentionally not complete:
 - Live REST schema validation.
 - Arbitrary custom nested parameter semantics beyond bundled structured
   collection/fixedCollection/filter metadata.
-- README GIF/screenshots and social preview image.
+- Additional screenshots/GIFs and social preview image.
 - Public X, Reddit, HN, or n8n forum launch posts.
 - Broader repair transforms for credential renames, node rewrites, trigger
   rewiring, and nested parameter-shape changes.

@@ -202,6 +202,7 @@ npm run check:precommit
 npm run check:community
 npm run check:release-readiness
 npm run check:readme-demo
+npm run check:audit-report
 npm run check:metadata
 npm run check:security
 npm run check:docs
@@ -246,6 +247,10 @@ live REST claims remain owner-gated.
 
 `npm run check:readme-demo` proves the README demo asset was generated from a
 real failing CLI command and still matches the current output.
+
+`npm run check:audit-report` proves the deep-audit report keeps the current
+verdicts, package dry-run counts, quality gate list, remaining gates, and README
+demo proof aligned with executable repo artifacts.
 
 `npm run check:security` proves local secret/config paths are ignored, scans
 tracked public files for common token patterns, and verifies the CLI does not

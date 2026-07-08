@@ -42,6 +42,8 @@
   owner-gated publish/tag/release/posting language, and rollback/support docs.
 - Added a generated README failure-demo SVG plus an executable demo gate that
   proves it still matches real CLI output.
+- Added an executable deep-audit report gate that catches stale package counts,
+  missing quality gates, and missing owner-gated release blockers.
 - Added a reproducible `Zie619/n8n-workflows` benchmark report with exact
   pass/fail and skipped-file counts.
 - Refreshed the benchmark report after nested parameter-key validation changed
