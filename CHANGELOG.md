@@ -12,6 +12,8 @@
   collection/fixedCollection/filter parameter keys.
 - Added local quality gates, CI workflow, pre-commit hook, and project hygiene
   documents.
+- Added ESLint and Prettier gates to `npm run quality` and the public CI
+  workflow.
 - Added a reproducible `Zie619/n8n-workflows` benchmark report with exact
   pass/fail and skipped-file counts.
 - Refreshed the benchmark report after nested parameter-key validation changed

@@ -10,12 +10,12 @@ This repository gates every push and pull request with:
 
 ```bash
 npm ci
-npm run build
-npm run check:example
-npm run check:bundled-schema
-npm test
-npm run audit:prod
+npm run quality
 ```
+
+`npm run quality` currently runs build, ESLint, Prettier format check, example
+validation, bundled-schema verification, metadata verification, fixture tests,
+the production dependency audit, and the packed-install smoke test.
 
 The public workflow is `.github/workflows/ci.yml`.
 
@@ -64,11 +64,11 @@ annotations, and skipped non-workflow JSON files as `::notice` annotations.
 The composite action also writes a Markdown job summary for reviewers.
 Exit codes remain the same as normal check mode:
 
-| Exit | Meaning |
-|---:|---|
-| `0` | All checked workflows passed. |
-| `1` | At least one workflow failed validation or an input failed to parse. |
-| `2` | CLI usage error. |
+| Exit | Meaning                                                              |
+| ---: | -------------------------------------------------------------------- |
+|  `0` | All checked workflows passed.                                        |
+|  `1` | At least one workflow failed validation or an input failed to parse. |
+|  `2` | CLI usage error.                                                     |
 
 Do not combine `--json` with `--format github`; those are separate automation
 surfaces.

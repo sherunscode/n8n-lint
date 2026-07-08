@@ -55,8 +55,6 @@ export interface BundledN8nPackageSchemaSourceConfig {
 }
 
 const defaultN8nNodesPackage = "n8n-nodes-base";
-const nodeMetadataFile = "dist/types/nodes.json";
-const credentialMetadataFile = "dist/types/credentials.json";
 export const bundledN8nPackageVersions = ["2.29.6", "2.30.0"] as const;
 export type BundledN8nPackageVersion = (typeof bundledN8nPackageVersions)[number];
 export const defaultBundledN8nPackageVersion: BundledN8nPackageVersion = "2.29.6";
@@ -100,8 +98,8 @@ export const bundledN8nPackageSelection = bundledN8nPackageSelections[defaultBun
 export function createLocalPlaceholderSchemaSource(): SchemaSource {
   return {
     kind: "local-placeholder",
-    async load(): Promise<SchemaSnapshot> {
-      return {
+    load(): Promise<SchemaSnapshot> {
+      return Promise.resolve({
         source: "local-placeholder",
         fetchedAt: new Date().toISOString(),
         nodeTypes: [],
@@ -111,18 +109,15 @@ export function createLocalPlaceholderSchemaSource(): SchemaSource {
         triggerNodeTypes: [],
         nodes: [],
         credentials: [],
-        warnings: [
-          "Live n8n schema validation is not implemented yet; checked local workflow structure only."
-        ]
-      };
+        warnings: ["Live n8n schema validation is not implemented yet; checked local workflow structure only."]
+      });
     }
   };
 }
 
 export function createBundledN8nPackageSchemaSource(config: BundledN8nPackageSchemaSourceConfig = {}): SchemaSource {
   const artifactPath =
-    config.artifactPath ??
-    bundledSchemaArtifactPaths[config.packageVersion ?? defaultBundledN8nPackageVersion];
+    config.artifactPath ?? bundledSchemaArtifactPaths[config.packageVersion ?? defaultBundledN8nPackageVersion];
 
   return {
     kind: "bundled-n8n-package",
@@ -165,7 +160,7 @@ export function createBundledN8nPackageSchemaSource(config: BundledN8nPackageSch
 export function createLiveRestSchemaSource(config: LiveRestSchemaSourceConfig): SchemaSource {
   return {
     kind: "live-rest",
-    async load(): Promise<SchemaSnapshot> {
+    load(): Promise<SchemaSnapshot> {
       const baseUrl = config.baseUrl.trim();
       if (!baseUrl) {
         throw new Error("n8n base URL is required for live REST schema source.");
@@ -173,7 +168,7 @@ export function createLiveRestSchemaSource(config: LiveRestSchemaSourceConfig): 
 
       // This is intentionally a thin placeholder until Week 1 proves the exact
       // n8n REST endpoints and auth shape. Do not claim live validation from it.
-      return {
+      return Promise.resolve({
         source: "live-rest",
         fetchedAt: new Date().toISOString(),
         nodeTypes: [],
@@ -187,7 +182,7 @@ export function createLiveRestSchemaSource(config: LiveRestSchemaSourceConfig): 
           "Live REST schema source is configured but endpoint probing is not implemented yet.",
           config.apiKey ? "API key was provided and kept in memory only." : "No API key was provided."
         ]
-      };
+      });
     }
   };
 }
@@ -342,7 +337,7 @@ function readStringArrayRecord(rawValue: unknown, label: string, filePath: strin
     throw new Error(`Bundled n8n schema artifact ${label} must be an object at ${filePath}.`);
   }
 
-  const entries = Object.entries(rawValue).map(([key, value]) => [
+  const entries: Array<[string, string[]]> = Object.entries(rawValue).map(([key, value]) => [
     key,
     readStringArray(value, `${label}.${key}`, filePath)
   ]);

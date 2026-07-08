@@ -2,8 +2,10 @@
 import { access, readFile } from "node:fs/promises";
 
 const failures = [];
+const packageJson = await readJson("package.json");
 const tool = await readJson("tool.json");
 const cliPackage = await readJson("packages/cli/package.json");
+const ciWorkflow = await readText(".github/workflows/ci.yml");
 
 expect(tool.name === cliPackage.name, "tool.json name must match CLI package name");
 expect(tool.version === cliPackage.version, "tool.json version must match CLI package version");
@@ -19,10 +21,25 @@ expect(
   Array.isArray(tool.notClaimed) && tool.notClaimed.includes("npm registry publication"),
   "tool.json must preserve npm publication non-claim"
 );
+expect(packageJson.scripts?.lint === "eslint packages scripts", "package.json must expose the ESLint gate");
+expect(
+  typeof packageJson.scripts?.["format:check"] === "string" &&
+    packageJson.scripts["format:check"].includes("prettier --check"),
+  "package.json must expose the Prettier check gate"
+);
+expect(
+  typeof packageJson.scripts?.quality === "string" &&
+    packageJson.scripts.quality.includes("npm run lint") &&
+    packageJson.scripts.quality.includes("npm run format:check"),
+  "package.json quality gate must include lint and format checks"
+);
+expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 
 await expectFile(".github/ISSUE_TEMPLATE/config.yml");
+await expectFile(".prettierrc.json");
 await expectFile("action.yml");
 await expectFile("docs/ci-setup.md");
+await expectFile("eslint.config.js");
 await expectFile("examples/pre-commit-setup/.pre-commit-config.yaml");
 await expectFile("examples/failing-nested-dead-parameter.json");
 await expectFile("scripts/smoke-packed-install.mjs");
@@ -38,8 +55,10 @@ console.log(
       checked: [
         "tool.json",
         ".github/ISSUE_TEMPLATE/config.yml",
+        ".prettierrc.json",
         "action.yml",
         "docs/ci-setup.md",
+        "eslint.config.js",
         "examples/pre-commit-setup/.pre-commit-config.yaml",
         "examples/failing-nested-dead-parameter.json",
         "scripts/smoke-packed-install.mjs"
@@ -52,6 +71,10 @@ console.log(
 
 async function readJson(filePath) {
   return JSON.parse(await readFile(filePath, "utf8"));
+}
+
+async function readText(filePath) {
+  return readFile(filePath, "utf8");
 }
 
 function hasCommand(name) {

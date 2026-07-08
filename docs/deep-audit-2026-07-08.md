@@ -51,13 +51,13 @@ REST claims.
   published at audit time.
 - `n8n@2.29.7` still resolves to `n8n-nodes-base@2.29.6` and
   `n8n-workflow@2.29.2`.
-- `npm run quality` passed: build, example check, bundled-schema check,
-  metadata check, core fixture tests, CLI fixture tests, production dependency
-  audit, and packed-install smoke.
+- `npm run quality` passed: build, ESLint, Prettier format check, example
+  check, bundled-schema check, metadata check, core fixture tests, CLI fixture
+  tests, production dependency audit, and packed-install smoke.
 - Package dry-runs reviewed:
   - `@n8nproof/core@0.0.0`: 11 files, 204.4 kB package, includes `dist` and
     compact schema artifacts only.
-  - `n8n-lint@0.0.0`: 6 files, 15.6 kB package, includes `dist` only plus
+  - `n8n-lint@0.0.0`: 6 files, 15.7 kB package, includes `dist` only plus
     package metadata, README, and LICENSE.
 - Fresh temp-project tarball install is automated by `npm run smoke:pack` and
   passed with `npx n8n-lint check workflow.json`.

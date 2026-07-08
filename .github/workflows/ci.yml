@@ -23,21 +23,10 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Build
-        run: npm run build
-
-      - name: Check examples
-        run: |
-          npm run check:example
-          npm run check:bundled-schema
-
-      - name: Test
-        run: npm test
+      - name: Quality
+        run: npm run quality
 
       - name: Dogfood GitHub Action
         uses: ./
         with:
           paths: examples/known-http-request-workflow.json
-
-      - name: Audit shipping dependencies
-        run: npm run audit:prod

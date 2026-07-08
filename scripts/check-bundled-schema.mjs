@@ -47,15 +47,13 @@ const matrixVersionFailures = bundledN8nPackageVersions
   .filter((failure) => failure !== undefined);
 const matrixDifferenceFailures = [
   ...matrixFixtureParameters
-    .filter(
-      ({ nodeType, parameterName }) =>
-        matrixSnapshots["2.29.6"]?.nodeParameterNames[nodeType]?.includes(parameterName)
+    .filter(({ nodeType, parameterName }) =>
+      matrixSnapshots["2.29.6"]?.nodeParameterNames[nodeType]?.includes(parameterName)
     )
     .map(({ nodeType, parameterName }) => `Expected ${nodeType}.${parameterName} to be absent from 2.29.6`),
   ...matrixFixtureParameters
     .filter(
-      ({ nodeType, parameterName }) =>
-        !matrixSnapshots["2.30.0"]?.nodeParameterNames[nodeType]?.includes(parameterName)
+      ({ nodeType, parameterName }) => !matrixSnapshots["2.30.0"]?.nodeParameterNames[nodeType]?.includes(parameterName)
     )
     .map(({ nodeType, parameterName }) => `Expected ${nodeType}.${parameterName} to be present in 2.30.0`)
 ];

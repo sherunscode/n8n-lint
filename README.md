@@ -61,8 +61,8 @@ will only be documented after npm publication.
   static SVG format.
 - Human-gated repair patches for schema-proven unknown top-level parameters.
 - Composite GitHub Action in `action.yml`, dogfooded by this repo's CI.
-- Local quality gates for build, fixtures, tests, and production dependency
-  audit.
+- Local quality gates for build, lint, format, fixtures, tests, and production
+  dependency audit.
 - Packed-package install smoke test for the publishable core and CLI workspaces.
 - Reproducible `Zie619/n8n-workflows` benchmark report with exact pass/fail and
   skipped-file counts.
@@ -102,15 +102,15 @@ Usage:
   n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]
 ```
 
-| Option | Default | Description |
-|---|---:|---|
-| `--source bundled-n8n-package` | yes | Uses the checked-in compact schema artifact. |
-| `--source local-placeholder` | no | Structure-only validation for adapter testing. |
-| `--n8n-version 2.29.6` | yes | Uses the default pinned bundled artifact. |
-| `--n8n-version 2.30.0` | no | Uses the second pinned bundled artifact. |
-| `--n8n-version matrix` | no | Runs all pinned bundled artifacts and reports compatibility differences. |
-| `--json` | no | Emits a stable JSON result object and exits non-zero on validation errors. |
-| `--format github` | no | Emits GitHub Actions annotations for check errors, warnings, and skipped files. |
+| Option                         | Default | Description                                                                     |
+| ------------------------------ | ------: | ------------------------------------------------------------------------------- |
+| `--source bundled-n8n-package` |     yes | Uses the checked-in compact schema artifact.                                    |
+| `--source local-placeholder`   |      no | Structure-only validation for adapter testing.                                  |
+| `--n8n-version 2.29.6`         |     yes | Uses the default pinned bundled artifact.                                       |
+| `--n8n-version 2.30.0`         |      no | Uses the second pinned bundled artifact.                                        |
+| `--n8n-version matrix`         |      no | Runs all pinned bundled artifacts and reports compatibility differences.        |
+| `--json`                       |      no | Emits a stable JSON result object and exits non-zero on validation errors.      |
+| `--format github`              |      no | Emits GitHub Actions annotations for check errors, warnings, and skipped files. |
 
 Local development currently runs the built CLI directly:
 
@@ -181,6 +181,8 @@ WARN schema_source.warning: Bundled n8n package metadata is loaded from a compac
 
 ```bash
 npm run build
+npm run lint
+npm run format:check
 npm run check:example
 npm run check:bundled-schema
 npm test

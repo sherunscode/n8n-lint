@@ -130,21 +130,19 @@ async function generateArtifact(version) {
       },
       nodeTypes: uniqueSorted(nodeEntries.map((entry) => entry.name)),
       credentialTypes: uniqueSorted(
-        credentialDefinitions
-          .map((definition) => readDefinitionName(definition))
-          .filter((name) => name !== undefined)
+        credentialDefinitions.map((definition) => readDefinitionName(definition)).filter((name) => name !== undefined)
       ),
       nodeParameterNames: buildNodeParameterNameMap(nodeEntries),
       nodeParameterPaths: buildNodeParameterPathMap(nodeEntries),
       triggerNodeTypes: uniqueSorted(
-        nodeEntries
-          .filter((entry) => isTriggerNodeDefinition(entry.definition))
-          .map((entry) => entry.name)
+        nodeEntries.filter((entry) => isTriggerNodeDefinition(entry.definition)).map((entry) => entry.name)
       )
     };
 
     if (artifact.package.version !== version) {
-      throw new Error(`Expected ${packageName}@${version}, loaded ${artifact.package.name}@${artifact.package.version}.`);
+      throw new Error(
+        `Expected ${packageName}@${version}, loaded ${artifact.package.name}@${artifact.package.version}.`
+      );
     }
 
     const outputPath = join(repoRoot, selection.outputPath);
@@ -316,7 +314,9 @@ function collectChildPropertyPaths(property) {
 
         const optionSegment = allowsMultiple ? `${optionName}[]` : optionName;
         const valuePaths = Array.isArray(option.values)
-          ? option.values.flatMap((value) => collectPropertyPaths(value)).map((valuePath) => `${optionSegment}.${valuePath}`)
+          ? option.values
+              .flatMap((value) => collectPropertyPaths(value))
+              .map((valuePath) => `${optionSegment}.${valuePath}`)
           : [];
         return [optionSegment, ...valuePaths];
       })

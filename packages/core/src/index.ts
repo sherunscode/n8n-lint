@@ -1,8 +1,4 @@
-import {
-  createLocalPlaceholderSchemaSource,
-  type SchemaSource,
-  type SchemaSourceKind
-} from "./schema-source.js";
+import { createLocalPlaceholderSchemaSource, type SchemaSource, type SchemaSourceKind } from "./schema-source.js";
 
 export type {
   BundledN8nPackageSelection,
@@ -279,7 +275,15 @@ function validateNestedParameterValue(
       return;
     }
 
-    value.forEach((item, index) => validateNestedParameterValue(item, pathNode.arrayItem as ParameterPathNode, `${path}[${index}]`, issues, nodeType));
+    value.forEach((item, index) => {
+      validateNestedParameterValue(
+        item,
+        pathNode.arrayItem as ParameterPathNode,
+        `${path}[${index}]`,
+        issues,
+        nodeType
+      );
+    });
     return;
   }
 
@@ -409,7 +413,9 @@ function visitConnectionTargets(
   onTarget: (targetName: string, path: string) => void
 ): void {
   if (Array.isArray(value)) {
-    value.forEach((item, index) => visitConnectionTargets(item, `${path}[${index}]`, onTarget));
+    value.forEach((item, index) => {
+      visitConnectionTargets(item, `${path}[${index}]`, onTarget);
+    });
     return;
   }
 

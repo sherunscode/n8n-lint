@@ -97,7 +97,7 @@ async function findJsonFiles(root) {
   for (const entry of entries) {
     const entryPath = join(root, entry.name);
     if (entry.isDirectory()) {
-      files.push(...await findJsonFiles(entryPath));
+      files.push(...(await findJsonFiles(entryPath)));
       continue;
     }
 

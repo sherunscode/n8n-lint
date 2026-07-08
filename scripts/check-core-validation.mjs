@@ -1,17 +1,20 @@
 #!/usr/bin/env node
 import { readFile } from "node:fs/promises";
 
-import {
-  createBundledN8nPackageSchemaSource,
-  validateWorkflow
-} from "../packages/core/dist/index.js";
+import { createBundledN8nPackageSchemaSource, validateWorkflow } from "../packages/core/dist/index.js";
 
-const fixture = JSON.parse(await readFile(new URL("../examples/known-http-request-workflow.json", import.meta.url), "utf8"));
-const unknownNode = JSON.parse(await readFile(new URL("../examples/failing-unknown-node.json", import.meta.url), "utf8"));
+const fixture = JSON.parse(
+  await readFile(new URL("../examples/known-http-request-workflow.json", import.meta.url), "utf8")
+);
+const unknownNode = JSON.parse(
+  await readFile(new URL("../examples/failing-unknown-node.json", import.meta.url), "utf8")
+);
 const unknownCredential = JSON.parse(
   await readFile(new URL("../examples/failing-unknown-credential.json", import.meta.url), "utf8")
 );
-const deadParameter = JSON.parse(await readFile(new URL("../examples/failing-dead-parameter.json", import.meta.url), "utf8"));
+const deadParameter = JSON.parse(
+  await readFile(new URL("../examples/failing-dead-parameter.json", import.meta.url), "utf8")
+);
 const nestedDeadParameter = JSON.parse(
   await readFile(new URL("../examples/failing-nested-dead-parameter.json", import.meta.url), "utf8")
 );

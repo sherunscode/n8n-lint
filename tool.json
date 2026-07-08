@@ -17,11 +17,7 @@
         "1": "At least one workflow failed validation or an input could not be read.",
         "2": "CLI usage error."
       },
-      "outputs": [
-        "human",
-        "json",
-        "github-annotations"
-      ]
+      "outputs": ["human", "json", "github-annotations"]
     },
     {
       "name": "repair",
@@ -31,21 +27,13 @@
     {
       "name": "badge",
       "usage": "n8n-lint badge <check-result.json>",
-      "outputs": [
-        "markdown",
-        "json",
-        "svg"
-      ]
+      "outputs": ["markdown", "json", "svg"]
     }
   ],
   "githubAction": {
     "name": "n8n-lint",
     "usage": "uses: sherunscode/n8n-lint@<ref>",
-    "inputs": [
-      "paths",
-      "source",
-      "n8n-version"
-    ],
+    "inputs": ["paths", "source", "n8n-version"],
     "outputFormat": "github-annotations",
     "jobSummary": true,
     "releaseBoundary": "Use a commit SHA or owner-approved semver tag; GitHub Marketplace listing is not claimed."

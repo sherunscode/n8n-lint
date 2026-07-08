@@ -526,7 +526,10 @@ async function runRepair(filePath: string, schemaSource: SchemaSource, options: 
   }
 }
 
-function buildRepair(workflow: unknown, issues: readonly ValidationIssue[]): {
+function buildRepair(
+  workflow: unknown,
+  issues: readonly ValidationIssue[]
+): {
   workflow: unknown;
   changes: RepairChange[];
 } {
@@ -539,16 +542,21 @@ function buildRepair(workflow: unknown, issues: readonly ValidationIssue[]): {
     }
 
     const target = parseNodeParameterPath(issue.path);
-    if (target === undefined || !isRecord(repaired) || !Array.isArray(repaired.nodes)) {
+    if (target === undefined || !isRecord(repaired)) {
       continue;
     }
 
-    const node = repaired.nodes[target.nodeIndex];
+    const nodes = repaired.nodes;
+    if (!Array.isArray(nodes)) {
+      continue;
+    }
+
+    const node: unknown = nodes[target.nodeIndex];
     if (!isRecord(node) || !isRecord(node.parameters) || !(target.parameterName in node.parameters)) {
       continue;
     }
 
-    delete node.parameters[target.parameterName];
+    node.parameters = omitRecordKey(node.parameters, target.parameterName);
     changes.push({
       code: "remove_unknown_parameter",
       path: issue.path,
@@ -578,16 +586,22 @@ function cloneJson(value: unknown): unknown {
   return JSON.parse(JSON.stringify(value)) as unknown;
 }
 
+function omitRecordKey(record: Record<string, unknown>, keyToOmit: string): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(record).filter(([key]) => key !== keyToOmit));
+}
+
 function createWholeFilePatch(filePath: string, beforeText: string, afterText: string): string {
   const beforeLines = splitPatchLines(beforeText);
   const afterLines = splitPatchLines(afterText);
-  return [
-    `--- ${filePath}`,
-    `+++ ${filePath}`,
-    `@@ -1,${beforeLines.length} +1,${afterLines.length} @@`,
-    ...beforeLines.map((line) => `-${line}`),
-    ...afterLines.map((line) => `+${line}`)
-  ].join("\n") + "\n";
+  return (
+    [
+      `--- ${filePath}`,
+      `+++ ${filePath}`,
+      `@@ -1,${beforeLines.length} +1,${afterLines.length} @@`,
+      ...beforeLines.map((line) => `-${line}`),
+      ...afterLines.map((line) => `+${line}`)
+    ].join("\n") + "\n"
+  );
 }
 
 function splitPatchLines(value: string): string[] {
@@ -596,10 +610,7 @@ function splitPatchLines(value: string): string[] {
   return withoutFinalNewline.length === 0 ? [] : withoutFinalNewline.split("\n");
 }
 
-async function runBatch(
-  inputs: string[],
-  schemaSource: SchemaSource
-): Promise<BatchRunResult> {
+async function runBatch(inputs: string[], schemaSource: SchemaSource): Promise<BatchRunResult> {
   const resolved = await resolveBatchInputs(inputs);
   const sourceSnapshot = await schemaSource.load();
   const results: BatchFileResult[] = [];
@@ -775,9 +786,7 @@ function collectMatrixDifferences(versions: MatrixRunResult["versions"]): Matrix
     }
 
     const statusSignatures = new Set(Object.values(statusByVersion));
-    const errorSignatures = new Set(
-      Object.values(errorSignaturesByVersion).map((signatures) => signatures.join("|"))
-    );
+    const errorSignatures = new Set(Object.values(errorSignaturesByVersion).map((signatures) => signatures.join("|")));
     if (statusSignatures.size > 1 || errorSignatures.size > 1) {
       differences.push({
         filePath,
@@ -829,7 +838,12 @@ function printGithubBatchResult(result: BatchRunResult): void {
     }
 
     if (fileResult.status === "error") {
-      printGithubAnnotation("error", fileResult.filePath, "input_error", fileResult.error ?? "Unknown read or parse error.");
+      printGithubAnnotation(
+        "error",
+        fileResult.filePath,
+        "input_error",
+        fileResult.error ?? "Unknown read or parse error."
+      );
       continue;
     }
 
@@ -1194,8 +1208,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 function createLoadedSchemaSource(snapshot: Awaited<ReturnType<SchemaSource["load"]>>): SchemaSource {
   return {
     kind: snapshot.source,
-    async load() {
-      return snapshot;
+    load() {
+      return Promise.resolve(snapshot);
     }
   };
 }

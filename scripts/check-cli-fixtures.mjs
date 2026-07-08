@@ -101,16 +101,17 @@ const checks = [
     name: "badge markdown output uses checked json result",
     args: [cliPath, "badge", "examples/badge-batch-result.json"],
     exitCode: 0,
-    stdoutIncludes: [
-      "![n8n-lint: 1 passing]",
-      "https://img.shields.io/badge/n8n--lint-1_passing-brightgreen"
-    ]
+    stdoutIncludes: ["![n8n-lint: 1 passing]", "https://img.shields.io/badge/n8n--lint-1_passing-brightgreen"]
   },
   {
     name: "badge json output reports summary-derived status",
     args: [cliPath, "badge", "examples/badge-batch-result.json", "--format", "json"],
     exitCode: 0,
-    stdoutIncludes: ['"message": "1 passing"', '"color": "brightgreen"', '"sourceFile": "examples/badge-batch-result.json"']
+    stdoutIncludes: [
+      '"message": "1 passing"',
+      '"color": "brightgreen"',
+      '"sourceFile": "examples/badge-batch-result.json"'
+    ]
   },
   {
     name: "badge svg output is static local markup",
@@ -211,7 +212,11 @@ const checks = [
     name: "repair json reports conservative change model",
     args: [cliPath, "repair", "examples/failing-dead-parameter.json", "--json"],
     exitCode: 0,
-    stdoutIncludes: ['"ok": true', '"code": "remove_unknown_parameter"', '"path": "$.nodes[0].parameters.notARealParameter"']
+    stdoutIncludes: [
+      '"ok": true',
+      '"code": "remove_unknown_parameter"',
+      '"path": "$.nodes[0].parameters.notARealParameter"'
+    ]
   },
   {
     name: "repair keeps non-repairable stale trigger failures blocked",
