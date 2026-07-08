@@ -40,6 +40,6 @@
     "@n8nproof/core": "0.0.0"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0"
+    "@types/node": "^26.1.0"
   }
 }
