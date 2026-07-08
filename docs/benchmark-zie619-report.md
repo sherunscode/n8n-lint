@@ -1,6 +1,6 @@
 # Zie619 n8n-workflows Benchmark Report
 
-Generated: 2026-07-08T02:57:15.066Z
+Generated: 2026-07-08T04:40:49.579Z
 
 ## Summary
 
@@ -12,10 +12,10 @@ Generated: 2026-07-08T02:57:15.066Z
 | Source dirty | false |
 | JSON files discovered | 2077 |
 | Input workflows | 2066 |
-| Passed | 1703 |
-| Failed | 363 |
+| Passed | 766 |
+| Failed | 1300 |
 | Skipped non-workflow JSON | 11 |
-| Runtime | 295028.65 ms |
+| Runtime | 330379.61 ms |
 
 ## Reproduce
 
@@ -34,9 +34,9 @@ Report files:
 
 ## Methodology
 
-Discovers JSON files under workflowRoot, skips JSON that is not an n8n workflow object with a top-level nodes array, then runs n8n-lint check --json against each selected workflow using the bundled-n8n-package schema source. This benchmark does not execute workflows and does not use live n8n REST validation.
+Discovers JSON files under workflowRoot, skips JSON that is not an n8n workflow object with a top-level nodes array, then runs n8n-lint check --json against each selected workflow using the bundled-n8n-package schema source. It validates workflow structure, bundled node and credential type names, top-level node parameter names, and trigger graph/type-version shape. This benchmark does not execute workflows and does not use live n8n REST validation.
 
-The current n8n-lint validator checks workflow JSON structure, bundled n8n node type names, and bundled credential type names. It does not execute workflows or claim live REST schema validation.
+The current n8n-lint validator checks workflow JSON structure, bundled n8n node type names, bundled credential type names, top-level node parameter names, and trigger graph/type-version shape. It does not execute workflows or claim live REST schema validation.
 
 ## Failure Categories
 
@@ -44,6 +44,7 @@ Failure categories are non-exclusive: one workflow can contribute to multiple ca
 
 | Code | Workflows | Issue occurrences |
 |---|---:|---:|
+| `workflow.node_parameter_unknown` | 1088 | 2218 |
 | `workflow.credential_type_unknown` | 277 | 666 |
 | `workflow.node_type_unknown` | 129 | 377 |
 

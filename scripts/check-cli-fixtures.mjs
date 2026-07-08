@@ -32,6 +32,18 @@ const checks = [
     stderrIncludes: ["workflow.credential_type_unknown", "notARealCredential"]
   },
   {
+    name: "dead parameter fixture fails schema validation",
+    args: [cliPath, "check", "examples/failing-dead-parameter.json"],
+    exitCode: 1,
+    stderrIncludes: ["workflow.node_parameter_unknown", "notARealParameter"]
+  },
+  {
+    name: "stale trigger shape fixture fails schema validation",
+    args: [cliPath, "check", "examples/failing-stale-trigger-shape.json"],
+    exitCode: 1,
+    stderrIncludes: ["workflow.trigger_type_version_missing", "workflow.trigger_incoming_connection"]
+  },
+  {
     name: "json output mode reports source",
     args: [cliPath, "check", "examples/known-http-request-workflow.json", "--json"],
     exitCode: 0,

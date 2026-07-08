@@ -9,6 +9,8 @@ Verified:
 
 - `n8n-lint check <workflow.json>` validates workflow structure.
 - Bundled compact schema artifact rejects unknown node and credential types.
+- Bundled compact schema artifact rejects unknown top-level node parameters and
+  stale trigger graph/type-version shapes.
 - CLI output truthfully labels `bundled-n8n-package` or `local-placeholder`.
 - Local quality gates prove build, fixtures, tests, and production dependency
   audit status.
@@ -22,6 +24,7 @@ Still gated or unproven:
 - npm publication and registry-backed `npx n8n-lint` docs.
 - Owner-side GitHub mutations such as topics, tag pushes, and releases.
 - Live REST schema validation from a running n8n instance.
+- Deep nested parameter-shape validation beyond top-level bundled metadata.
 - Hosted SaaS, dashboard, MCP server, marketplace, or a second product.
 
 ## V0 Launch Closure

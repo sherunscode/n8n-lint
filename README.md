@@ -6,13 +6,27 @@ Validate n8n workflow JSON before it reaches production.
 
 `n8n-lint` is the first n8nproof tool from She Runs Code. It exists because
 production n8n workflows can fail from stale node names, renamed credential
-types, and schema drift that static template collections do not catch.
+types, dead top-level parameters, stale trigger graph shapes, and schema drift
+that static template collections do not catch.
 
 This repository is still a local MVP. It is not published to npm yet and does
 not claim live REST schema validation yet. Today the verified paths are a source
 checkout, a packed local tarball install, and a reproducible local benchmark
 report against `Zie619/n8n-workflows`; registry-backed `npx n8n-lint` usage
 will only be documented after npm publication.
+
+## Proof and Boundaries
+
+- CI: the badge links to the latest public `main` quality run.
+- Current install paths: source checkout and packed local tarball only until npm
+  publication.
+- Current validation: workflow structure, bundled n8n node type names, bundled
+  credential type names, top-level node parameter names, and trigger
+  graph/type-version shape.
+- Benchmark: `docs/benchmark-zie619-report.md` records the reproducible
+  `Zie619/n8n-workflows` run and exact source commit.
+- Not claimed yet: npm registry install, live REST schema validation, workflow
+  execution, deep nested parameter validation, hosted SaaS, or marketplace.
 
 ## What Works Now
 
@@ -21,7 +35,9 @@ will only be documented after npm publication.
 - Compact bundled schema artifact generated from `n8n-nodes-base@2.29.6`, the
   package selected by the current `n8n@2.29.7` dependency set.
 - Unknown node type detection.
-- Unknown credential type detection.
+- Unknown or renamed credential type detection.
+- Unknown or dead top-level node parameter detection.
+- Stale trigger graph/type-version shape detection.
 - JSON output mode for CI tooling.
 - Local quality gates for build, fixtures, tests, and production dependency
   audit.
@@ -131,8 +147,9 @@ npm run generate:bundled-schema
 ```
 
 The generated file is `packages/core/schema/bundled-n8n-package.json`. It
-stores node and credential type names only. It does not bundle n8n runtime code,
-integration clients, credentials, or workflow data.
+stores node and credential type names, top-level node parameter names, and
+trigger node type names. It does not bundle n8n runtime code, integration
+clients, credentials, or workflow data.
 
 ## Pre-Commit
 
@@ -153,12 +170,14 @@ Current report, generated from `Zie619/n8n-workflows` commit
 
 - JSON files discovered: 2,077.
 - Input workflows checked: 2,066.
-- Passed: 1,703.
-- Failed: 363.
+- Passed: 766.
+- Failed: 1,300.
 - Skipped non-workflow JSON files: 11.
 
 The benchmark uses the bundled `n8n-nodes-base@2.29.6` schema artifact. It does
-not execute workflows and does not claim live REST validation.
+not execute workflows and does not claim live REST validation. The current
+validator checks workflow structure, bundled node and credential type names,
+top-level node parameter names, and trigger graph/type-version shape.
 
 ```bash
 npm run benchmark:zie619 -- <path-to-Zie619-n8n-workflows> docs/benchmark-zie619-report.json
@@ -174,7 +193,8 @@ MVP scope:
 - CLI check command.
 - Pre-commit hook.
 - GitHub Action quality gate.
-- Fixture-backed validation behavior.
+- Fixture-backed validation behavior for structure, node types, credential
+  types, dead top-level parameters, and stale trigger shape.
 - Honest docs and benchmark harness.
 
 Not MVP scope:

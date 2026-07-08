@@ -6,6 +6,8 @@
   `n8n-nodes-base@2.29.6`.
 - Made bundled schema validation the local CLI default.
 - Added fixture-backed checks for unknown node and credential types.
+- Added fixture-backed checks for dead top-level node parameters and stale
+  trigger graph/type-version shapes.
 - Added local quality gates, CI workflow, pre-commit hook, and project hygiene
   documents.
 - Added a reproducible `Zie619/n8n-workflows` benchmark report with exact

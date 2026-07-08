@@ -1,0 +1,41 @@
+{
+  "name": "Stale trigger shape fixture",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "fixture-source-node",
+      "name": "Source",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "fixture-manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        280,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Source": {
+      "main": [
+        [
+          {
+            "node": "Manual Trigger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}

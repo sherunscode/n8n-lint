@@ -11,6 +11,10 @@ const unknownNode = JSON.parse(await readFile(new URL("../examples/failing-unkno
 const unknownCredential = JSON.parse(
   await readFile(new URL("../examples/failing-unknown-credential.json", import.meta.url), "utf8")
 );
+const deadParameter = JSON.parse(await readFile(new URL("../examples/failing-dead-parameter.json", import.meta.url), "utf8"));
+const staleTriggerShape = JSON.parse(
+  await readFile(new URL("../examples/failing-stale-trigger-shape.json", import.meta.url), "utf8")
+);
 const source = createBundledN8nPackageSchemaSource();
 
 const passing = await validateWorkflow(fixture, source);
@@ -31,6 +35,24 @@ assert(
   "unknown credential fixture should report workflow.credential_type_unknown"
 );
 
+const parameterFailure = await validateWorkflow(deadParameter, source);
+assert(!parameterFailure.ok, "dead parameter fixture should fail bundled schema validation");
+assert(
+  parameterFailure.issues.some((issue) => issue.code === "workflow.node_parameter_unknown"),
+  "dead parameter fixture should report workflow.node_parameter_unknown"
+);
+
+const triggerFailure = await validateWorkflow(staleTriggerShape, source);
+assert(!triggerFailure.ok, "stale trigger shape fixture should fail bundled schema validation");
+assert(
+  triggerFailure.issues.some((issue) => issue.code === "workflow.trigger_type_version_missing"),
+  "stale trigger shape fixture should report workflow.trigger_type_version_missing"
+);
+assert(
+  triggerFailure.issues.some((issue) => issue.code === "workflow.trigger_incoming_connection"),
+  "stale trigger shape fixture should report workflow.trigger_incoming_connection"
+);
+
 console.log(
   JSON.stringify(
     {
@@ -38,7 +60,9 @@ console.log(
       checks: [
         "core bundled schema positive fixture",
         "core unknown node fixture",
-        "core unknown credential fixture"
+        "core unknown credential fixture",
+        "core dead parameter fixture",
+        "core stale trigger shape fixture"
       ]
     },
     null,

@@ -27,8 +27,23 @@ const [nodeDefinitions, credentialDefinitions] = await Promise.all([
   readJsonArray(join(packageRoot, credentialMetadataFile), "credential definitions")
 ]);
 
+const nodeEntries = nodeDefinitions
+  .map((definition) => {
+    const name = readDefinitionName(definition);
+    if (name === undefined) {
+      return undefined;
+    }
+
+    const qualifiedName = qualifyNodeType(name, packageName);
+    return {
+      definition,
+      name: qualifiedName
+    };
+  })
+  .filter((entry) => entry !== undefined);
+
 const artifact = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   generatedAt: new Date().toISOString(),
   source: "bundled-n8n-package",
   package: {
@@ -40,16 +55,17 @@ const artifact = {
     }
   },
   selection,
-  nodeTypes: uniqueSorted(
-    nodeDefinitions
-      .map((definition) => readDefinitionName(definition))
-      .filter((name) => name !== undefined)
-      .map((name) => qualifyNodeType(name, packageName))
-  ),
+  nodeTypes: uniqueSorted(nodeEntries.map((entry) => entry.name)),
   credentialTypes: uniqueSorted(
     credentialDefinitions
       .map((definition) => readDefinitionName(definition))
       .filter((name) => name !== undefined)
+  ),
+  nodeParameterNames: buildNodeParameterNameMap(nodeEntries),
+  triggerNodeTypes: uniqueSorted(
+    nodeEntries
+      .filter((entry) => isTriggerNodeDefinition(entry.definition))
+      .map((entry) => entry.name)
   )
 };
 
@@ -62,7 +78,9 @@ console.log(
       outputPath: "packages/core/schema/bundled-n8n-package.json",
       package: `${artifact.package.name}@${artifact.package.version}`,
       nodeTypes: artifact.nodeTypes.length,
-      credentialTypes: artifact.credentialTypes.length
+      credentialTypes: artifact.credentialTypes.length,
+      parameterizedNodeTypes: Object.keys(artifact.nodeParameterNames).length,
+      triggerNodeTypes: artifact.triggerNodeTypes.length
     },
     null,
     2
@@ -93,6 +111,46 @@ function readNonEmptyString(value, fallback) {
 
 function qualifyNodeType(name, prefix) {
   return name.includes(".") ? name : `${prefix}.${name}`;
+}
+
+function collectTopLevelParameterNames(definition) {
+  if (!definition || typeof definition !== "object" || !Array.isArray(definition.properties)) {
+    return [];
+  }
+
+  return uniqueSorted(
+    definition.properties
+      .map((property) => property?.name)
+      .filter((name) => typeof name === "string" && name.trim() !== "")
+      .map((name) => name.trim())
+  );
+}
+
+function buildNodeParameterNameMap(nodeEntries) {
+  const merged = new Map();
+  for (const entry of nodeEntries) {
+    const current = merged.get(entry.name) ?? [];
+    merged.set(entry.name, [...current, ...collectTopLevelParameterNames(entry.definition)]);
+  }
+
+  return Object.fromEntries(
+    [...merged.entries()]
+      .map(([name, parameters]) => [name, uniqueSorted(parameters)])
+      .filter(([, parameters]) => parameters.length > 0)
+      .sort(([left], [right]) => left.localeCompare(right))
+  );
+}
+
+function isTriggerNodeDefinition(definition) {
+  if (!definition || typeof definition !== "object") {
+    return false;
+  }
+
+  if (Array.isArray(definition.group) && definition.group.includes("trigger")) {
+    return true;
+  }
+
+  return typeof definition.name === "string" && definition.name.endsWith("Trigger");
 }
 
 function uniqueSorted(values) {

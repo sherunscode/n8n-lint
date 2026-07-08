@@ -41,6 +41,8 @@ interface SchemaValidationContext {
   source: SchemaSourceKind;
   nodeTypes?: ReadonlySet<string>;
   credentialTypes?: ReadonlySet<string>;
+  nodeParameterNames?: ReadonlyMap<string, ReadonlySet<string>>;
+  triggerNodeTypes?: ReadonlySet<string>;
 }
 
 interface WorkflowLike {
@@ -65,6 +67,17 @@ export async function validateWorkflow(
 
   if (snapshot.credentialTypes.length > 0) {
     schemaContext.credentialTypes = new Set(snapshot.credentialTypes);
+  }
+
+  const nodeParameterEntries = Object.entries(snapshot.nodeParameterNames);
+  if (nodeParameterEntries.length > 0) {
+    schemaContext.nodeParameterNames = new Map(
+      nodeParameterEntries.map(([nodeType, names]) => [nodeType, new Set(names)])
+    );
+  }
+
+  if (snapshot.triggerNodeTypes.length > 0) {
+    schemaContext.triggerNodeTypes = new Set(snapshot.triggerNodeTypes);
   }
 
   const validation = validateWorkflowStructureWithSource(workflow, snapshot.source, schemaContext);
@@ -122,6 +135,10 @@ function validateWorkflowStructureWithSource(
     validateWorkflowNodes(candidate.nodes, issues, schemaContext);
   }
 
+  if (Array.isArray(candidate.nodes) && isRecord(candidate.connections)) {
+    validateTriggerConnections(candidate.nodes, candidate.connections, issues, schemaContext);
+  }
+
   return result(issues, source);
 }
 
@@ -163,8 +180,48 @@ function validateWorkflowNodes(
       });
     }
 
+    validateWorkflowNodeParameters(node, nodeType, path, issues, schemaContext);
     validateWorkflowNodeCredentials(node, path, issues, schemaContext);
+    validateTriggerNodeShape(node, nodeType, path, issues, schemaContext);
   });
+}
+
+function validateWorkflowNodeParameters(
+  node: Record<string, unknown>,
+  nodeType: string,
+  path: string,
+  issues: ValidationIssue[],
+  schemaContext: SchemaValidationContext | undefined
+): void {
+  if (node.parameters == null) {
+    return;
+  }
+
+  if (!isRecord(node.parameters)) {
+    issues.push({
+      severity: "error",
+      code: "workflow.node_parameters_invalid",
+      message: "Workflow node parameters must be an object when present.",
+      path: `${path}.parameters`
+    });
+    return;
+  }
+
+  const allowedParameters = schemaContext?.nodeParameterNames?.get(nodeType);
+  if (allowedParameters === undefined) {
+    return;
+  }
+
+  for (const parameterName of Object.keys(node.parameters)) {
+    if (!allowedParameters.has(parameterName)) {
+      issues.push({
+        severity: "error",
+        code: "workflow.node_parameter_unknown",
+        message: `Unknown or dead parameter "${parameterName}" for node type "${nodeType}".`,
+        path: `${path}.parameters.${parameterName}`
+      });
+    }
+  }
 }
 
 function validateWorkflowNodeCredentials(
@@ -196,10 +253,97 @@ function validateWorkflowNodeCredentials(
       issues.push({
         severity: "error",
         code: "workflow.credential_type_unknown",
-        message: `Unknown credential type "${credentialType}" for schema source ${schemaContext.source}.`,
+        message: `Unknown or renamed credential type "${credentialType}" for schema source ${schemaContext.source}.`,
         path: `${path}.credentials.${credentialType}`
       });
     }
+  }
+}
+
+function validateTriggerNodeShape(
+  node: Record<string, unknown>,
+  nodeType: string,
+  path: string,
+  issues: ValidationIssue[],
+  schemaContext: SchemaValidationContext | undefined
+): void {
+  if (!schemaContext?.triggerNodeTypes?.has(nodeType)) {
+    return;
+  }
+
+  if (typeof node.typeVersion !== "number") {
+    issues.push({
+      severity: "error",
+      code: "workflow.trigger_type_version_missing",
+      message: `Trigger node "${nodeType}" must include a numeric typeVersion to avoid stale trigger-shape ambiguity.`,
+      path: `${path}.typeVersion`
+    });
+  }
+}
+
+function validateTriggerConnections(
+  nodes: unknown[],
+  connections: Record<string, unknown>,
+  issues: ValidationIssue[],
+  schemaContext: SchemaValidationContext | undefined
+): void {
+  if (schemaContext?.triggerNodeTypes === undefined) {
+    return;
+  }
+
+  const triggerNodeNames = new Set<string>();
+  for (const node of nodes) {
+    if (!isRecord(node) || typeof node.name !== "string" || typeof node.type !== "string") {
+      continue;
+    }
+
+    if (schemaContext.triggerNodeTypes.has(node.type.trim()) && node.name.trim() !== "") {
+      triggerNodeNames.add(node.name.trim());
+    }
+  }
+
+  if (triggerNodeNames.size === 0) {
+    return;
+  }
+
+  for (const [sourceNodeName, connectionShape] of Object.entries(connections)) {
+    visitConnectionTargets(connectionShape, `$.connections.${sourceNodeName}`, (targetName, path) => {
+      if (triggerNodeNames.has(targetName)) {
+        issues.push({
+          severity: "error",
+          code: "workflow.trigger_incoming_connection",
+          message: `Trigger node "${targetName}" has an incoming connection, which indicates a stale trigger graph shape.`,
+          path
+        });
+      }
+    });
+  }
+}
+
+function visitConnectionTargets(
+  value: unknown,
+  path: string,
+  onTarget: (targetName: string, path: string) => void
+): void {
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => visitConnectionTargets(item, `${path}[${index}]`, onTarget));
+    return;
+  }
+
+  if (!isRecord(value)) {
+    return;
+  }
+
+  if (typeof value.node === "string" && value.node.trim() !== "") {
+    onTarget(value.node.trim(), `${path}.node`);
+  }
+
+  for (const [key, child] of Object.entries(value)) {
+    if (key === "node") {
+      continue;
+    }
+
+    visitConnectionTargets(child, `${path}.${key}`, onTarget);
   }
 }
 

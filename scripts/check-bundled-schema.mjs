@@ -16,10 +16,16 @@ const missingNodeTypes = fixtureNodeTypes.filter((nodeType) => !snapshot.nodeTyp
 const missingCredentialTypes = fixtureCredentialTypes.filter(
   (credentialType) => !snapshot.credentialTypes.includes(credentialType)
 );
+const missingFixtureParameters = collectFixtureParameters(fixture).filter(
+  ({ nodeType, parameterName }) => !snapshot.nodeParameterNames[nodeType]?.includes(parameterName)
+);
 const versionMismatch = snapshot.packageInfo?.version !== bundledN8nPackageSelection.packageVersion;
 const failures = [
   ...missingNodeTypes.map((nodeType) => `Missing node type ${nodeType}`),
   ...missingCredentialTypes.map((credentialType) => `Missing credential type ${credentialType}`),
+  ...missingFixtureParameters.map(
+    ({ nodeType, parameterName }) => `Missing parameter ${parameterName} for node type ${nodeType}`
+  ),
   ...(versionMismatch
     ? [
         `Expected ${bundledN8nPackageSelection.packageName}@${bundledN8nPackageSelection.packageVersion}, loaded ${snapshot.packageInfo?.name ?? "unknown"}@${snapshot.packageInfo?.version ?? "unknown"}`
@@ -34,10 +40,13 @@ const result = {
   selection: bundledN8nPackageSelection,
   nodeTypes: snapshot.nodeTypes.length,
   credentialTypes: snapshot.credentialTypes.length,
+  parameterizedNodeTypes: Object.keys(snapshot.nodeParameterNames).length,
+  triggerNodeTypes: snapshot.triggerNodeTypes.length,
   fixture: {
     path: "examples/known-http-request-workflow.json",
     nodeTypes: fixtureNodeTypes,
-    credentialTypes: fixtureCredentialTypes
+    credentialTypes: fixtureCredentialTypes,
+    parameters: collectFixtureParameters(fixture)
   },
   failures
 };
@@ -78,6 +87,30 @@ function collectFixtureCredentialTypes(workflow) {
   }
 
   return uniqueSorted(credentialTypes);
+}
+
+function collectFixtureParameters(workflow) {
+  if (!workflow || !Array.isArray(workflow.nodes)) {
+    return [];
+  }
+
+  const parameters = [];
+  for (const node of workflow.nodes) {
+    if (typeof node?.type !== "string" || !node?.parameters || typeof node.parameters !== "object") {
+      continue;
+    }
+
+    for (const parameterName of Object.keys(node.parameters)) {
+      parameters.push({
+        nodeType: node.type.trim(),
+        parameterName
+      });
+    }
+  }
+
+  return parameters.sort((left, right) =>
+    `${left.nodeType}.${left.parameterName}`.localeCompare(`${right.nodeType}.${right.parameterName}`)
+  );
 }
 
 function uniqueSorted(values) {
