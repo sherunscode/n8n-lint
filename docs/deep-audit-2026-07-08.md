@@ -68,7 +68,7 @@ REST claims.
 - `npm run check:security` now enforces ignored local secret/config files, public
   token-pattern scanning, and no bare API-key CLI option.
 - `npm run check:docs` now enforces README `--help` parity with the built CLI
-  and required CLI option documentation.
+  and documentation for every help-exposed CLI flag.
 - `npm run check:pack` now enforces expected package file lists, forbidden-path
   exclusions, no bundled dependencies, and package size ceilings.
 - `npm run check:claims` now enforces the current-truth strategy banner and

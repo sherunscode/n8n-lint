@@ -102,15 +102,20 @@ Usage:
   n8n-lint badge <check-result.json> [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]
 ```
 
-| Option                         | Default | Description                                                                     |
-| ------------------------------ | ------: | ------------------------------------------------------------------------------- |
-| `--source bundled-n8n-package` |     yes | Uses the checked-in compact schema artifact.                                    |
-| `--source local-placeholder`   |      no | Structure-only validation for adapter testing.                                  |
-| `--n8n-version 2.29.6`         |     yes | Uses the default pinned bundled artifact.                                       |
-| `--n8n-version 2.30.0`         |      no | Uses the second pinned bundled artifact.                                        |
-| `--n8n-version matrix`         |      no | Runs all pinned bundled artifacts and reports compatibility differences.        |
-| `--json`                       |      no | Emits a stable JSON result object and exits non-zero on validation errors.      |
-| `--format github`              |      no | Emits GitHub Actions annotations for check errors, warnings, and skipped files. |
+| Option                         |    Default | Description                                                                     |
+| ------------------------------ | ---------: | ------------------------------------------------------------------------------- |
+| `--source bundled-n8n-package` |        yes | Uses the checked-in compact schema artifact.                                    |
+| `--source local-placeholder`   |         no | Structure-only validation for adapter testing.                                  |
+| `--n8n-version 2.29.6`         |        yes | Uses the default pinned bundled artifact.                                       |
+| `--n8n-version 2.30.0`         |         no | Uses the second pinned bundled artifact.                                        |
+| `--n8n-version matrix`         |         no | Runs all pinned bundled artifacts and reports compatibility differences.        |
+| `--json`                       |         no | Emits a stable JSON result object and exits non-zero on validation errors.      |
+| `--format github`              |         no | Emits GitHub Actions annotations for check errors, warnings, and skipped files. |
+| `--format markdown\|json\|svg` | `markdown` | Selects badge output format.                                                    |
+| `--output <file>`              |     stdout | Writes repair patches or badge output to a file.                                |
+| `--apply`                      |         no | Allows repair mode to modify the workflow file.                                 |
+| `--confirm`                    |         no | Required with `--apply` before repair mode mutates a workflow file.             |
+| `--label <text>`               | `n8n-lint` | Sets the generated badge label.                                                 |
 
 Local development currently runs the built CLI directly:
 
@@ -212,7 +217,7 @@ tracked public files for common token patterns, and verifies the CLI does not
 accept a bare API key option.
 
 `npm run check:docs` proves the README's documented `--help` output matches the
-built CLI and that required CLI options remain documented.
+built CLI and that every flag exposed by help output remains documented.
 
 `npm run check:pack` proves the publishable tarballs contain only the expected
 dist, schema, package metadata, README, and LICENSE files.

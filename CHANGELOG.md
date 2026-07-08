@@ -18,7 +18,8 @@
   paths, scans tracked public files for token patterns, and blocks bare API-key
   CLI options.
 - Added an executable docs contract gate that compares the README `--help`
-  block against the built CLI and verifies required CLI options are documented.
+  block against the built CLI and verifies every help-exposed CLI flag is
+  documented.
 - Added an executable package-content gate that fails if publishable tarballs
   include unexpected files, forbidden paths, bundled dependencies, or size
   regressions.

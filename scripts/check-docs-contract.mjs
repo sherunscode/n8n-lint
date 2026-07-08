@@ -6,9 +6,12 @@ import { promisify } from "node:util";
 const execFileAsync = promisify(execFile);
 const failures = [];
 const readme = await readFile("README.md", "utf8");
+const normalizedReadme = readme.replaceAll("\\|", "|");
+const actualHelp = await readCliHelp();
 
-await expectHelpBlockMatchesCli();
-expectReadmeDocumentsCliOptions();
+expectHelpBlockMatchesCli();
+expectReadmeDocumentsAllHelpFlags();
+expectReadmeDocumentsCliOptionVariants();
 expectNoPlaceholderCopy();
 
 if (failures.length > 0) {
@@ -19,15 +22,14 @@ console.log(
   JSON.stringify(
     {
       ok: true,
-      checked: ["README --help output", "README CLI option table", "placeholder copy scan"]
+      checked: ["README --help output", "README CLI option table", "README all help flags", "placeholder copy scan"]
     },
     null,
     2
   )
 );
 
-async function expectHelpBlockMatchesCli() {
-  const actualHelp = await readCliHelp();
+function expectHelpBlockMatchesCli() {
   const documentedHelp = extractHelpBlock();
   if (documentedHelp !== actualHelp) {
     failures.push("README documented --help output must match actual CLI --help output byte-for-byte");
@@ -57,20 +59,40 @@ function extractHelpBlock() {
   return blockMatch[1] ?? "";
 }
 
-function expectReadmeDocumentsCliOptions() {
-  const requiredOptions = [
+function expectReadmeDocumentsAllHelpFlags() {
+  const flagsFromHelp = [...new Set(actualHelp.match(/--[a-z0-9-]+/gi) ?? [])].sort((left, right) =>
+    left.localeCompare(right)
+  );
+  const documentedFlags = new Set(
+    [...readme.matchAll(/`(--[a-z0-9-]+)(?:[^`]*)`/gi)].map((match) => match[1]).filter(Boolean)
+  );
+
+  for (const flag of flagsFromHelp) {
+    if (!documentedFlags.has(flag)) {
+      failures.push(`README option table must document CLI flag ${flag}`);
+    }
+  }
+}
+
+function expectReadmeDocumentsCliOptionVariants() {
+  const requiredOptionVariants = [
     "`--source bundled-n8n-package`",
     "`--source local-placeholder`",
     "`--n8n-version 2.29.6`",
     "`--n8n-version 2.30.0`",
     "`--n8n-version matrix`",
     "`--json`",
-    "`--format github`"
+    "`--format github`",
+    "`--format markdown|json|svg`",
+    "`--output <file>`",
+    "`--apply`",
+    "`--confirm`",
+    "`--label <text>`"
   ];
 
-  for (const option of requiredOptions) {
-    if (!readme.includes(option)) {
-      failures.push(`README must document CLI option ${option}`);
+  for (const option of requiredOptionVariants) {
+    if (!normalizedReadme.includes(option)) {
+      failures.push(`README must document CLI option variant ${option}`);
     }
   }
 }
