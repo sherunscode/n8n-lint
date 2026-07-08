@@ -97,6 +97,13 @@ expect(
   hasPhrase(launchContentPack, "Use `docs/assets/animated-failure-demo.svg` only after `npm run check:animated-demo`"),
   "launch content pack must require animated demo freshness before use"
 );
+expect(
+  hasPhrase(
+    launchContentPack,
+    "Use `docs/assets/terminal-output-demo.svg` only after `npm run check:terminal-output-demo`"
+  ),
+  "launch content pack must require terminal output demo freshness before use"
+);
 expect(hasPhrase(launchDrafts, "These drafts are not posted."), "launch drafts must remain explicitly unposted");
 expect(
   hasPhrase(launchDrafts, "Do not add npm install claims until `n8n-lint` is published"),
@@ -136,6 +143,7 @@ console.log(
         "release checklist owner gates",
         "launch content owner gates",
         "animated demo freshness gate",
+        "terminal output demo freshness gate",
         "launch visual freshness gate",
         "support and rollback plan"
       ]

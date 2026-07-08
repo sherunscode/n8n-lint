@@ -56,6 +56,9 @@ REST claims.
 - Animated failure demo asset `docs/assets/animated-failure-demo.svg` is
   generated from real CLI failure output and checked by
   `npm run check:animated-demo`.
+- Terminal output demo asset `docs/assets/terminal-output-demo.svg` is generated
+  from real colored pass and fail CLI output and checked by
+  `npm run check:terminal-output-demo`.
 - Launch/social preview asset `docs/assets/social-preview.svg` is generated
   from the current benchmark report, bundled schema config, and canonical repo
   metadata, then checked by `npm run check:social-preview`.
@@ -84,7 +87,7 @@ REST claims.
   `check:release-readiness`, `check:live-rest-boundary`,
   `check:launch-content`, `check:benchmark-report`, `check:github-action`,
   `check:strategy-checklist`, `check:readme-demo`, `check:animated-demo`,
-  `check:social-preview`, `check:architecture-diagram`,
+  `check:terminal-output-demo`, `check:social-preview`, `check:architecture-diagram`,
   `check:last-verified-badges`, `check:audit-report`, `check:status-docs`,
   `check:metadata`, `check:security`, `check:docs`, `check:pack`,
   `check:claims`, `check:links`,
@@ -155,6 +158,10 @@ REST claims.
 - `npm run check:animated-demo` now enforces that the animated failure demo SVG
   is generated from a real failing CLI command, includes the dead-parameter
   failure, and preserves the live REST non-claim warning.
+- `npm run check:terminal-output-demo` now enforces that the terminal output
+  proof SVG is generated from real colored pass and fail CLI commands, includes
+  dead-parameter line-level detail, and preserves the live REST non-claim
+  warning.
 - `npm run check:social-preview` now enforces that the launch/social preview SVG
   is generated from the current benchmark report, bundled schema config, and
   canonical repo metadata while preserving npm and live REST non-claim
@@ -214,6 +221,8 @@ Current checked behavior:
   non-claim.
 - `docs/assets/architecture.svg` provides a generated architecture diagram for
   the README.
+- `docs/assets/terminal-output-demo.svg` provides generated pass/fail terminal
+  output proof for the README.
 - `docs/assets/last-verified-badges.svg` provides generated green/yellow/red
   last-verified badge-state proof for the README.
 - `docs/badge-output.md` documents badge formats and status rules.
@@ -273,8 +282,9 @@ These are intentionally not complete:
 - Live REST schema validation.
 - Arbitrary custom nested parameter semantics beyond bundled structured
   collection/fixedCollection/filter metadata.
-- Additional video/GIF captures beyond the checked README, animated demo, social
-  preview, architecture SVG, and last-verified badge-state SVG assets.
+- Additional video/GIF captures beyond the checked README, animated demo,
+  terminal output, social preview, architecture SVG, and last-verified
+  badge-state SVG assets.
 - Public X, Reddit, HN, or n8n forum launch posts.
 - Broader repair transforms for credential renames, node rewrites, trigger
   rewiring, and nested parameter-shape changes.

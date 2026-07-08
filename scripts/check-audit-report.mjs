@@ -22,6 +22,7 @@ const requiredQualityGates = [
   "check:strategy-checklist",
   "check:readme-demo",
   "check:animated-demo",
+  "check:terminal-output-demo",
   "check:social-preview",
   "check:architecture-diagram",
   "check:last-verified-badges",
@@ -46,6 +47,8 @@ expect(audit.includes("docs/assets/readme-failure-demo.svg"), "audit must mentio
 expect(audit.includes("npm run check:readme-demo"), "audit must mention the README demo checker");
 expect(audit.includes("docs/assets/animated-failure-demo.svg"), "audit must mention the checked animated demo asset");
 expect(audit.includes("npm run check:animated-demo"), "audit must mention the animated demo checker");
+expect(audit.includes("docs/assets/terminal-output-demo.svg"), "audit must mention the checked terminal output asset");
+expect(audit.includes("npm run check:terminal-output-demo"), "audit must mention the terminal output checker");
 expect(audit.includes("docs/assets/social-preview.svg"), "audit must mention the checked social preview asset");
 expect(audit.includes("npm run check:social-preview"), "audit must mention the social preview checker");
 expect(audit.includes("docs/assets/architecture.svg"), "audit must mention the checked architecture diagram asset");
@@ -82,9 +85,9 @@ for (const pack of [runPack("packages/core"), runPack("packages/cli")]) {
 expect(
   hasPhrase(
     audit,
-    "Additional video/GIF captures beyond the checked README, animated demo, social preview, architecture SVG, and last-verified badge-state SVG assets."
+    "Additional video/GIF captures beyond the checked README, animated demo, terminal output, social preview, architecture SVG, and last-verified badge-state SVG assets."
   ),
-  "remaining gates must distinguish extra visual launch assets from the checked README, animated demo, social preview, architecture SVG, and last-verified badge-state SVGs"
+  "remaining gates must distinguish extra visual launch assets from the checked README, animated demo, terminal output, social preview, architecture SVG, and last-verified badge-state SVGs"
 );
 
 for (const remainingGate of [
@@ -113,6 +116,7 @@ console.log(
         "owner-gated remaining items",
         "README demo proof",
         "animated demo proof",
+        "terminal output proof",
         "social preview proof",
         "architecture diagram proof",
         "last-verified badge visual proof",
