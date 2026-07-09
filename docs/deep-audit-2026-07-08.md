@@ -72,6 +72,10 @@ REST claims.
 - Launch/social preview asset `docs/assets/social-preview.svg` is generated
   from the current benchmark report, bundled schema config, and canonical repo
   metadata, then checked by `npm run check:social-preview`.
+- GitHub repository settings are checked by `npm run check:github-repo-settings`:
+  the public repo identity, launch description, required topics, Open Graph
+  image URL, and current `usesCustomOpenGraphImage=false` status are read from
+  GitHub APIs.
 - Architecture diagram asset `docs/assets/architecture.svg` is generated from
   package metadata, bundled schema config, and tool metadata, then checked by
   `npm run check:architecture-diagram`.
@@ -249,6 +253,10 @@ REST claims.
   is generated from the current benchmark report, bundled schema config, and
   canonical repo metadata while preserving npm and live REST non-claim
   boundaries.
+- `npm run check:github-repo-settings` now enforces public repo identity,
+  launch description, topics, and GitHub Open Graph image status, and confirms
+  the custom social preview remains an explicit external UI launch gate while
+  `usesCustomOpenGraphImage=false`.
 - `npm run check:architecture-diagram` now enforces that the architecture SVG is
   generated from package metadata, bundled schema config, and tool metadata
   while preserving the live REST non-claim boundary.
@@ -386,6 +394,7 @@ These are intentionally not complete:
 - npm publish and registry-backed `npx n8n-lint`.
 - Semver tag and GitHub release.
 - Publishing the checked draft release notes as an actual GitHub Release.
+- GitHub custom social preview configured in repository settings.
 - GitHub Action Marketplace listing.
 - Live REST schema validation.
 - Arbitrary custom nested parameter semantics beyond bundled structured

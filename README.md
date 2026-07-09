@@ -291,6 +291,7 @@ npm run check:github-pr-gate-proof
 npm run check:strategy-checklist
 npm run check:github-rendered-readme
 npm run check:github-profile
+npm run check:github-repo-settings
 npm run check:readme-demo
 npm run check:animated-demo
 npm run check:terminal-output-demo
@@ -450,6 +451,11 @@ compatibility difference.
 `npm run check:social-preview` proves the launch/social preview SVG is generated
 from the current benchmark report, bundled schema config, and canonical repo
 metadata while preserving npm and live REST non-claim boundaries.
+
+`npm run check:github-repo-settings` proves the public repository identity,
+description, topics, and Open Graph image status through GitHub APIs. Until a
+custom GitHub social preview image is configured in repository settings, it
+keeps that external UI gate explicit.
 
 `npm run check:architecture-diagram` proves the README architecture diagram is
 generated from package metadata, schema config, and tool metadata while
