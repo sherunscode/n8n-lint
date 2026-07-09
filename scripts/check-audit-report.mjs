@@ -30,6 +30,7 @@ const requiredQualityGates = [
   "check:github-rendered-readme",
   "check:github-profile",
   "check:github-repo-settings",
+  "check:clean-source-checkout",
   "check:readme-demo",
   "check:animated-demo",
   "check:terminal-output-demo",
@@ -159,6 +160,14 @@ for (const topic of [
   expect(audit.includes(`\`${topic}\``), `audit must mention exact GitHub topic: ${topic}`);
 }
 expect(audit.includes("usesCustomOpenGraphImage=false"), "audit must mention current GitHub custom Open Graph status");
+expect(audit.includes("npm run check:clean-source-checkout"), "audit must mention the clean source-checkout checker");
+expect(
+  hasPhrase(
+    audit,
+    "tracked-file clean checkout with `npm ci`, `npm run build`, README quickstart, failing fixture, and packed-install smoke"
+  ),
+  "audit must mention clean source-checkout proof coverage"
+);
 expect(audit.includes("npm run check:claims"), "audit must mention the claims checker");
 
 for (const gate of requiredQualityGates) {
@@ -232,6 +241,7 @@ console.log(
         "strategy checklist proof",
         "GitHub-rendered README proof",
         "GitHub profile proof",
+        "clean source-checkout proof",
         "CLI output proof",
         "package README proof"
       ]

@@ -123,11 +123,13 @@ REST claims.
   `check:benchmark-dashboard`, `check:batch-benchmark-output`,
   `check:github-action`, `check:github-pr-gate-proof`,
   `check:strategy-checklist`, `check:github-rendered-readme`,
-  `check:github-profile`, `check:readme-demo`, `check:animated-demo`,
-  `check:terminal-output-demo`, `check:matrix-demo`, `check:matrix-gif`,
-  `check:social-preview`, `check:architecture-diagram`, `check:last-verified-badges`, `check:audit-report`, `check:status-docs`,
-  `check:metadata`, `check:security`, `check:package-readmes`, `check:docs`, `check:pack`,
-  `check:claims`, `check:links`,
+  `check:github-profile`, `check:github-repo-settings`,
+  `check:clean-source-checkout`, `check:readme-demo`,
+  `check:animated-demo`, `check:terminal-output-demo`, `check:matrix-demo`,
+  `check:matrix-gif`, `check:social-preview`, `check:architecture-diagram`,
+  `check:last-verified-badges`, `check:audit-report`, `check:status-docs`,
+  `check:metadata`, `check:security`, `check:package-readmes`, `check:docs`,
+  `check:pack`, `check:claims`, `check:links`,
   `check:exit-codes`, core fixture tests, CLI fixture tests, production
   dependency audit, and packed-install smoke.
 - Package dry-runs reviewed:
@@ -137,6 +139,11 @@ REST claims.
     package metadata, README, and LICENSE.
 - Fresh temp-project tarball install is automated by `npm run smoke:pack` and
   passed with `npx n8n-lint check workflow.json`.
+- `npm run check:clean-source-checkout` now proves a tracked-file clean checkout
+  with `npm ci`, `npm run build`, README quickstart, failing fixture, and
+  packed-install smoke in a temporary directory outside the working copy. This
+  does not replace the owner-gated registry-backed install proof after npm
+  publication.
 - Secret-pattern scan found no OpenAI, GitHub, Anthropic, Gemini, Cloudflare, or
   n8n token pattern in tracked public surfaces.
 - `npm run check:security` now enforces ignored local secret/config files, public
@@ -270,7 +277,8 @@ REST claims.
   decay states.
 - `npm run check:audit-report` now enforces that this audit report retains the
   conditional/no-go verdicts, current package dry-run counts, quality gate list,
-  owner-gated remaining items, and README demo proof.
+  owner-gated remaining items, clean source-checkout proof, and README demo
+  proof.
 - `npm run check:status-docs` now enforces that local build-loop status notes
   stay ignored and, when present, are clearly marked historical with a pointer
   back to this current audit.

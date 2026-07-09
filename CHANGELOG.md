@@ -2,6 +2,15 @@
 
 ## 0.0.0 - Unreleased
 
+- Added a clean source-checkout verifier that exports tracked files to a
+  temporary directory, runs `npm ci`, builds, follows the README quickstart,
+  proves a failing fixture, and reruns packed-install smoke outside the working
+  copy.
+- Hardened the npm registry boundary checker for current npm E404 wording while
+  still failing closed if either publishable package resolves to a version.
+- Hardened GitHub README/profile proof checks to use local `gh` authentication
+  when `GITHUB_TOKEN` is not present, avoiding raw-content rate-limit flakes
+  without printing token values.
 - Reconciled the public GitHub repository topics with the full strategy topic set
   and made the repo-settings checker enforce the exact list.
 - Added a GitHub-ready social preview PNG upload asset generated from the same

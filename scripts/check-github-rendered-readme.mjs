@@ -7,6 +7,7 @@ const owner = "sherunscode";
 const repo = "n8n-lint";
 const repositoryUrl = `https://github.com/${owner}/${repo}`;
 const failures = [];
+let cachedGithubToken;
 
 const localHead = git(["rev-parse", "HEAD"]);
 const publicCommit = await fetchPublicMainCommit();
@@ -317,8 +318,24 @@ function escapeHtml(text) {
 }
 
 function githubToken() {
-  const token = process.env.GITHUB_TOKEN;
-  return typeof token === "string" && token.trim() !== "" ? token.trim() : null;
+  if (cachedGithubToken !== undefined) {
+    return cachedGithubToken;
+  }
+
+  const envToken = process.env.GITHUB_TOKEN;
+  if (typeof envToken === "string" && envToken.trim() !== "") {
+    cachedGithubToken = envToken.trim();
+    return cachedGithubToken;
+  }
+
+  const result = spawnSync("gh", ["auth", "token"], {
+    cwd: process.cwd(),
+    encoding: "utf8",
+    stdio: "pipe"
+  });
+
+  cachedGithubToken = result.status === 0 && result.stdout.trim() !== "" ? result.stdout.trim() : null;
+  return cachedGithubToken;
 }
 
 function expect(condition, message) {
