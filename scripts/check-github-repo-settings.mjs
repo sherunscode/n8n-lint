@@ -6,7 +6,26 @@ const owner = "sherunscode";
 const repo = "n8n-lint";
 const repository = `${owner}/${repo}`;
 const expectedDescription = "Validate n8n workflow JSON with artifact-backed schema checks.";
-const expectedTopics = ["ci-cd", "cli", "github-actions", "n8n", "validation", "workflow-automation"];
+const expectedTopics = [
+  "automation-testing",
+  "ci-cd",
+  "cli",
+  "continuous-integration",
+  "developer-tools",
+  "devops",
+  "github-actions",
+  "linter",
+  "n8n",
+  "n8n-nodes",
+  "n8n-workflow",
+  "pre-commit",
+  "rest-api",
+  "schema-validation",
+  "self-hosted",
+  "typescript",
+  "validation",
+  "workflow-automation"
+];
 const failures = [];
 
 const packageJson = await readJson("package.json");
@@ -34,6 +53,7 @@ const topics = Array.isArray(restRepo.topics) ? restRepo.topics : [];
 for (const topic of expectedTopics) {
   expect(topics.includes(topic), `GitHub repo topics must include ${topic}`);
 }
+expect(topics.length === expectedTopics.length, "GitHub repo topics must match the strategy topic count exactly");
 
 expect(graphRepo.nameWithOwner === repository, "GitHub GraphQL repo nameWithOwner must match canonical repo");
 expect(

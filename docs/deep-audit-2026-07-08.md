@@ -22,8 +22,11 @@ REST claims.
 
 - Git clean baseline before audit: `main` tracked `origin/main`.
 - Latest public repo: `https://github.com/sherunscode/n8n-lint`.
-- GitHub repo is public, Issues are enabled, Discussions are enabled, and topics
-  include `n8n`, `cli`, `ci-cd`, `validation`, `github-actions`, and
+- GitHub repo is public, Issues are enabled, Discussions are enabled, and the
+  exact strategy topic set is configured: `automation-testing`, `ci-cd`, `cli`,
+  `continuous-integration`, `developer-tools`, `devops`, `github-actions`,
+  `linter`, `n8n`, `n8n-nodes`, `n8n-workflow`, `pre-commit`, `rest-api`,
+  `schema-validation`, `self-hosted`, `typescript`, `validation`, and
   `workflow-automation`.
 - GitHub Discussion #8 is live as the linked Q&A support/badge channel:
   `https://github.com/sherunscode/n8n-lint/discussions/8`.
