@@ -31,6 +31,7 @@ const requiredQualityGates = [
   "check:github-profile",
   "check:github-repo-settings",
   "check:clean-source-checkout",
+  "check:public-source-checkout",
   "check:readme-demo",
   "check:animated-demo",
   "check:terminal-output-demo",
@@ -168,6 +169,11 @@ expect(
   ),
   "audit must mention clean source-checkout proof coverage"
 );
+expect(audit.includes("npm run check:public-source-checkout"), "audit must mention the public source-checkout checker");
+expect(
+  hasPhrase(audit, "public GitHub clone with `npm ci`, `npm run build`, README quickstart, and packed-install smoke"),
+  "audit must mention public GitHub clone proof coverage"
+);
 expect(audit.includes("npm run check:claims"), "audit must mention the claims checker");
 
 for (const gate of requiredQualityGates) {
@@ -242,6 +248,7 @@ console.log(
         "GitHub-rendered README proof",
         "GitHub profile proof",
         "clean source-checkout proof",
+        "public source-checkout proof",
         "CLI output proof",
         "package README proof"
       ]
