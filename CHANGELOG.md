@@ -23,6 +23,10 @@
 - Hardened the GitHub-rendered README verifier so CI uses authenticated repository
   content checks for local README image and link targets instead of rate-limited
   raw asset probes.
+- Hardened the composite GitHub Action `paths` input so multiple paths use
+  newline-delimited exact arguments instead of shell whitespace splitting.
+- Hardened the She Runs Code GitHub profile verifier so CI reads the profile
+  README through authenticated GitHub API content checks when available.
 - Added an executable docs contract gate that compares the README `--help`
   block against the built CLI and verifies every help-exposed CLI flag is
   documented.

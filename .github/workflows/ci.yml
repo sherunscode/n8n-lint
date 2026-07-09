@@ -35,4 +35,6 @@ jobs:
       - name: Dogfood GitHub Action
         uses: ./
         with:
-          paths: examples/known-http-request-workflow.json
+          paths: |
+            examples/known-http-request-workflow.json
+            examples/passing-workflow.json

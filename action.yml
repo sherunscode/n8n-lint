@@ -4,7 +4,7 @@ author: She Runs Code
 
 inputs:
   paths:
-    description: Workflow JSON path, directory, or glob. Multiple values may be separated by spaces.
+    description: Workflow JSON path, directory, or glob. For multiple values, use a multiline block with one value per line.
     required: true
   source:
     description: Schema source to use.
@@ -36,7 +36,16 @@ runs:
         cd "$GITHUB_WORKSPACE"
         output_file="$RUNNER_TEMP/n8n-lint-output.txt"
         json_file="$RUNNER_TEMP/n8n-lint-result.json"
-        read -r -a path_args <<< "$N8N_LINT_PATHS"
+        path_args=()
+        while IFS= read -r path_arg; do
+          if [ -n "$path_arg" ]; then
+            path_args+=("$path_arg")
+          fi
+        done <<< "$N8N_LINT_PATHS"
+        if [ "${#path_args[@]}" -eq 0 ]; then
+          echo "::error title=n8n-lint input error::paths input must include at least one path, directory, or glob."
+          exit 2
+        fi
         node "$GITHUB_ACTION_PATH/packages/cli/dist/bin.js" check "${path_args[@]}" --source "$N8N_LINT_SOURCE" --n8n-version "$N8N_LINT_VERSION" --format github 2>&1 | tee "$output_file"
         status=${PIPESTATUS[0]}
         node "$GITHUB_ACTION_PATH/packages/cli/dist/bin.js" check "${path_args[@]}" --source "$N8N_LINT_SOURCE" --n8n-version "$N8N_LINT_VERSION" --json > "$json_file" 2>/dev/null
