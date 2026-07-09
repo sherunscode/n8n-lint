@@ -43,6 +43,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:release-notes") &&
     packageJson.scripts.quality.includes("npm run check:release-command-plan") &&
     packageJson.scripts.quality.includes("npm run check:release-workflow") &&
+    packageJson.scripts.quality.includes("npm run check:release-artifact-manifest") &&
     packageJson.scripts.quality.includes("npm run check:live-rest-boundary") &&
     packageJson.scripts.quality.includes("npm run check:launch-content") &&
     packageJson.scripts.quality.includes("npm run check:benchmark-report") &&
@@ -73,7 +74,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:claims") &&
     packageJson.scripts.quality.includes("npm run check:links") &&
     packageJson.scripts.quality.includes("npm run check:exit-codes"),
-  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, npm registry boundary, release readiness, release notes, release command plan, release workflow, live REST boundary, launch content, benchmark report, benchmark dashboard, batch benchmark output, GitHub Action, GitHub PR gate proof, strategy checklist, GitHub-rendered README, GitHub profile, GitHub repo settings, clean source-checkout, public source-checkout, README demo, animated demo, terminal output demo, matrix demo, matrix GIF, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, package README, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
+  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, npm registry boundary, release readiness, release notes, release command plan, release workflow, release artifact manifest, live REST boundary, launch content, benchmark report, benchmark dashboard, batch benchmark output, GitHub Action, GitHub PR gate proof, strategy checklist, GitHub-rendered README, GitHub profile, GitHub repo settings, clean source-checkout, public source-checkout, README demo, animated demo, terminal output demo, matrix demo, matrix GIF, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, package README, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
 );
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 expect(ciWorkflow.includes("contents: read"), "CI workflow must keep contents read permission");
@@ -109,6 +110,10 @@ expect(
 expect(
   packageJson.scripts?.["check:release-workflow"] === "node scripts/check-release-workflow.mjs",
   "package.json must expose the release workflow checker"
+);
+expect(
+  packageJson.scripts?.["check:release-artifact-manifest"] === "node scripts/check-release-artifact-manifest.mjs",
+  "package.json must expose the release artifact manifest checker"
 );
 expect(
   packageJson.scripts?.["check:package-readmes"] === "node scripts/check-package-readmes.mjs",
@@ -157,6 +162,8 @@ await expectFile("scripts/check-release-readiness.mjs");
 await expectFile("scripts/check-release-notes-draft.mjs");
 await expectFile("scripts/check-release-command-plan.mjs");
 await expectFile("scripts/check-release-workflow.mjs");
+await expectFile("scripts/write-release-artifact-manifest.mjs");
+await expectFile("scripts/check-release-artifact-manifest.mjs");
 await expectFile("scripts/check-live-rest-boundary.mjs");
 await expectFile("scripts/check-launch-content.mjs");
 await expectFile("scripts/check-benchmark-report.mjs");
@@ -236,6 +243,8 @@ console.log(
         "scripts/check-release-notes-draft.mjs",
         "scripts/check-release-command-plan.mjs",
         "scripts/check-release-workflow.mjs",
+        "scripts/write-release-artifact-manifest.mjs",
+        "scripts/check-release-artifact-manifest.mjs",
         "scripts/check-live-rest-boundary.mjs",
         "scripts/check-launch-content.mjs",
         "scripts/check-benchmark-report.mjs",

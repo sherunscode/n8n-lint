@@ -42,6 +42,11 @@ uploads local tarball artifacts. It does not request `NPM_TOKEN`, does not use
 write permissions, does not run `npm publish`, does not push tags, and does not
 create a GitHub Release.
 
+The artifact upload includes `release-artifact-manifest.json` with package
+names, versions, byte sizes, and SHA-256 hashes.
+`npm run check:release-artifact-manifest` verifies the manifest writer against
+freshly packed local tarballs.
+
 Actual npm publication, tag push, GitHub Release creation, and public launch
 posts remain owner-gated.
 

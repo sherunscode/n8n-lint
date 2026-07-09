@@ -43,6 +43,8 @@ for (const phrase of [
   "Do not print tokens, npm config values, environment variables, cookies, or secret file contents.",
   "Do not update README with registry-backed `npx` instructions until this smoke passes.",
   "The release proof workflow must complete without write permissions, npm tokens, npm publish, tag push, or GitHub Release creation.",
+  "Inspect `release-artifact-manifest.json` before owner-approved publish.",
+  "The manifest must list both tarballs, byte sizes, and SHA-256 hashes.",
   "The tag must point to the same commit that passed final pre-publish `quality` and CodeQL checks.",
   "Remove `npm registry publication` from `tool.json.notClaimed` only after the registry package and clean-machine smoke are verified.",
   "Prefer a patch release over unpublish."
@@ -65,6 +67,7 @@ for (const command of [
   "npm run check:release-notes",
   "npm run check:release-command-plan",
   "npm run check:release-workflow",
+  "npm run check:release-artifact-manifest",
   "npm run smoke:pack",
   "npm pack --workspace packages/core --dry-run",
   "npm pack --workspace packages/cli --dry-run",
@@ -120,6 +123,10 @@ expect(
 expect(
   hasPhrase(releaseChecklist, "Run `npm run check:release-workflow` before publish approval."),
   "release checklist must point at the release workflow checker"
+);
+expect(
+  hasPhrase(releaseChecklist, "npm run check:release-artifact-manifest"),
+  "release checklist must point at the release artifact manifest checker"
 );
 expect(
   hasPhrase(releaseChecklist, "Run `npm run check:npm-registry-boundary` before publish approval."),

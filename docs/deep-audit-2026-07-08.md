@@ -119,9 +119,9 @@ REST claims.
   `check:cli-output`, `check:precommit`, `check:community`,
   `check:precommit-rejection-demo`, `check:npm-registry-boundary`,
   `check:release-readiness`, `check:release-notes`, `check:release-command-plan`,
-  `check:release-workflow`, `check:live-rest-boundary`, `check:launch-content`,
-  `check:benchmark-report`, `check:benchmark-dashboard`,
-  `check:batch-benchmark-output`, `check:github-action`,
+  `check:release-workflow`, `check:release-artifact-manifest`,
+  `check:live-rest-boundary`, `check:launch-content`, `check:benchmark-report`,
+  `check:benchmark-dashboard`, `check:batch-benchmark-output`, `check:github-action`,
   `check:github-pr-gate-proof`,
   `check:strategy-checklist`, `check:github-rendered-readme`,
   `check:github-profile`, `check:github-repo-settings`,
@@ -213,6 +213,9 @@ REST claims.
   quality and release-contract checks, package dry-runs, local tarball artifact
   upload, no npm token, no npm publish, no tag push, and no GitHub Release
   creation.
+- `npm run check:release-artifact-manifest` now verifies checksum manifest
+  generation for release proof tarballs, including package names, versions,
+  byte sizes, SHA-256 hashes, and workflow upload wiring.
 - `npm run check:live-rest-boundary` now enforces that the live REST source
   boundary stays locked: public CLI help exposes only verified local sources,
   the internal placeholder stays unimplemented, blank/invalid/non-HTTPS/
@@ -335,7 +338,9 @@ Current checked behavior:
 - `docs/ci-setup.md` documents GitHub annotation output and CI setup paths.
 - `.github/workflows/release.yml` provides a checked release proof workflow for
   quality, release-contract checks, package dry-runs, and local tarball
-  artifacts without publish authority.
+  artifacts without publish authority. Its artifact upload includes
+  `release-artifact-manifest.json` with package names, versions, byte sizes, and
+  SHA-256 hashes.
 - `docs/ci-setup.md` documents future live REST API-key handling through
   GitHub Actions encrypted secrets while preserving the current live REST
   non-claim.

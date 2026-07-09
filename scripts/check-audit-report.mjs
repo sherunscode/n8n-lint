@@ -20,6 +20,7 @@ const requiredQualityGates = [
   "check:release-notes",
   "check:release-command-plan",
   "check:release-workflow",
+  "check:release-artifact-manifest",
   "check:live-rest-boundary",
   "check:launch-content",
   "check:benchmark-report",
@@ -99,6 +100,12 @@ expect(
   hasPhrase(audit, "no npm token, no npm publish, no tag push, and no GitHub Release creation"),
   "audit must mention the release workflow publish safety boundary"
 );
+expect(
+  audit.includes("npm run check:release-artifact-manifest"),
+  "audit must mention the release artifact manifest checker"
+);
+expect(audit.includes("release-artifact-manifest.json"), "audit must mention the release artifact manifest");
+expect(audit.includes("SHA-256 hashes"), "audit must mention release artifact SHA-256 hashes");
 expect(audit.includes("GitHub Discussion #8"), "audit must mention the live GitHub Discussion proof");
 expect(
   audit.includes("live GitHub Discussion #8 support/badge channel"),
@@ -235,6 +242,7 @@ console.log(
         "release notes draft proof",
         "release command plan proof",
         "release workflow proof",
+        "release artifact manifest proof",
         "README demo proof",
         "animated demo proof",
         "terminal output proof",

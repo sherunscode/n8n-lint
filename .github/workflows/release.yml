@@ -53,10 +53,13 @@ jobs:
           mkdir -p release-artifacts
           npm pack --workspace packages/core --pack-destination release-artifacts
           npm pack --workspace packages/cli --pack-destination release-artifacts
+          node scripts/write-release-artifact-manifest.mjs release-artifacts
 
       - name: Upload local tarball artifacts
         uses: actions/upload-artifact@v4.6.2
         with:
           name: n8n-lint-release-proof-packages
-          path: release-artifacts/*.tgz
+          path: |
+            release-artifacts/*.tgz
+            release-artifacts/release-artifact-manifest.json
           if-no-files-found: error

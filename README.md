@@ -61,6 +61,8 @@ same real matrix CLI and JSON output, then checked by
 - Release proof workflow: `.github/workflows/release.yml` runs quality, release
   contract checks, package dry-runs, and local tarball artifact upload without
   npm publish, tag push, or GitHub Release creation.
+- The release proof artifact upload includes `release-artifact-manifest.json`
+  next to the local tarballs.
 - Current install paths: source checkout and packed local tarball only until npm
   publication.
 - Current validation: workflow structure, bundled n8n node type names, bundled
@@ -293,6 +295,7 @@ npm run check:release-readiness
 npm run check:release-notes
 npm run check:release-command-plan
 npm run check:release-workflow
+npm run check:release-artifact-manifest
 npm run check:live-rest-boundary
 npm run check:launch-content
 npm run check:benchmark-report
@@ -402,6 +405,9 @@ commands, and rollback boundaries.
 `npm run check:release-workflow` proves the release proof workflow stays a
 read-only packaging gate and cannot publish, push tags, request npm tokens, or
 create GitHub Releases.
+
+`npm run check:release-artifact-manifest` proves release proof tarballs get a
+checksum manifest with package names, versions, byte sizes, and SHA-256 hashes.
 
 `npm run check:live-rest-boundary` proves the live REST source boundary stays
 locked: public CLI help exposes only the verified local sources, the internal
