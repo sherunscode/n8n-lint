@@ -19,6 +19,7 @@ const requiredQualityGates = [
   "check:release-readiness",
   "check:release-notes",
   "check:release-command-plan",
+  "check:release-workflow",
   "check:live-rest-boundary",
   "check:launch-content",
   "check:benchmark-report",
@@ -92,6 +93,12 @@ expect(audit.includes("docs/release-notes-v0.1.0-draft.md"), "audit must mention
 expect(audit.includes("npm run check:release-command-plan"), "audit must mention the release command plan checker");
 expect(audit.includes("docs/release-command-plan-v0.1.0.md"), "audit must mention the checked release command plan");
 expect(audit.includes("single approved tag"), "audit must mention the single approved tag boundary");
+expect(audit.includes("npm run check:release-workflow"), "audit must mention the release workflow checker");
+expect(audit.includes(".github/workflows/release.yml"), "audit must mention the checked release workflow");
+expect(
+  hasPhrase(audit, "no npm token, no npm publish, no tag push, and no GitHub Release creation"),
+  "audit must mention the release workflow publish safety boundary"
+);
 expect(audit.includes("GitHub Discussion #8"), "audit must mention the live GitHub Discussion proof");
 expect(
   audit.includes("live GitHub Discussion #8 support/badge channel"),
@@ -227,6 +234,7 @@ console.log(
         "npm registry boundary proof",
         "release notes draft proof",
         "release command plan proof",
+        "release workflow proof",
         "README demo proof",
         "animated demo proof",
         "terminal output proof",

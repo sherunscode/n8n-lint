@@ -42,6 +42,7 @@ for (const phrase of [
   "`npm view @n8nproof/core version` or `npm view n8n-lint version` returns an existing version before the first public publish attempt.",
   "Do not print tokens, npm config values, environment variables, cookies, or secret file contents.",
   "Do not update README with registry-backed `npx` instructions until this smoke passes.",
+  "The release proof workflow must complete without write permissions, npm tokens, npm publish, tag push, or GitHub Release creation.",
   "The tag must point to the same commit that passed final pre-publish `quality` and CodeQL checks.",
   "Remove `npm registry publication` from `tool.json.notClaimed` only after the registry package and clean-machine smoke are verified.",
   "Prefer a patch release over unpublish."
@@ -63,9 +64,11 @@ for (const command of [
   "npm run check:release-readiness",
   "npm run check:release-notes",
   "npm run check:release-command-plan",
+  "npm run check:release-workflow",
   "npm run smoke:pack",
   "npm pack --workspace packages/core --dry-run",
   "npm pack --workspace packages/cli --dry-run",
+  "gh workflow run release.yml --repo sherunscode/n8n-lint --ref main",
   "npm whoami",
   "npm publish --workspace packages/core --access public",
   "npm publish --workspace packages/cli",
@@ -113,6 +116,10 @@ expect(!plan.includes("gh release create --draft=false"), "release command plan 
 expect(
   hasPhrase(releaseChecklist, "Run `npm run check:release-command-plan` before publish approval."),
   "release checklist must point at the release command plan checker"
+);
+expect(
+  hasPhrase(releaseChecklist, "Run `npm run check:release-workflow` before publish approval."),
+  "release checklist must point at the release workflow checker"
 );
 expect(
   hasPhrase(releaseChecklist, "Run `npm run check:npm-registry-boundary` before publish approval."),

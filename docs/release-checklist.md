@@ -34,9 +34,10 @@ The CLI package depends on `@n8nproof/core` at the same exact version, so publis
 6. Update `docs/release-command-plan-v0.1.0.md` or create the matching command
    plan for the chosen version. Run `npm run check:release-command-plan` before
    publish approval.
-7. Run `npm run check:npm-registry-boundary` before publish approval. The
+7. Run `npm run check:release-workflow` before publish approval.
+8. Run `npm run check:npm-registry-boundary` before publish approval. The
    expected first-release npm state is both package lookups return `E404`.
-8. Ensure README examples do not claim registry-backed `npx` usage until after
+9. Ensure README examples do not claim registry-backed `npx` usage until after
    publication is complete.
 
 ## Local Gates
@@ -50,6 +51,7 @@ npm run check:npm-registry-boundary
 npm run check:release-readiness
 npm run check:release-notes
 npm run check:release-command-plan
+npm run check:release-workflow
 npm run smoke:pack
 npm pack --workspace packages/core --dry-run
 npm pack --workspace packages/cli --dry-run
@@ -81,6 +83,13 @@ npm view n8n-lint version
 ```
 
 Expected first-release npm state: both package lookups return `E404`.
+
+## Release Proof Workflow
+
+The release proof workflow in `.github/workflows/release.yml` may package and
+upload local tarballs, but it must not publish to npm, push tags, or create
+GitHub Releases. Actual npm publish, tag push, GitHub Release creation, and
+public posting still require owner approval.
 
 ## Fresh Install Smoke
 

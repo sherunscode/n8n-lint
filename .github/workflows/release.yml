@@ -1,0 +1,62 @@
+name: Release Proof
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  discussions: read
+
+jobs:
+  release-proof:
+    name: Release proof
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Quality
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: npm run quality
+
+      - name: Release contract checks
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          npm run check:npm-registry-boundary
+          npm run check:release-readiness
+          npm run check:release-notes
+          npm run check:release-command-plan
+          npm run check:release-workflow
+
+      - name: Package dry run
+        run: |
+          npm pack --workspace packages/core --dry-run
+          npm pack --workspace packages/cli --dry-run
+
+      - name: Build local tarball artifacts
+        run: |
+          mkdir -p release-artifacts
+          npm pack --workspace packages/core --pack-destination release-artifacts
+          npm pack --workspace packages/cli --pack-destination release-artifacts
+
+      - name: Upload local tarball artifacts
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: n8n-lint-release-proof-packages
+          path: release-artifacts/*.tgz
+          if-no-files-found: error
