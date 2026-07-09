@@ -297,10 +297,7 @@ export function createLiveRestSchemaSource(config: LiveRestSchemaSourceConfig): 
   return {
     kind: "live-rest",
     load(): Promise<SchemaSnapshot> {
-      const baseUrl = config.baseUrl.trim();
-      if (!baseUrl) {
-        throw new Error("n8n base URL is required for live REST schema source.");
-      }
+      validateLiveRestBaseUrl(config.baseUrl);
 
       // This is intentionally a thin placeholder until Week 1 proves the exact
       // n8n REST endpoints and auth shape. Do not claim live validation from it.
@@ -321,6 +318,28 @@ export function createLiveRestSchemaSource(config: LiveRestSchemaSourceConfig): 
       });
     }
   };
+}
+
+function validateLiveRestBaseUrl(rawBaseUrl: string): void {
+  const baseUrl = rawBaseUrl.trim();
+  if (!baseUrl) {
+    throw new Error("n8n base URL is required for live REST schema source.");
+  }
+
+  let parsed: URL;
+  try {
+    parsed = new URL(baseUrl);
+  } catch {
+    throw new Error("n8n base URL must be a valid HTTPS URL for live REST schema source.");
+  }
+
+  if (parsed.protocol !== "https:") {
+    throw new Error("n8n base URL must use HTTPS for live REST schema source.");
+  }
+
+  if (parsed.username !== "" || parsed.password !== "") {
+    throw new Error("n8n base URL must not include credentials for live REST schema source.");
+  }
 }
 
 export function isBundledN8nPackageVersion(value: string): boolean {

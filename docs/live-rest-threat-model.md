@@ -17,6 +17,10 @@ adapter, not permission to advertise one.
 - The shipped CLI does not contact an n8n instance.
 - The shipped CLI does not require, parse, or accept an n8n API key.
 - The internal `live-rest` source fails closed when the base URL is blank.
+- The internal `live-rest` source rejects invalid URLs, non-HTTPS URLs, and
+  credentials embedded in the URL before returning a placeholder snapshot.
+- HTTPS URLs are required before the placeholder returns a snapshot.
+- Credentials in the URL are rejected before endpoint probing exists.
 - The internal placeholder does not echo provided API-key material.
 - `npm run check:live-rest-boundary` keeps `live-rest` out of public CLI help
   until endpoint proof and network safety tests exist.
@@ -41,18 +45,19 @@ tests:
 
 1. Blank `N8N_BASE_URL` fails closed with the documented message.
 2. HTTP URLs fail closed by default.
-3. TLS/certificate errors fail closed by default.
-4. Cross-origin redirects do not receive Authorization headers.
-5. Wrong host or wrong endpoint responses fail closed without guessed schema
+3. Credentials embedded in the URL fail closed before any request is made.
+4. TLS/certificate errors fail closed by default.
+5. Cross-origin redirects do not receive Authorization headers.
+6. Wrong host or wrong endpoint responses fail closed without guessed schema
    data.
-6. Timeouts fail closed and do not print credential material.
-7. API keys are accepted only from environment variables or encrypted CI
+7. Timeouts fail closed and do not print credential material.
+8. API keys are accepted only from environment variables or encrypted CI
    secrets.
-8. Human, JSON, GitHub annotation, badge, and generated-report outputs redact
+9. Human, JSON, GitHub annotation, badge, and generated-report outputs redact
    all credential values.
-9. Endpoint proof exists from a local or owner-approved n8n instance and records
+10. Endpoint proof exists from a local or owner-approved n8n instance and records
    the exact n8n version, endpoint paths, response shapes, and commands used.
-10. README, SECURITY.md, CI docs, release checklist, and launch drafts all keep
+11. README, SECURITY.md, CI docs, release checklist, and launch drafts all keep
     live REST claims disabled until the proof artifacts are committed.
 
 ## Release Rule

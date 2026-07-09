@@ -52,6 +52,26 @@ expect(
   "core live-rest adapter must fail closed without a base URL"
 );
 expect(
+  schemaSource.includes("n8n base URL must be a valid HTTPS URL for live REST schema source."),
+  "core live-rest adapter must fail closed for invalid base URLs"
+);
+expect(
+  schemaSource.includes("n8n base URL must use HTTPS for live REST schema source."),
+  "core live-rest adapter must fail closed for non-HTTPS base URLs"
+);
+expect(
+  schemaSource.includes("n8n base URL must not include credentials for live REST schema source."),
+  "core live-rest adapter must fail closed for credentials embedded in base URLs"
+);
+expect(
+  !schemaSource.includes("rejectUnauthorized") && !cliSource.includes("rejectUnauthorized"),
+  "runtime sources must not expose rejectUnauthorized TLS bypasses"
+);
+expect(
+  !schemaSource.includes("NODE_TLS_REJECT_UNAUTHORIZED") && !cliSource.includes("NODE_TLS_REJECT_UNAUTHORIZED"),
+  "runtime sources must not expose NODE_TLS_REJECT_UNAUTHORIZED bypasses"
+);
+expect(
   schemaSource.includes("Live REST schema source is configured but endpoint probing is not implemented yet."),
   "core live-rest adapter must preserve the endpoint-not-implemented warning"
 );
@@ -107,6 +127,8 @@ await expectDocPhrases("docs/live-rest-threat-model.md", [
   "Live REST schema validation must not execute workflows",
   "fire triggers",
   "Endpoint proof exists from a local or owner-approved n8n instance",
+  "HTTPS URLs are required before the placeholder returns a snapshot",
+  "Credentials in the URL are rejected before endpoint probing exists",
   "the public CLI source list must remain unchanged"
 ]);
 await expectDocPhrases("SECURITY.md", [
@@ -164,6 +186,19 @@ async function expectLiveRestRuntimeBoundary() {
       formatError(error).includes("n8n base URL is required for live REST schema source."),
       "blank live REST baseUrl must return the documented failure"
     );
+  }
+
+  for (const [baseUrl, expectedMessage] of [
+    ["not a url", "n8n base URL must be a valid HTTPS URL for live REST schema source."],
+    ["http://example.invalid", "n8n base URL must use HTTPS for live REST schema source."],
+    ["https://user:password@example.invalid", "n8n base URL must not include credentials for live REST schema source."]
+  ]) {
+    try {
+      await module.createLiveRestSchemaSource({ baseUrl }).load();
+      failures.push(`live REST source must fail closed for baseUrl ${baseUrl}`);
+    } catch (error) {
+      expect(formatError(error).includes(expectedMessage), `baseUrl ${baseUrl} must return: ${expectedMessage}`);
+    }
   }
 
   const apiKeySentinel = "redacted-token-value";
