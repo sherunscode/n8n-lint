@@ -130,7 +130,8 @@ same real matrix CLI and JSON output, then checked by
 - Local status and decaying last-verified badge generation from real
   `check --json` output in markdown, JSON, or static SVG format.
 - Human-gated repair patches for schema-proven unknown top-level parameters.
-- Composite GitHub Action in `action.yml`, dogfooded by this repo's CI.
+- Composite GitHub Action in `action.yml`, dogfooded by this repo's CI with
+  newline-safe path parsing.
 - Local quality gates for build, lint, format, fixtures, metadata, security
   hygiene, tests, and production dependency audit.
 - Packed-package install smoke test for the publishable core and CLI workspaces.
@@ -398,9 +399,10 @@ output SVG is generated from the committed `Zie619/n8n-workflows` report and
 keeps discovered JSON, selected workflow, pass, fail, skipped, failure-category,
 and no-execution/live-REST boundary text aligned.
 
-`npm run check:github-action` proves the composite action metadata, safe paths
-array expansion, `--format github` invocation, last-verified badge summary, CI
-dogfood step, tool metadata, and Marketplace boundary stay aligned.
+`npm run check:github-action` proves the composite action metadata, newline-safe
+path parsing, `--format github` invocation, last-verified badge summary, CI
+dogfood step, tool metadata, and Marketplace boundary stay aligned. For the
+action's `paths` input, pass one path, directory, or glob per line.
 
 `npm run check:github-pr-gate-proof` proves the PR merge-gate screenshot is a
 real PNG asset backed by public GitHub metadata for proof-only PR #6, including
@@ -606,7 +608,7 @@ MVP scope:
 - Local static badge generation from real check results.
 - Human-gated repair patches for schema-proven unknown top-level parameters.
 - Composite GitHub Action, with semver tags and Marketplace listing still
-  release-gated.
+  release-gated, and one path, directory, or glob per line in the action input.
 - Honest docs and benchmark harness.
 
 Not MVP scope:

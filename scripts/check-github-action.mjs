@@ -25,6 +25,7 @@ for (const phrase of [
   "description: Validate n8n workflow JSON with artifact-backed schema checks.",
   "author: She Runs Code",
   "paths:",
+  "For multiple values, use a multiline block with one value per line.",
   "source:",
   "n8n-version:",
   "default: bundled-n8n-package",
@@ -32,7 +33,12 @@ for (const phrase of [
   "using: composite",
   "npm ci",
   "npm run build",
-  'read -r -a path_args <<< "$N8N_LINT_PATHS"',
+  "path_args=()",
+  "while IFS= read -r path_arg; do",
+  'path_args+=("$path_arg")',
+  'if [ "${#path_args[@]}" -eq 0 ]; then',
+  "paths input must include at least one path, directory, or glob.",
+  "exit 2",
   'check "${path_args[@]}" --source "$N8N_LINT_SOURCE" --n8n-version "$N8N_LINT_VERSION" --format github',
   'check "${path_args[@]}" --source "$N8N_LINT_SOURCE" --n8n-version "$N8N_LINT_VERSION" --json',
   'badge "$json_file" --kind last-verified',
@@ -47,10 +53,16 @@ for (const phrase of [
 
 expect(!action.includes("check $N8N_LINT_PATHS"), "action.yml must not expand paths unquoted");
 expect(
+  !action.includes('read -r -a path_args <<< "$N8N_LINT_PATHS"'),
+  "action.yml must not split paths on shell whitespace"
+);
+expect(
   ci.includes("- name: Dogfood GitHub Action") &&
     ci.includes("uses: ./") &&
-    ci.includes("paths: examples/known-http-request-workflow.json"),
-  "CI must dogfood the local composite action against the known workflow fixture"
+    ci.includes("paths: |") &&
+    ci.includes("examples/known-http-request-workflow.json") &&
+    ci.includes("examples/passing-workflow.json"),
+  "CI must dogfood the local composite action against multiple newline-delimited workflow fixtures"
 );
 expect(
   Array.isArray(tool.githubAction?.inputs) &&
@@ -70,9 +82,10 @@ expect(
 );
 
 for (const phrase of [
-  "Composite GitHub Action in `action.yml`, dogfooded by this repo's CI.",
+  "Composite GitHub Action in `action.yml`, dogfooded by this repo's CI with newline-safe path parsing.",
   "GitHub Actions annotation output with `--format github` and action job",
-  "Composite GitHub Action, with semver tags and Marketplace listing still"
+  "Composite GitHub Action, with semver tags and Marketplace listing still",
+  "one path, directory, or glob per line"
 ]) {
   expect(hasPhrase(readme, phrase), `README must include action proof phrase: ${phrase}`);
 }
@@ -80,6 +93,7 @@ for (const phrase of [
 for (const phrase of [
   "The repo ships a composite action at `action.yml`.",
   "The action writes a GitHub job summary",
+  "one path, directory, or glob per line",
   "decaying last-verified badge",
   "Marketplace listing and semver tag usage remain release gates.",
   "pin a commit SHA for external use"
@@ -89,7 +103,8 @@ for (const phrase of [
 
 for (const phrase of [
   "A composite GitHub Action exists at `action.yml`, writes a reviewer-facing job",
-  "Composite GitHub Action path that runs `check --format github` and writes a",
+  "Composite GitHub Action path that runs `check --format github`, uses newline-safe path parsing",
+  "newline-safe path parsing",
   "last-verified badge",
   "npm run check:github-action"
 ]) {
@@ -106,7 +121,7 @@ console.log(
       ok: true,
       checked: [
         "action metadata",
-        "safe paths array expansion",
+        "newline-safe path parsing",
         "format github invocation",
         "last-verified badge summary",
         "job summary output",

@@ -44,8 +44,9 @@ REST claims.
 - `tool.json`, issue-template routing, CI setup docs, and a pre-commit framework
   example exist without claiming npm publication.
 - A composite GitHub Action exists at `action.yml`, writes a reviewer-facing job
-  summary with a last-verified badge, handles paths via a quoted bash array, is
-  dogfooded by CI, and is checked by `npm run check:github-action`.
+  summary with a last-verified badge, parses newline-delimited paths into a
+  quoted bash array, is dogfooded by CI, and is checked by
+  `npm run check:github-action`.
 - The strategy checklist reconciliation is complete for the local-only
   `STRATEGY.md` repo-proof items when that ignored planning file is present:
   `npm run check:strategy-checklist` keeps proven boxes checked and confirms
@@ -275,9 +276,9 @@ Current checked behavior:
 - Stable `--json` output mode.
 - GitHub annotation output with native `::error`, `::warning`, and `::notice`
   commands.
-- Composite GitHub Action path that runs `check --format github` and writes a
-  Markdown job summary.
-- GitHub Action contract check for action metadata, safe paths handling,
+- Composite GitHub Action path that runs `check --format github`, uses
+  newline-safe path parsing, and writes a Markdown job summary.
+- GitHub Action contract check for action metadata, newline-safe paths handling,
   `--format github` invocation, last-verified badge summary output, CI
   dogfooding, tool metadata, and Marketplace non-claim boundaries.
 - Single-file and batch human/JSON output with final summary counts, including

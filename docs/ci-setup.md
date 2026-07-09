@@ -41,6 +41,10 @@ paths, schema source, version selector, a decaying last-verified badge generated
 from the same check JSON, and the last 200 lines of CLI output, while
 preserving the CLI exit code as the merge gate.
 
+For the action's `paths` input, pass one path, directory, or glob per line. The
+action intentionally parses newline-delimited values instead of splitting on
+shell whitespace, so paths and globs are passed to the CLI as exact arguments.
+
 Until an owner-approved semver tag exists, pin a commit SHA for external use
 rather than relying on a moving branch:
 
@@ -57,7 +61,9 @@ jobs:
       - uses: actions/checkout@v7.0.0
       - uses: sherunscode/n8n-lint@<commit-sha>
         with:
-          paths: "workflows/**/*.json"
+          paths: |
+            workflows/**/*.json
+            examples/known-http-request-workflow.json
 ```
 
 The project CI dogfoods the action against
