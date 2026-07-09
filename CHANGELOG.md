@@ -36,6 +36,8 @@
   documented.
 - Hardened the docs contract gate so README install commands stay limited to
   the source-checkout and packed-tarball smoke paths before npm publication.
+- Added a GitHub repository settings checker that verifies public repo metadata,
+  topics, and Open Graph custom-social-preview status through GitHub APIs.
 - Added an executable package-content gate that fails if publishable tarballs
   include unexpected files, forbidden paths, bundled dependencies, or size
   regressions.

@@ -29,6 +29,7 @@ const requiredQualityGates = [
   "check:strategy-checklist",
   "check:github-rendered-readme",
   "check:github-profile",
+  "check:github-repo-settings",
   "check:readme-demo",
   "check:animated-demo",
   "check:terminal-output-demo",
@@ -128,6 +129,8 @@ expect(audit.includes("npm run check:github-rendered-readme"), "audit must menti
 expect(audit.includes("public GitHub-rendered README page"), "audit must mention public README render proof");
 expect(audit.includes("npm run check:github-profile"), "audit must mention the GitHub profile checker");
 expect(audit.includes("public She Runs Code organization profile"), "audit must mention public profile proof");
+expect(audit.includes("npm run check:github-repo-settings"), "audit must mention the GitHub repo settings checker");
+expect(audit.includes("usesCustomOpenGraphImage=false"), "audit must mention current GitHub custom Open Graph status");
 expect(audit.includes("npm run check:claims"), "audit must mention the claims checker");
 
 for (const gate of requiredQualityGates) {
@@ -156,6 +159,7 @@ for (const remainingGate of [
   "npm publish and registry-backed `npx n8n-lint`",
   "Semver tag and GitHub release",
   "Publishing the checked draft release notes as an actual GitHub Release",
+  "GitHub custom social preview configured in repository settings",
   "GitHub Action Marketplace listing",
   "Live REST schema validation",
   "Public X, Reddit, HN, or n8n forum launch posts"
