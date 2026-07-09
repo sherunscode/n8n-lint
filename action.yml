@@ -18,6 +18,22 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Verify n8n-lint action runtime
+      shell: bash
+      run: |
+        if ! command -v node >/dev/null 2>&1; then
+          echo "::error title=n8n-lint action runtime::Node.js >=18.18.0 is required before using this action. Add actions/setup-node before sherunscode/n8n-lint."
+          exit 2
+        fi
+        if ! node -e "const [major, minor] = process.versions.node.split('.').map(Number); process.exit(major > 18 || (major === 18 && minor >= 18) ? 0 : 1);"; then
+          echo "::error title=n8n-lint action runtime::Node.js >=18.18.0 is required before using this action. Current version: $(node --version)."
+          exit 2
+        fi
+        if ! command -v npm >/dev/null 2>&1; then
+          echo "::error title=n8n-lint action runtime::npm is required before using this action. Add actions/setup-node before sherunscode/n8n-lint."
+          exit 2
+        fi
+
     - name: Build n8n-lint action runtime
       shell: bash
       run: |

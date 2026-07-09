@@ -31,6 +31,12 @@ for (const phrase of [
   "default: bundled-n8n-package",
   "default: 2.29.6",
   "using: composite",
+  "Verify n8n-lint action runtime",
+  "command -v node",
+  "Node.js >=18.18.0 is required before using this action.",
+  "process.versions.node",
+  "command -v npm",
+  "npm is required before using this action.",
   "npm ci",
   "npm run build",
   "path_args=()",
@@ -58,6 +64,8 @@ expect(
 );
 expect(
   ci.includes("- name: Dogfood GitHub Action") &&
+    ci.includes("actions/setup-node@v6.4.0") &&
+    ci.includes("node-version: 22") &&
     ci.includes("uses: ./") &&
     ci.includes("paths: |") &&
     ci.includes("examples/known-http-request-workflow.json") &&
@@ -85,6 +93,7 @@ for (const phrase of [
   "Composite GitHub Action in `action.yml`, dogfooded by this repo's CI with newline-safe path parsing.",
   "GitHub Actions annotation output with `--format github` and action job",
   "Composite GitHub Action, with semver tags and Marketplace listing still",
+  "Consumer workflows must provide Node.js `>=18.18.0` and npm before `uses: sherunscode/n8n-lint`.",
   "one path, directory, or glob per line"
 ]) {
   expect(hasPhrase(readme, phrase), `README must include action proof phrase: ${phrase}`);
@@ -93,6 +102,8 @@ for (const phrase of [
 for (const phrase of [
   "The repo ships a composite action at `action.yml`.",
   "The action writes a GitHub job summary",
+  "job must provide Node.js `>=18.18.0` and npm before `uses: sherunscode/n8n-lint`",
+  "actions/setup-node",
   "one path, directory, or glob per line",
   "decaying last-verified badge",
   "Marketplace listing and semver tag usage remain release gates.",
@@ -103,7 +114,8 @@ for (const phrase of [
 
 for (const phrase of [
   "A composite GitHub Action exists at `action.yml`, writes a reviewer-facing job",
-  "Composite GitHub Action path that runs `check --format github`, uses newline-safe path parsing",
+  "verifies Node.js `>=18.18.0` plus npm before building",
+  "Composite GitHub Action path that verifies the Node/npm runtime, runs `check --format github`, uses newline-safe path parsing",
   "newline-safe path parsing",
   "last-verified badge",
   "npm run check:github-action"
@@ -121,6 +133,7 @@ console.log(
       ok: true,
       checked: [
         "action metadata",
+        "Node/npm runtime preflight",
         "newline-safe path parsing",
         "format github invocation",
         "last-verified badge summary",

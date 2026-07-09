@@ -41,6 +41,10 @@ paths, schema source, version selector, a decaying last-verified badge generated
 from the same check JSON, and the last 200 lines of CLI output, while
 preserving the CLI exit code as the merge gate.
 
+Because the current composite action builds the checked-out action runtime, the
+job must provide Node.js `>=18.18.0` and npm before `uses:
+sherunscode/n8n-lint`. The examples below use `actions/setup-node`.
+
 For the action's `paths` input, pass one path, directory, or glob per line. The
 action intentionally parses newline-delimited values instead of splitting on
 shell whitespace, so paths and globs are passed to the CLI as exact arguments.
@@ -59,6 +63,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.0
+      - uses: actions/setup-node@v6.4.0
+        with:
+          node-version: 22
       - uses: sherunscode/n8n-lint@<commit-sha>
         with:
           paths: |
