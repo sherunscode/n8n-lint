@@ -53,6 +53,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:github-rendered-readme") &&
     packageJson.scripts.quality.includes("npm run check:github-profile") &&
     packageJson.scripts.quality.includes("npm run check:github-repo-settings") &&
+    packageJson.scripts.quality.includes("npm run check:clean-source-checkout") &&
     packageJson.scripts.quality.includes("npm run check:readme-demo") &&
     packageJson.scripts.quality.includes("npm run check:animated-demo") &&
     packageJson.scripts.quality.includes("npm run check:terminal-output-demo") &&
@@ -70,7 +71,7 @@ expect(
     packageJson.scripts.quality.includes("npm run check:claims") &&
     packageJson.scripts.quality.includes("npm run check:links") &&
     packageJson.scripts.quality.includes("npm run check:exit-codes"),
-  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, npm registry boundary, release readiness, release notes, release command plan, live REST boundary, launch content, benchmark report, benchmark dashboard, batch benchmark output, GitHub Action, GitHub PR gate proof, strategy checklist, GitHub-rendered README, GitHub profile, GitHub repo settings, README demo, animated demo, terminal output demo, matrix demo, matrix GIF, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, package README, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
+  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, npm registry boundary, release readiness, release notes, release command plan, live REST boundary, launch content, benchmark report, benchmark dashboard, batch benchmark output, GitHub Action, GitHub PR gate proof, strategy checklist, GitHub-rendered README, GitHub profile, GitHub repo settings, clean source-checkout, README demo, animated demo, terminal output demo, matrix demo, matrix GIF, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, package README, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
 );
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 expect(ciWorkflow.includes("contents: read"), "CI workflow must keep contents read permission");
@@ -90,6 +91,10 @@ expect(
 expect(
   packageJson.scripts?.["check:github-repo-settings"] === "node scripts/check-github-repo-settings.mjs",
   "package.json must expose the GitHub repo settings checker"
+);
+expect(
+  packageJson.scripts?.["check:clean-source-checkout"] === "node scripts/check-clean-source-checkout.mjs",
+  "package.json must expose the clean source-checkout checker"
 );
 expect(
   packageJson.scripts?.["check:release-command-plan"] === "node scripts/check-release-command-plan.mjs",
@@ -151,6 +156,7 @@ await expectFile("scripts/check-strategy-checklist.mjs");
 await expectFile("scripts/check-github-rendered-readme.mjs");
 await expectFile("scripts/check-github-profile-feature.mjs");
 await expectFile("scripts/check-github-repo-settings.mjs");
+await expectFile("scripts/check-clean-source-checkout.mjs");
 await expectFile("scripts/check-readme-demo.mjs");
 await expectFile("scripts/check-animated-demo.mjs");
 await expectFile("scripts/check-terminal-output-demo.mjs");
@@ -226,6 +232,7 @@ console.log(
         "scripts/check-github-rendered-readme.mjs",
         "scripts/check-github-profile-feature.mjs",
         "scripts/check-github-repo-settings.mjs",
+        "scripts/check-clean-source-checkout.mjs",
         "scripts/check-readme-demo.mjs",
         "scripts/check-animated-demo.mjs",
         "scripts/check-terminal-output-demo.mjs",

@@ -120,7 +120,7 @@ function npmViewVersion(packageName) {
   }
 
   const output = [result.stdout, result.stderr].filter(Boolean).join("\n");
-  if (output.includes("E404") && output.includes("is not in this registry")) {
+  if (isUnpublishedE404(output)) {
     return {
       status: "unpublished"
     };
@@ -147,6 +147,16 @@ function summarizeNpmOutput(output) {
     .filter((line) => !line.includes("_logs"))
     .slice(0, 4)
     .join(" | ");
+}
+
+function isUnpublishedE404(output) {
+  const normalizedOutput = output.toLowerCase();
+  return (
+    output.includes("E404") &&
+    (normalizedOutput.includes("is not in this registry") ||
+      normalizedOutput.includes("could not be found") ||
+      normalizedOutput.includes("not found"))
+  );
 }
 
 async function readJson(filePath) {

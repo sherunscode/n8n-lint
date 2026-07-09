@@ -1,10 +1,12 @@
 #!/usr/bin/env node
+import { spawnSync } from "node:child_process";
 
 const failures = [];
 const profileUrl = "https://raw.githubusercontent.com/sherunscode/.github/main/profile/README.md";
 const profileApiUrl = "https://api.github.com/repos/sherunscode/.github/contents/profile/README.md?ref=main";
 const orgApiUrl = "https://api.github.com/orgs/sherunscode";
 const repoApiUrl = "https://api.github.com/repos/sherunscode/n8n-lint";
+let cachedGithubToken;
 const profile = await fetchProfileReadme();
 
 for (const phrase of [
@@ -118,6 +120,21 @@ function hasPhrase(text, phrase) {
 }
 
 function githubToken() {
-  const token = process.env.GITHUB_TOKEN;
-  return typeof token === "string" && token.trim() !== "" ? token.trim() : null;
+  if (cachedGithubToken !== undefined) {
+    return cachedGithubToken;
+  }
+
+  const envToken = process.env.GITHUB_TOKEN;
+  if (typeof envToken === "string" && envToken.trim() !== "") {
+    cachedGithubToken = envToken.trim();
+    return cachedGithubToken;
+  }
+
+  const result = spawnSync("gh", ["auth", "token"], {
+    encoding: "utf8",
+    stdio: "pipe"
+  });
+
+  cachedGithubToken = result.status === 0 && result.stdout.trim() !== "" ? result.stdout.trim() : null;
+  return cachedGithubToken;
 }

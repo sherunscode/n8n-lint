@@ -136,6 +136,9 @@ same real matrix CLI and JSON output, then checked by
 - Local quality gates for build, lint, format, fixtures, metadata, security
   hygiene, tests, and production dependency audit.
 - Packed-package install smoke test for the publishable core and CLI workspaces.
+- Clean source-checkout proof that exports tracked files to a temp directory,
+  runs `npm ci`, builds, follows the README quickstart, proves a failing fixture,
+  and reruns the packed install smoke outside the working copy.
 - Reproducible `Zie619/n8n-workflows` benchmark report with exact pass/fail and
   skipped-file counts.
 
@@ -293,6 +296,7 @@ npm run check:strategy-checklist
 npm run check:github-rendered-readme
 npm run check:github-profile
 npm run check:github-repo-settings
+npm run check:clean-source-checkout
 npm run check:readme-demo
 npm run check:animated-demo
 npm run check:terminal-output-demo
@@ -326,6 +330,12 @@ npm run quality
 shipping dependency gate stays clean. The pinned `n8n-nodes-base` package is a
 dev-time generator input only; it is not a runtime dependency of the core or CLI
 packages.
+
+`npm run check:clean-source-checkout` exports tracked repo files into a temporary
+clean source checkout, runs `npm ci`, runs `npm run build`, follows the README
+quickstart command, verifies a failing fixture exits nonzero, and runs
+`npm run smoke:pack` there. It proves the public source-checkout path without
+claiming registry-backed `npx n8n-lint` before npm publication.
 
 `npm run check:schema-config` proves the pinned bundled schema selections live
 in `packages/core/schema/bundled-n8n-package-config.json`, match the checked-in
