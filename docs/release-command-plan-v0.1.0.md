@@ -125,6 +125,7 @@ npm run check:release-readiness
 npm run check:release-notes
 npm run check:release-command-plan
 npm run check:release-workflow
+npm run check:release-artifact-manifest
 npm run smoke:pack
 npm pack --workspace packages/core --dry-run
 npm pack --workspace packages/cli --dry-run
@@ -134,6 +135,8 @@ gh workflow run release.yml --repo sherunscode/n8n-lint --ref main
 Confirm the `quality` run and CodeQL run both point to the exact `HEAD`.
 The release proof workflow must complete without write permissions, npm tokens,
 npm publish, tag push, or GitHub Release creation.
+Inspect `release-artifact-manifest.json` before owner-approved publish. The
+manifest must list both tarballs, byte sizes, and SHA-256 hashes.
 
 ## Phase 3 - Owner-Approved npm Publish
 

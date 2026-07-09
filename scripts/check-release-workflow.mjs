@@ -48,9 +48,12 @@ for (const phrase of [
   "mkdir -p release-artifacts",
   "npm pack --workspace packages/core --pack-destination release-artifacts",
   "npm pack --workspace packages/cli --pack-destination release-artifacts",
+  "node scripts/write-release-artifact-manifest.mjs release-artifacts",
   "actions/upload-artifact@v4.6.2",
   "name: n8n-lint-release-proof-packages",
-  "path: release-artifacts/*.tgz",
+  "path: |",
+  "release-artifacts/*.tgz",
+  "release-artifacts/release-artifact-manifest.json",
   "if-no-files-found: error"
 ]) {
   expect(workflow.includes(phrase), `release workflow must include: ${phrase}`);
@@ -130,6 +133,7 @@ console.log(
         "release contract checks",
         "package dry-runs",
         "local tarball artifact upload",
+        "release artifact manifest upload",
         "no npm token",
         "no npm publish",
         "no tag push",

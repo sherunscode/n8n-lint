@@ -52,6 +52,7 @@ npm run check:release-readiness
 npm run check:release-notes
 npm run check:release-command-plan
 npm run check:release-workflow
+npm run check:release-artifact-manifest
 npm run smoke:pack
 npm pack --workspace packages/core --dry-run
 npm pack --workspace packages/cli --dry-run
@@ -90,6 +91,9 @@ The release proof workflow in `.github/workflows/release.yml` may package and
 upload local tarballs, but it must not publish to npm, push tags, or create
 GitHub Releases. Actual npm publish, tag push, GitHub Release creation, and
 public posting still require owner approval.
+
+Inspect `release-artifact-manifest.json` before owner-approved publish. The
+manifest must list both tarballs, byte sizes, and SHA-256 hashes.
 
 ## Fresh Install Smoke
 
