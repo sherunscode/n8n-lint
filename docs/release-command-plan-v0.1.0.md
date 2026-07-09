@@ -33,7 +33,8 @@ Stop immediately if any of these are true:
   existing version before the first public publish attempt.
 - `npm run quality` fails.
 - `npm run check:npm-registry-boundary`, `npm run check:release-readiness`,
-  `npm run check:release-notes`, or `npm run check:release-command-plan` fails.
+  `npm run check:release-notes`, `npm run check:release-command-plan`, or
+  `npm run check:release-workflow` fails.
 - Any command asks for or prints a token, registry auth value, cookie, or `.env`
   value.
 
@@ -123,12 +124,16 @@ npm run check:npm-registry-boundary
 npm run check:release-readiness
 npm run check:release-notes
 npm run check:release-command-plan
+npm run check:release-workflow
 npm run smoke:pack
 npm pack --workspace packages/core --dry-run
 npm pack --workspace packages/cli --dry-run
+gh workflow run release.yml --repo sherunscode/n8n-lint --ref main
 ```
 
 Confirm the `quality` run and CodeQL run both point to the exact `HEAD`.
+The release proof workflow must complete without write permissions, npm tokens,
+npm publish, tag push, or GitHub Release creation.
 
 ## Phase 3 - Owner-Approved npm Publish
 

@@ -32,6 +32,19 @@ the packed-install smoke test.
 
 The public workflow is `.github/workflows/ci.yml`.
 
+## Release Proof Workflow
+
+The release proof workflow is `.github/workflows/release.yml`. It runs on
+manual dispatch and `main` pushes.
+
+It runs `npm run quality`, the release contract checks, package dry-runs, and
+uploads local tarball artifacts. It does not request `NPM_TOKEN`, does not use
+write permissions, does not run `npm publish`, does not push tags, and does not
+create a GitHub Release.
+
+Actual npm publication, tag push, GitHub Release creation, and public launch
+posts remain owner-gated.
+
 ## Composite GitHub Action
 
 The repo ships a composite action at `action.yml`. It builds the action runtime

@@ -58,6 +58,9 @@ same real matrix CLI and JSON output, then checked by
 ## Proof and Boundaries
 
 - CI: the badge links to the latest public `main` quality run.
+- Release proof workflow: `.github/workflows/release.yml` runs quality, release
+  contract checks, package dry-runs, and local tarball artifact upload without
+  npm publish, tag push, or GitHub Release creation.
 - Current install paths: source checkout and packed local tarball only until npm
   publication.
 - Current validation: workflow structure, bundled n8n node type names, bundled
@@ -289,6 +292,7 @@ npm run check:npm-registry-boundary
 npm run check:release-readiness
 npm run check:release-notes
 npm run check:release-command-plan
+npm run check:release-workflow
 npm run check:live-rest-boundary
 npm run check:launch-content
 npm run check:benchmark-report
@@ -394,6 +398,10 @@ publish/tag/release command path in `docs/release-command-plan-v0.1.0.md`,
 including public-state preflight commands, final pre-publish checks, package
 publish order, registry smoke, single-tag GitHub Release creation, forbidden
 commands, and rollback boundaries.
+
+`npm run check:release-workflow` proves the release proof workflow stays a
+read-only packaging gate and cannot publish, push tags, request npm tokens, or
+create GitHub Releases.
 
 `npm run check:live-rest-boundary` proves the live REST source boundary stays
 locked: public CLI help exposes only the verified local sources, the internal
@@ -547,8 +555,10 @@ first and `n8n-lint` second after owner approval.
 See `docs/release-checklist.md` for versioning, npm auth, provenance, tag,
 GitHub release, fresh-install smoke, and rollback steps. See
 `docs/release-command-plan-v0.1.0.md` for the checked command-by-command
-v0.1.0 release path. Actual npm publish, GitHub tag push, and GitHub release
-creation remain owner-gated.
+v0.1.0 release path. The checked release proof workflow in
+`.github/workflows/release.yml` may package and upload local tarballs, but
+does not grant publish authority. Actual npm publish, GitHub tag push, and
+GitHub release creation remain owner-gated.
 
 ## Schema Artifact
 
@@ -646,6 +656,8 @@ MVP scope:
 - Composite GitHub Action, with semver tags and Marketplace listing still
   release-gated, Node.js `>=18.18.0`/npm required before use, and one path,
   directory, or glob per line in the action input.
+- Release proof workflow for quality, release-contract checks, package dry-runs,
+  and local tarball artifacts without publish authority.
 - Honest docs and benchmark harness.
 
 Not MVP scope:
