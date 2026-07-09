@@ -27,6 +27,8 @@
   newline-delimited exact arguments instead of shell whitespace splitting.
 - Added a composite GitHub Action runtime preflight for Node.js `>=18.18.0` and
   npm, with docs requiring `actions/setup-node` in consumer workflows.
+- Hardened the internal live REST placeholder so blank, invalid, non-HTTPS, and
+  credential-bearing base URLs fail closed before endpoint probing exists.
 - Hardened the She Runs Code GitHub profile verifier so CI reads the profile
   README through authenticated GitHub API content checks when available.
 - Added an executable docs contract gate that compares the README `--help`

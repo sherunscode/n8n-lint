@@ -122,7 +122,7 @@ REST claims.
   `check:exit-codes`, core fixture tests, CLI fixture tests, production
   dependency audit, and packed-install smoke.
 - Package dry-runs reviewed:
-  - `@n8nproof/core@0.0.0`: 12 files, 206.1 kB package, includes `dist`,
+  - `@n8nproof/core@0.0.0`: 12 files, 206.3 kB package, includes `dist`,
     `schema`, package metadata, README, and LICENSE only.
   - `n8n-lint@0.0.0`: 6 files, 19.2 kB package, includes `dist` only plus
     package metadata, README, and LICENSE.
@@ -186,10 +186,11 @@ REST claims.
   rollback boundaries.
 - `npm run check:live-rest-boundary` now enforces that the live REST source
   boundary stays locked: public CLI help exposes only verified local sources,
-  the internal placeholder stays unimplemented, API-key material is not echoed,
-  docs keep live REST schema validation unclaimed until endpoint proof exists,
-  and future GitHub Actions examples use encrypted `secrets.N8N_API_KEY`
-  wiring instead of plaintext workflow YAML values. It also enforces
+  the internal placeholder stays unimplemented, blank/invalid/non-HTTPS/
+  credential-bearing base URLs fail closed, API-key material is not echoed, docs
+  keep live REST schema validation unclaimed until endpoint proof exists, and
+  future GitHub Actions examples use encrypted `secrets.N8N_API_KEY` wiring
+  instead of plaintext workflow YAML values. It also enforces
   `docs/live-rest-threat-model.md`, including fail-closed TLS, cross-origin
   redirect, wrong-host, API-key redaction, no-workflow-execution, and endpoint
   proof gates for any future adapter.

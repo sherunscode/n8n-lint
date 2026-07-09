@@ -94,8 +94,9 @@ stay labeled unproven until a local or owner-approved n8n instance confirms
 endpoint behavior. `npm run check:live-rest-boundary` proves this boundary:
 public CLI help exposes only `bundled-n8n-package` and `local-placeholder`, the
 internal `live-rest` placeholder must stay CLI-inaccessible until endpoint
-coverage exists, blank base URLs fail closed, and provided API-key material is
-not echoed in placeholder output.
+coverage exists, blank or invalid base URLs fail closed, non-HTTPS URLs fail
+closed, credentials embedded in the URL fail closed, and provided API-key
+material is not echoed in placeholder output.
 
 `docs/live-rest-threat-model.md` is now the required checklist before any
 future live REST implementation is exposed. It requires fail-closed TLS and

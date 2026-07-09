@@ -373,10 +373,11 @@ commands, and rollback boundaries.
 
 `npm run check:live-rest-boundary` proves the live REST source boundary stays
 locked: public CLI help exposes only the verified local sources, the internal
-placeholder still fails closed or warns, API-key material is not echoed, and the
-docs keep live REST schema validation unclaimed until endpoint proof exists.
-It also enforces `docs/live-rest-threat-model.md`, including fail-closed TLS,
-redirect, wrong-host, and API-key handling gates for any future adapter.
+placeholder fails closed for blank, invalid, non-HTTPS, or credential-bearing
+base URLs, API-key material is not echoed, and the docs keep live REST schema
+validation unclaimed until endpoint proof exists. It also enforces
+`docs/live-rest-threat-model.md`, including fail-closed TLS, redirect,
+wrong-host, and API-key handling gates for any future adapter.
 It also checks that future GitHub Actions examples use `secrets.N8N_API_KEY`
 instead of plaintext workflow YAML values.
 
