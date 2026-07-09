@@ -40,7 +40,7 @@ for (const phrase of [
   "No fake stars, fake followers, bought engagement, bots, spam, or misleading authorship.",
   "Use the README badge or Actions tab to verify the latest public `main` quality run before posting.",
   "Do not rely on a static run ID in launch copy; re-check after every pushed commit.",
-  "Use `docs/assets/social-preview.svg` only after `npm run check:social-preview`",
+  "Use `docs/assets/social-preview.svg` and `docs/assets/social-preview.png` only after `npm run check:social-preview`",
   "Use `docs/assets/animated-failure-demo.svg` only after `npm run check:animated-demo`",
   "Use `docs/assets/terminal-output-demo.svg` only after `npm run check:terminal-output-demo`",
   "Use `docs/assets/precommit-rejection-demo.svg` only after `npm run check:precommit-rejection-demo`",

@@ -74,8 +74,9 @@ same real matrix CLI and JSON output, then checked by
 - Batch benchmark output: `docs/assets/batch-benchmark-output.svg` is generated
   from the same checked `Zie619/n8n-workflows` report and shows the full-repo
   discovered/selected/pass/fail/skip terminal-style output boundary.
-- Launch visual: `docs/assets/social-preview.svg` is generated from the checked
-  benchmark, schema config, and repo metadata.
+- Launch visual: `docs/assets/social-preview.svg` and the GitHub-ready
+  `docs/assets/social-preview.png` are generated from the checked benchmark,
+  schema config, and repo metadata.
 - Terminal visual: `docs/assets/terminal-output-demo.svg` is generated from
   actual colored pass and fail CLI output.
 - Pre-commit visual: `docs/assets/precommit-rejection-demo.svg` is generated
@@ -448,9 +449,11 @@ under `n8n-nodes-base@2.30.0`.
 same real matrix CLI and JSON output, including the `clearWarning`
 compatibility difference.
 
-`npm run check:social-preview` proves the launch/social preview SVG is generated
-from the current benchmark report, bundled schema config, and canonical repo
-metadata while preserving npm and live REST non-claim boundaries.
+`npm run check:social-preview` proves the launch/social preview SVG and
+GitHub-ready PNG upload asset are generated from the current benchmark report,
+bundled schema config, and canonical repo metadata while preserving npm and live
+REST non-claim boundaries. The PNG is checked at 1280x640 and under GitHub's 1
+MB repository social preview upload limit.
 
 `npm run check:github-repo-settings` proves the public repository identity,
 description, topics, and Open Graph image status through GitHub APIs. Until a
