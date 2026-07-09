@@ -2,6 +2,11 @@
 
 Core validation library used by `n8n-lint`.
 
+Current repository state: this package is not published to npm yet. Use the
+repository source checkout or the packed local tarball smoke path in the root
+README until the owner-approved npm release and clean-machine registry proof
+are complete.
+
 This package loads checked-in compact n8n schema artifacts and validates n8n
 workflow JSON structure, node type names, credential type names, top-level node
 parameter names, structured nested collection/fixedCollection/filter parameter
@@ -10,7 +15,7 @@ keys, and trigger graph/type-version shape. Current pinned artifacts cover
 centralized in `schema/bundled-n8n-package-config.json`. It does not execute
 workflows and does not claim live REST validation.
 
-After npm publication, install the CLI package for normal use:
+After owner-approved npm publication, install the CLI package for normal use:
 
 ```bash
 npm install n8n-lint

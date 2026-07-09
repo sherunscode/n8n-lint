@@ -63,12 +63,13 @@ expect(
     packageJson.scripts.quality.includes("npm run check:audit-report") &&
     packageJson.scripts.quality.includes("npm run check:status-docs") &&
     packageJson.scripts.quality.includes("npm run check:security") &&
+    packageJson.scripts.quality.includes("npm run check:package-readmes") &&
     packageJson.scripts.quality.includes("npm run check:docs") &&
     packageJson.scripts.quality.includes("npm run check:pack") &&
     packageJson.scripts.quality.includes("npm run check:claims") &&
     packageJson.scripts.quality.includes("npm run check:links") &&
     packageJson.scripts.quality.includes("npm run check:exit-codes"),
-  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, npm registry boundary, release readiness, release notes, release command plan, live REST boundary, launch content, benchmark report, benchmark dashboard, batch benchmark output, GitHub Action, GitHub PR gate proof, strategy checklist, GitHub-rendered README, GitHub profile, README demo, animated demo, terminal output demo, matrix demo, matrix GIF, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
+  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, npm registry boundary, release readiness, release notes, release command plan, live REST boundary, launch content, benchmark report, benchmark dashboard, batch benchmark output, GitHub Action, GitHub PR gate proof, strategy checklist, GitHub-rendered README, GitHub profile, README demo, animated demo, terminal output demo, matrix demo, matrix GIF, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, package README, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
 );
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 expect(ciWorkflow.includes("contents: read"), "CI workflow must keep contents read permission");
@@ -88,6 +89,10 @@ expect(
 expect(
   packageJson.scripts?.["check:release-command-plan"] === "node scripts/check-release-command-plan.mjs",
   "package.json must expose the release command plan checker"
+);
+expect(
+  packageJson.scripts?.["check:package-readmes"] === "node scripts/check-package-readmes.mjs",
+  "package.json must expose the package README checker"
 );
 expect(
   githubPrGateProof.includes("process.env.GITHUB_TOKEN") && githubPrGateProof.includes("headers.Authorization"),
@@ -150,6 +155,7 @@ await expectFile("scripts/check-last-verified-badges.mjs");
 await expectFile("scripts/check-audit-report.mjs");
 await expectFile("scripts/check-status-docs.mjs");
 await expectFile("scripts/check-security-hygiene.mjs");
+await expectFile("scripts/check-package-readmes.mjs");
 await expectFile("scripts/check-docs-contract.mjs");
 await expectFile("scripts/check-package-contents.mjs");
 await expectFile("scripts/check-claims-hygiene.mjs");
@@ -222,6 +228,7 @@ console.log(
         "scripts/check-audit-report.mjs",
         "scripts/check-status-docs.mjs",
         "scripts/check-security-hygiene.mjs",
+        "scripts/check-package-readmes.mjs",
         "scripts/check-docs-contract.mjs",
         "scripts/check-package-contents.mjs",
         "scripts/check-claims-hygiene.mjs",

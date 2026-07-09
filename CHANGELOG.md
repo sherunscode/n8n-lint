@@ -17,6 +17,12 @@
 - Added an executable security hygiene gate that verifies ignored secret/config
   paths, scans tracked public files for token patterns, and blocks bare API-key
   CLI options.
+- Added an executable package README gate that verifies the README files shipped
+  in publishable tarballs preserve package names, command surfaces,
+  pre-publication install boundaries, and current non-claims.
+- Hardened the GitHub-rendered README verifier so CI uses authenticated repository
+  content checks for local README image and link targets instead of rate-limited
+  raw asset probes.
 - Added an executable docs contract gate that compares the README `--help`
   block against the built CLI and verifies every help-exposed CLI flag is
   documented.

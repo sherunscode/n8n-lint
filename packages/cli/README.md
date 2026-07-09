@@ -2,6 +2,11 @@
 
 Validate n8n workflow JSON before it reaches production.
 
+Current repository state: this package is not published to npm yet. Use the
+repository source checkout or the packed local tarball smoke path in the root
+README until the owner-approved npm release and clean-machine registry proof
+are complete.
+
 ```bash
 n8n-lint check workflow.json
 n8n-lint check workflow.json --format github

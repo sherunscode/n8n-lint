@@ -116,14 +116,14 @@ REST claims.
   `check:github-profile`, `check:readme-demo`, `check:animated-demo`,
   `check:terminal-output-demo`, `check:matrix-demo`, `check:matrix-gif`,
   `check:social-preview`, `check:architecture-diagram`, `check:last-verified-badges`, `check:audit-report`, `check:status-docs`,
-  `check:metadata`, `check:security`, `check:docs`, `check:pack`,
+  `check:metadata`, `check:security`, `check:package-readmes`, `check:docs`, `check:pack`,
   `check:claims`, `check:links`,
   `check:exit-codes`, core fixture tests, CLI fixture tests, production
   dependency audit, and packed-install smoke.
 - Package dry-runs reviewed:
-  - `@n8nproof/core@0.0.0`: 12 files, 205.9 kB package, includes `dist`,
+  - `@n8nproof/core@0.0.0`: 12 files, 206.1 kB package, includes `dist`,
     `schema`, package metadata, README, and LICENSE only.
-  - `n8n-lint@0.0.0`: 6 files, 19.1 kB package, includes `dist` only plus
+  - `n8n-lint@0.0.0`: 6 files, 19.2 kB package, includes `dist` only plus
     package metadata, README, and LICENSE.
 - Fresh temp-project tarball install is automated by `npm run smoke:pack` and
   passed with `npx n8n-lint check workflow.json`.
@@ -131,6 +131,10 @@ REST claims.
   n8n token pattern in tracked public surfaces.
 - `npm run check:security` now enforces ignored local secret/config files, public
   token-pattern scanning, and no bare API-key CLI option.
+- `npm run check:package-readmes` now enforces that the package README files
+  shipped in tarballs preserve package names, current command surfaces, current
+  validation scope, the pre-publication install boundary, and
+  no-workflow-execution/no-live-REST boundaries.
 - `npm run check:docs` now enforces README `--help` parity with the built CLI
   and documentation for every help-exposed CLI flag.
 - `npm run check:pack` now enforces expected package file lists, forbidden-path

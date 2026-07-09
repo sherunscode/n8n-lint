@@ -14,7 +14,7 @@ const sameCommit = publicCommit === localHead;
 const localReadmeScopeClean = sameCommit && git(["status", "--porcelain", "--", "README.md", "docs/assets"]) === "";
 const readme = localReadmeScopeClean
   ? await readFile("README.md", "utf8")
-  : await fetchText(rawUrl(publicCommit, "README.md"));
+  : await fetchRepoFileText(publicCommit, "README.md");
 const pageHtml = await fetchText(repositoryUrl);
 const readmeWithoutFences = stripCodeFences(readme);
 const imageTargets = extractMarkdownImages(readmeWithoutFences).filter(isLocalTarget);
@@ -39,7 +39,7 @@ for (const target of imageTargets) {
   }
 
   expect(pageHtml.includes(normalized), `GitHub-rendered README must reference image target ${normalized}`);
-  await expectHttpOk(rawUrl(publicCommit, normalized), `README image must resolve from public commit: ${normalized}`, [
+  await expectRepoFileOk(publicCommit, normalized, `README image must resolve from public commit: ${normalized}`, [
     "image/svg+xml",
     "image/png",
     "image/jpeg",
@@ -55,8 +55,9 @@ for (const target of linkTargets) {
     continue;
   }
 
-  await expectHttpOk(
-    blobUrl(publicCommit, normalized),
+  await expectRepoFileOk(
+    publicCommit,
+    normalized,
     `README local link must resolve on GitHub-rendered public commit: ${target}`
   );
 
@@ -122,11 +123,18 @@ async function fetchText(url) {
 }
 
 async function fetchWithHeaders(url) {
+  const headers = {
+    "User-Agent": "sherunscode-n8n-lint-render-check",
+    Accept: "application/vnd.github+json, text/html, text/plain;q=0.9, */*;q=0.8"
+  };
+  const token = githubToken();
+  if (token !== null) {
+    headers.Authorization = `Bearer ${token}`;
+    headers["X-GitHub-Api-Version"] = "2022-11-28";
+  }
+
   const response = await fetch(url, {
-    headers: {
-      "User-Agent": "sherunscode-n8n-lint-render-check",
-      Accept: "application/vnd.github+json, text/html, text/plain;q=0.9, */*;q=0.8"
-    },
+    headers,
     redirect: "follow"
   });
 
@@ -135,6 +143,49 @@ async function fetchWithHeaders(url) {
   }
 
   return response;
+}
+
+async function fetchRepoFileText(commit, target) {
+  if (githubToken() !== null) {
+    const metadata = await fetchRepoFileMetadata(commit, target);
+    if (metadata.encoding === "base64" && typeof metadata.content === "string") {
+      return Buffer.from(metadata.content.replace(/\s+/g, ""), "base64").toString("utf8");
+    }
+  }
+
+  return fetchText(rawUrl(commit, target));
+}
+
+async function fetchRepoFileMetadata(commit, target) {
+  const data = await fetchJson(contentsApiUrl(commit, target));
+  if (Array.isArray(data) || data?.type !== "file") {
+    throw new Error(`${target} is not a file at ${commit}`);
+  }
+  return data;
+}
+
+async function expectRepoFileOk(commit, target, message, allowedContentTypes = []) {
+  if (githubToken() !== null) {
+    try {
+      await fetchRepoFileMetadata(commit, target);
+      if (allowedContentTypes.length > 0) {
+        const expectedContentType = contentTypeForPath(target);
+        if (!allowedContentTypes.includes(expectedContentType)) {
+          failures.push(`${message}; unexpected file type ${expectedContentType || "(unknown)"}`);
+        }
+      }
+      return;
+    } catch (error) {
+      failures.push(`${message}: ${error instanceof Error ? error.message : String(error)}`);
+      return;
+    }
+  }
+
+  await expectHttpOk(
+    allowedContentTypes.length > 0 ? rawUrl(commit, target) : blobUrl(commit, target),
+    message,
+    allowedContentTypes
+  );
 }
 
 async function expectHttpOk(url, message, allowedContentTypes = []) {
@@ -220,6 +271,19 @@ function blobUrl(commit, target) {
   return `https://github.com/${owner}/${repo}/blob/${commit}/${encodePath(target)}`;
 }
 
+function contentsApiUrl(commit, target) {
+  return `https://api.github.com/repos/${owner}/${repo}/contents/${encodePath(target)}?ref=${encodeURIComponent(commit)}`;
+}
+
+function contentTypeForPath(target) {
+  const lower = target.toLowerCase();
+  if (lower.endsWith(".svg")) return "image/svg+xml";
+  if (lower.endsWith(".png")) return "image/png";
+  if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return "image/jpeg";
+  if (lower.endsWith(".gif")) return "image/gif";
+  return "";
+}
+
 function encodePath(target) {
   return target
     .split("/")
@@ -250,6 +314,11 @@ function escapeHtml(text) {
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
+}
+
+function githubToken() {
+  const token = process.env.GITHUB_TOKEN;
+  return typeof token === "string" && token.trim() !== "" ? token.trim() : null;
 }
 
 function expect(condition, message) {
