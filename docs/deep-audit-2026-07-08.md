@@ -69,9 +69,11 @@ REST claims.
 - Matrix compatibility GIF `docs/assets/matrix-compatibility-demo.gif` is
   generated from real matrix CLI and JSON output and checked by
   `npm run check:matrix-gif`.
-- Launch/social preview asset `docs/assets/social-preview.svg` is generated
-  from the current benchmark report, bundled schema config, and canonical repo
-  metadata, then checked by `npm run check:social-preview`.
+- Launch/social preview assets `docs/assets/social-preview.svg` and
+  `docs/assets/social-preview.png` are generated from the current benchmark
+  report, bundled schema config, and canonical repo metadata, then checked by
+  `npm run check:social-preview`; the PNG is checked at 1280x640 and under
+  GitHub's 1 MB repository social preview upload limit.
 - GitHub repository settings are checked by `npm run check:github-repo-settings`:
   the public repo identity, launch description, required topics, Open Graph
   image URL, and current `usesCustomOpenGraphImage=false` status are read from
@@ -250,9 +252,9 @@ REST claims.
   difference that fails under `n8n-nodes-base@2.29.6` and passes under
   `n8n-nodes-base@2.30.0`.
 - `npm run check:social-preview` now enforces that the launch/social preview SVG
-  is generated from the current benchmark report, bundled schema config, and
-  canonical repo metadata while preserving npm and live REST non-claim
-  boundaries.
+  and GitHub-ready PNG upload asset are generated from the current benchmark
+  report, bundled schema config, and canonical repo metadata while preserving
+  npm and live REST non-claim boundaries.
 - `npm run check:github-repo-settings` now enforces public repo identity,
   launch description, topics, and GitHub Open Graph image status, and confirms
   the custom social preview remains an explicit external UI launch gate while
@@ -400,8 +402,8 @@ These are intentionally not complete:
 - Arbitrary custom nested parameter semantics beyond bundled structured
   collection/fixedCollection/filter metadata.
 - Additional video captures beyond the checked README, animated demo, terminal
-  output, pre-commit rejection, matrix compatibility SVG/GIF, social preview,
-  architecture SVG, and last-verified badge-state SVG assets.
+  output, pre-commit rejection, matrix compatibility SVG/GIF, social preview
+  SVG/PNG, architecture SVG, and last-verified badge-state SVG assets.
 - Public X, Reddit, HN, or n8n forum launch posts.
 - Broader repair transforms for credential renames, node rewrites, trigger
   rewiring, and nested parameter-shape changes.

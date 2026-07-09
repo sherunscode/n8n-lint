@@ -124,6 +124,7 @@ await expectFile("docs/assets/github-pr-merge-gate-proof.png");
 await expectFile("docs/assets/matrix-compatibility-demo.svg");
 await expectFile("docs/assets/matrix-compatibility-demo.gif");
 await expectFile("docs/assets/social-preview.svg");
+await expectFile("docs/assets/social-preview.png");
 await expectFile("docs/assets/architecture.svg");
 await expectFile("docs/assets/last-verified-badges.svg");
 await expectFile("examples/failing-nested-dead-parameter.json");
@@ -198,6 +199,7 @@ console.log(
         "docs/assets/matrix-compatibility-demo.svg",
         "docs/assets/matrix-compatibility-demo.gif",
         "docs/assets/social-preview.svg",
+        "docs/assets/social-preview.png",
         "docs/assets/architecture.svg",
         "docs/assets/last-verified-badges.svg",
         "examples/failing-nested-dead-parameter.json",

@@ -128,7 +128,10 @@ expect(
   "launch content pack must block npm/npx launch claims before verification"
 );
 expect(
-  hasPhrase(launchContentPack, "Use `docs/assets/social-preview.svg` only after `npm run check:social-preview`"),
+  hasPhrase(
+    launchContentPack,
+    "Use `docs/assets/social-preview.svg` and `docs/assets/social-preview.png` only after `npm run check:social-preview`"
+  ),
   "launch content pack must require social preview freshness before use"
 );
 expect(

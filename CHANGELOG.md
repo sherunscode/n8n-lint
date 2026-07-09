@@ -2,6 +2,8 @@
 
 ## 0.0.0 - Unreleased
 
+- Added a GitHub-ready social preview PNG upload asset generated from the same
+  checked benchmark, schema, and repository metadata as the SVG preview.
 - Added compact bundled n8n schema artifact generation from
   `n8n-nodes-base@2.29.6`.
 - Made bundled schema validation the local CLI default.

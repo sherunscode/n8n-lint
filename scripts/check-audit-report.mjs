@@ -69,6 +69,11 @@ expect(audit.includes("npm run check:matrix-demo"), "audit must mention the matr
 expect(audit.includes("docs/assets/matrix-compatibility-demo.gif"), "audit must mention the checked matrix GIF asset");
 expect(audit.includes("npm run check:matrix-gif"), "audit must mention the matrix GIF checker");
 expect(audit.includes("docs/assets/social-preview.svg"), "audit must mention the checked social preview asset");
+expect(audit.includes("docs/assets/social-preview.png"), "audit must mention the checked social preview PNG asset");
+expect(
+  audit.includes("GitHub's 1 MB repository social preview upload limit"),
+  "audit must mention the GitHub social preview upload size boundary"
+);
 expect(audit.includes("npm run check:social-preview"), "audit must mention the social preview checker");
 expect(audit.includes("docs/assets/architecture.svg"), "audit must mention the checked architecture diagram asset");
 expect(audit.includes("npm run check:architecture-diagram"), "audit must mention the architecture diagram checker");
@@ -150,9 +155,9 @@ for (const pack of [runPack("packages/core"), runPack("packages/cli")]) {
 expect(
   hasPhrase(
     audit,
-    "Additional video captures beyond the checked README, animated demo, terminal output, pre-commit rejection, matrix compatibility SVG/GIF, social preview, architecture SVG, and last-verified badge-state SVG assets."
+    "Additional video captures beyond the checked README, animated demo, terminal output, pre-commit rejection, matrix compatibility SVG/GIF, social preview SVG/PNG, architecture SVG, and last-verified badge-state SVG assets."
   ),
-  "remaining gates must distinguish extra video launch assets from the checked README, animated demo, terminal output, pre-commit rejection, matrix compatibility SVG/GIF, social preview, architecture SVG, and last-verified badge-state SVGs"
+  "remaining gates must distinguish extra video launch assets from the checked README, animated demo, terminal output, pre-commit rejection, matrix compatibility SVG/GIF, social preview SVG/PNG, architecture SVG, and last-verified badge-state SVGs"
 );
 
 for (const remainingGate of [

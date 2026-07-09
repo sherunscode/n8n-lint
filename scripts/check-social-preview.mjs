@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import sharp from "sharp";
 
 const writeMode = process.argv.includes("--write");
-const assetPath = "docs/assets/social-preview.svg";
+const svgAssetPath = "docs/assets/social-preview.svg";
+const pngAssetPath = "docs/assets/social-preview.png";
 const benchmarkPath = "docs/benchmark-zie619-report.json";
 const schemaConfigPath = "packages/core/schema/bundled-n8n-package-config.json";
 const toolPath = "tool.json";
@@ -48,20 +50,46 @@ const expectedSvg = renderSocialPreview({
 });
 
 if (writeMode) {
-  await mkdir(path.dirname(assetPath), { recursive: true });
-  await writeFile(assetPath, expectedSvg, "utf8");
+  await mkdir(path.dirname(svgAssetPath), { recursive: true });
+  await writeFile(svgAssetPath, expectedSvg, "utf8");
+  await writeFile(pngAssetPath, await renderUploadPng(expectedSvg));
 } else {
-  const actualSvg = await readFile(assetPath, "utf8");
+  const actualSvg = await readFile(svgAssetPath, "utf8");
   if (actualSvg !== expectedSvg) {
-    throw new Error(`social preview asset is stale. Run npm run generate:social-preview and commit ${assetPath}.`);
+    throw new Error(
+      `social preview SVG asset is stale. Run npm run generate:social-preview and commit ${svgAssetPath}.`
+    );
   }
+}
+
+const pngBuffer = await readFile(pngAssetPath);
+const pngMetadata = await sharp(pngBuffer).metadata();
+expect(pngMetadata.format === "png", "social preview upload asset must be PNG");
+expect(pngMetadata.width === 1280, "social preview upload PNG width must be 1280");
+expect(pngMetadata.height === 640, "social preview upload PNG height must be 640");
+expect(pngMetadata.size < 1_000_000, "social preview upload PNG must stay under GitHub's 1 MB limit");
+await expectPngColorAt(pngBuffer, 10, 10, [16, 24, 39], "outer background");
+await expectPngColorAt(pngBuffer, 64, 64, [248, 250, 252], "outer card");
+await expectPngColorAt(pngBuffer, 90, 90, [255, 255, 255], "inner card");
+await expectPngColorAt(pngBuffer, 112, 292, [226, 232, 240], "benchmark band");
+
+if (failures.length > 0) {
+  throw new Error(`social preview check failed:\n${failures.map((failure) => `- ${failure}`).join("\n")}`);
 }
 
 console.log(
   JSON.stringify(
     {
       ok: true,
-      asset: assetPath,
+      assets: {
+        svg: svgAssetPath,
+        uploadPng: pngAssetPath
+      },
+      uploadPng: {
+        width: pngMetadata.width,
+        height: pngMetadata.height,
+        size: pngMetadata.size
+      },
       sources: [benchmarkPath, schemaConfigPath, toolPath],
       checked: [
         "canonical repo",
@@ -69,7 +97,8 @@ console.log(
         "default bundled schema version",
         "npm publication non-claim",
         "live REST validation non-claim",
-        "checked SVG asset"
+        "checked SVG asset",
+        "checked GitHub-ready PNG upload asset"
       ]
     },
     null,
@@ -82,8 +111,8 @@ async function readJson(filePath) {
 }
 
 function renderSocialPreview({ repo, schemaVersion, total, passed, failed, skipped, benchmarkCommit, sourceCommit }) {
-  const width = 1200;
-  const height = 630;
+  const width = 1280;
+  const height = 640;
   const benchmarkShort = benchmarkCommit.slice(0, 12);
   const sourceShort = sourceCommit.slice(0, 12);
 
@@ -91,26 +120,26 @@ function renderSocialPreview({ repo, schemaVersion, total, passed, failed, skipp
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title desc">`,
     '  <title id="title">n8n-lint social preview</title>',
     '  <desc id="desc">Evidence-backed social preview for the She Runs Code n8n-lint repository.</desc>',
-    '  <rect width="1200" height="630" fill="#f8fafc"/>',
-    '  <rect x="0" y="0" width="1200" height="630" fill="#101827"/>',
-    '  <rect x="44" y="44" width="1112" height="542" rx="24" fill="#f8fafc"/>',
-    '  <rect x="72" y="72" width="1056" height="486" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>',
-    '  <text x="96" y="122" fill="#0f172a" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700">She Runs Code</text>',
-    `  <text x="96" y="190" fill="#111827" font-family="Inter, Arial, sans-serif" font-size="78" font-weight="800">${escapeXml(
+    '  <rect width="1280" height="640" fill="#f8fafc"/>',
+    '  <rect x="0" y="0" width="1280" height="640" fill="#101827"/>',
+    '  <rect x="48" y="48" width="1184" height="544" rx="24" fill="#f8fafc"/>',
+    '  <rect x="78" y="78" width="1124" height="484" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>',
+    '  <text x="104" y="128" fill="#0f172a" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700">She Runs Code</text>',
+    `  <text x="104" y="196" fill="#111827" font-family="Inter, Arial, sans-serif" font-size="78" font-weight="800">${escapeXml(
       "n8n-lint"
     )}</text>`,
-    '  <text x="96" y="238" fill="#334155" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="500">Validate n8n workflow JSON before it reaches production.</text>',
-    '  <rect x="96" y="282" width="1008" height="118" rx="14" fill="#e2e8f0"/>',
-    `  <text x="122" y="328" fill="#0f172a" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700">${formatNumber(
+    '  <text x="104" y="244" fill="#334155" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="500">Validate n8n workflow JSON before it reaches production.</text>',
+    '  <rect x="104" y="286" width="1072" height="118" rx="14" fill="#e2e8f0"/>',
+    `  <text x="132" y="332" fill="#0f172a" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700">${formatNumber(
       total
     )} workflow inputs checked</text>`,
-    `  <text x="122" y="370" fill="#334155" font-family="Inter, Arial, sans-serif" font-size="24">${formatNumber(
+    `  <text x="132" y="374" fill="#334155" font-family="Inter, Arial, sans-serif" font-size="24">${formatNumber(
       passed
     )} passed / ${formatNumber(failed)} failed / ${formatNumber(skipped)} skipped in the checked benchmark</text>`,
-    renderBadge(96, 430, 300, "bundled schema", `n8n-nodes-base@${schemaVersion}`, "#0f766e"),
-    renderBadge(414, 430, 350, "repo", repo, "#1d4ed8"),
-    renderBadge(782, 430, 322, "boundary", "no npm / no live REST claim", "#b45309"),
-    `  <text x="96" y="535" fill="#64748b" font-family="Consolas, Menlo, monospace" font-size="18">benchmark ${escapeXml(
+    renderBadge(104, 434, 312, "bundled schema", `n8n-nodes-base@${schemaVersion}`, "#0f766e"),
+    renderBadge(436, 434, 372, "repo", repo, "#1d4ed8"),
+    renderBadge(828, 434, 348, "boundary", "no npm / no live REST claim", "#b45309"),
+    `  <text x="104" y="536" fill="#64748b" font-family="Consolas, Menlo, monospace" font-size="18">benchmark ${escapeXml(
       benchmarkShort
     )} | source ${escapeXml(sourceShort)}</text>`,
     "</svg>",
@@ -140,6 +169,27 @@ function escapeXml(text) {
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
+}
+
+async function renderUploadPng(svg) {
+  return sharp(Buffer.from(svg, "utf8"))
+    .png({
+      compressionLevel: 9,
+      adaptiveFiltering: false,
+      palette: false
+    })
+    .toBuffer();
+}
+
+async function expectPngColorAt(pngBuffer, x, y, expectedRgb, label) {
+  const { data, info } = await sharp(pngBuffer).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const offset = (y * info.width + x) * info.channels;
+  const actualRgb = [data[offset], data[offset + 1], data[offset + 2]];
+  const withinTolerance = actualRgb.every((value, index) => Math.abs(value - expectedRgb[index]) <= 2);
+  expect(
+    withinTolerance,
+    `social preview upload PNG ${label} pixel at ${x},${y} must be rgb(${expectedRgb.join(",")}), got rgb(${actualRgb.join(",")})`
+  );
 }
 
 function expect(condition, message) {
