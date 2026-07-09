@@ -302,6 +302,7 @@ npm run check:audit-report
 npm run check:status-docs
 npm run check:metadata
 npm run check:security
+npm run check:package-readmes
 npm run check:docs
 npm run check:pack
 npm run check:claims
@@ -464,6 +465,10 @@ current deep audit.
 `npm run check:security` proves local secret/config paths are ignored, scans
 tracked public files for common token patterns, and verifies the CLI does not
 accept a bare API key option.
+
+`npm run check:package-readmes` proves the package README files shipped in the
+publishable tarballs preserve the current pre-publication boundary, command
+surface, validation scope, and no-workflow-execution/no-live-REST claims.
 
 `npm run check:docs` proves the README's documented `--help` output matches the
 built CLI and that every flag exposed by help output remains documented.
