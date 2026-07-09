@@ -2,6 +2,9 @@
 
 ## 0.0.0 - Unreleased
 
+- Added a public GitHub source-checkout verifier that clones
+  `sherunscode/n8n-lint`, runs `npm ci`, builds, follows the README quickstart,
+  and reruns packed-install smoke when local `HEAD` matches public `main`.
 - Added a clean source-checkout verifier that exports tracked files to a
   temporary directory, runs `npm ci`, builds, follows the README quickstart,
   proves a failing fixture, and reruns packed-install smoke outside the working

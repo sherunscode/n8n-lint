@@ -139,6 +139,10 @@ same real matrix CLI and JSON output, then checked by
 - Clean source-checkout proof that exports tracked files to a temp directory,
   runs `npm ci`, builds, follows the README quickstart, proves a failing fixture,
   and reruns the packed install smoke outside the working copy.
+- Public GitHub source-checkout proof that clones
+  `https://github.com/sherunscode/n8n-lint.git`, runs `npm ci`, builds, follows
+  the README quickstart, and reruns packed install smoke when local `HEAD`
+  matches public `main`.
 - Reproducible `Zie619/n8n-workflows` benchmark report with exact pass/fail and
   skipped-file counts.
 
@@ -297,6 +301,7 @@ npm run check:github-rendered-readme
 npm run check:github-profile
 npm run check:github-repo-settings
 npm run check:clean-source-checkout
+npm run check:public-source-checkout
 npm run check:readme-demo
 npm run check:animated-demo
 npm run check:terminal-output-demo
@@ -336,6 +341,13 @@ clean source checkout, runs `npm ci`, runs `npm run build`, follows the README
 quickstart command, verifies a failing fixture exits nonzero, and runs
 `npm run smoke:pack` there. It proves the public source-checkout path without
 claiming registry-backed `npx n8n-lint` before npm publication.
+
+`npm run check:public-source-checkout` clones the public GitHub repository from
+`https://github.com/sherunscode/n8n-lint.git`, runs `npm ci`, runs
+`npm run build`, follows the README quickstart command, and runs
+`npm run smoke:pack` from that clone. It enforces only when local `HEAD` matches
+public `main` (or when `N8N_LINT_PUBLIC_CLONE_FORCE=1` is set), so PRs can still
+test their own branch while `main` proves the public reader path.
 
 `npm run check:schema-config` proves the pinned bundled schema selections live
 in `packages/core/schema/bundled-n8n-package-config.json`, match the checked-in

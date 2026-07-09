@@ -124,7 +124,7 @@ REST claims.
   `check:github-action`, `check:github-pr-gate-proof`,
   `check:strategy-checklist`, `check:github-rendered-readme`,
   `check:github-profile`, `check:github-repo-settings`,
-  `check:clean-source-checkout`, `check:readme-demo`,
+  `check:clean-source-checkout`, `check:public-source-checkout`, `check:readme-demo`,
   `check:animated-demo`, `check:terminal-output-demo`, `check:matrix-demo`,
   `check:matrix-gif`, `check:social-preview`, `check:architecture-diagram`,
   `check:last-verified-badges`, `check:audit-report`, `check:status-docs`,
@@ -144,6 +144,11 @@ REST claims.
   packed-install smoke in a temporary directory outside the working copy. This
   does not replace the owner-gated registry-backed install proof after npm
   publication.
+- `npm run check:public-source-checkout` now proves a public GitHub clone with
+  `npm ci`, `npm run build`, README quickstart, and packed-install smoke when
+  local `HEAD` matches public `main`, while skipping PR branches until they are
+  merged. This proves the public source reader path without claiming npm
+  registry publication.
 - Secret-pattern scan found no OpenAI, GitHub, Anthropic, Gemini, Cloudflare, or
   n8n token pattern in tracked public surfaces.
 - `npm run check:security` now enforces ignored local secret/config files, public
@@ -277,8 +282,8 @@ REST claims.
   decay states.
 - `npm run check:audit-report` now enforces that this audit report retains the
   conditional/no-go verdicts, current package dry-run counts, quality gate list,
-  owner-gated remaining items, clean source-checkout proof, and README demo
-  proof.
+  owner-gated remaining items, clean source-checkout proof, public source
+  checkout proof, and README demo proof.
 - `npm run check:status-docs` now enforces that local build-loop status notes
   stay ignored and, when present, are clearly marked historical with a pointer
   back to this current audit.
