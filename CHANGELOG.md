@@ -2,6 +2,8 @@
 
 ## 0.0.0 - Unreleased
 
+- Reconciled the public GitHub repository topics with the full strategy topic set
+  and made the repo-settings checker enforce the exact list.
 - Added a GitHub-ready social preview PNG upload asset generated from the same
   checked benchmark, schema, and repository metadata as the SVG preview.
 - Added compact bundled n8n schema artifact generation from

@@ -135,6 +135,29 @@ expect(audit.includes("public GitHub-rendered README page"), "audit must mention
 expect(audit.includes("npm run check:github-profile"), "audit must mention the GitHub profile checker");
 expect(audit.includes("public She Runs Code organization profile"), "audit must mention public profile proof");
 expect(audit.includes("npm run check:github-repo-settings"), "audit must mention the GitHub repo settings checker");
+expect(audit.includes("exact strategy topic set"), "audit must mention exact GitHub strategy topic proof");
+for (const topic of [
+  "automation-testing",
+  "ci-cd",
+  "cli",
+  "continuous-integration",
+  "developer-tools",
+  "devops",
+  "github-actions",
+  "linter",
+  "n8n",
+  "n8n-nodes",
+  "n8n-workflow",
+  "pre-commit",
+  "rest-api",
+  "schema-validation",
+  "self-hosted",
+  "typescript",
+  "validation",
+  "workflow-automation"
+]) {
+  expect(audit.includes(`\`${topic}\``), `audit must mention exact GitHub topic: ${topic}`);
+}
 expect(audit.includes("usesCustomOpenGraphImage=false"), "audit must mention current GitHub custom Open Graph status");
 expect(audit.includes("npm run check:claims"), "audit must mention the claims checker");
 
