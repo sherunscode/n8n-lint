@@ -12,6 +12,7 @@ const actualHelp = await readCliHelp();
 expectHelpBlockMatchesCli();
 expectReadmeDocumentsAllHelpFlags();
 expectReadmeDocumentsCliOptionVariants();
+expectReadmeInstallShapeBoundaries();
 expectNoPlaceholderCopy();
 
 if (failures.length > 0) {
@@ -22,7 +23,13 @@ console.log(
   JSON.stringify(
     {
       ok: true,
-      checked: ["README --help output", "README CLI option table", "README all help flags", "placeholder copy scan"]
+      checked: [
+        "README --help output",
+        "README CLI option table",
+        "README all help flags",
+        "README install-shape boundaries",
+        "placeholder copy scan"
+      ]
     },
     null,
     2
@@ -100,6 +107,47 @@ function expectReadmeDocumentsCliOptionVariants() {
   }
 }
 
+function expectReadmeInstallShapeBoundaries() {
+  const bashBlocks = extractFencedBlocks("bash");
+  const quickstartBlock = bashBlocks.find(
+    (block) =>
+      block.includes("npm ci") &&
+      block.includes("npm run build") &&
+      block.includes("node packages/cli/dist/bin.js check examples/known-http-request-workflow.json")
+  );
+  if (quickstartBlock === undefined) {
+    failures.push("README quickstart must prove the source-checkout install path");
+  }
+
+  const packedSmokeBlocks = bashBlocks.filter((block) => block.includes("npx n8n-lint check workflow.json"));
+  if (packedSmokeBlocks.length !== 1) {
+    failures.push(
+      "README must include exactly one npx command block before publication, scoped to packed tarball smoke"
+    );
+    return;
+  }
+
+  const packedSmokeBlock = packedSmokeBlocks[0] ?? "";
+  for (const phrase of [
+    'PACK_DIR="$(mktemp -d)"',
+    'SMOKE_DIR="$(mktemp -d)"',
+    "npm pack --workspace packages/core",
+    "npm pack --workspace packages/cli",
+    'npm install "$PACK_DIR"/n8nproof-core-0.0.0.tgz "$PACK_DIR"/n8n-lint-0.0.0.tgz',
+    "npx n8n-lint check workflow.json"
+  ]) {
+    if (!packedSmokeBlock.includes(phrase)) {
+      failures.push(`README packed-tarball smoke block must include: ${phrase}`);
+    }
+  }
+
+  for (const forbidden of ["npm install n8n-lint", "npm i n8n-lint", "npm add n8n-lint"]) {
+    if (readme.includes(forbidden)) {
+      failures.push(`README must not include registry-backed install command before npm publication: ${forbidden}`);
+    }
+  }
+}
+
 function expectNoPlaceholderCopy() {
   const forbidden = ["TODO:", "Lorem ipsum", "Coming soon"];
   for (const phrase of forbidden) {
@@ -107,4 +155,9 @@ function expectNoPlaceholderCopy() {
       failures.push(`README must not contain placeholder copy: ${phrase}`);
     }
   }
+}
+
+function extractFencedBlocks(language) {
+  const pattern = new RegExp(`\`\`\`${language}\\r?\\n([\\s\\S]*?)\\r?\\n\`\`\``, "g");
+  return [...readme.matchAll(pattern)].map((match) => match[1] ?? "");
 }

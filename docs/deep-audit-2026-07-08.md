@@ -136,8 +136,10 @@ REST claims.
   shipped in tarballs preserve package names, current command surfaces, current
   validation scope, the pre-publication install boundary, and
   no-workflow-execution/no-live-REST boundaries.
-- `npm run check:docs` now enforces README `--help` parity with the built CLI
-  and documentation for every help-exposed CLI flag.
+- `npm run check:docs` now enforces README `--help` parity with the built CLI,
+  documentation for every help-exposed CLI flag, source-checkout quickstart
+  proof, and the pre-publication packed-tarball smoke boundary for any README
+  `npx n8n-lint` command.
 - `npm run check:pack` now enforces expected package file lists, forbidden-path
   exclusions, no bundled dependencies, and package size ceilings.
 - `npm run check:claims` now enforces the current-truth strategy banner and

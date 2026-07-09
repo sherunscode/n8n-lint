@@ -34,6 +34,8 @@
 - Added an executable docs contract gate that compares the README `--help`
   block against the built CLI and verifies every help-exposed CLI flag is
   documented.
+- Hardened the docs contract gate so README install commands stay limited to
+  the source-checkout and packed-tarball smoke paths before npm publication.
 - Added an executable package-content gate that fails if publishable tarballs
   include unexpected files, forbidden paths, bundled dependencies, or size
   regressions.

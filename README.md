@@ -476,7 +476,9 @@ publishable tarballs preserve the current pre-publication boundary, command
 surface, validation scope, and no-workflow-execution/no-live-REST claims.
 
 `npm run check:docs` proves the README's documented `--help` output matches the
-built CLI and that every flag exposed by help output remains documented.
+built CLI, every flag exposed by help output remains documented, and
+pre-publication install instructions stay limited to source-checkout and
+packed-tarball smoke paths.
 
 `npm run check:pack` proves the publishable tarballs contain only the expected
 dist, schema, package metadata, README, and LICENSE files.
