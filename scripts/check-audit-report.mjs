@@ -94,6 +94,11 @@ expect(audit.includes("final JSON summary"), "audit must mention final JSON summ
 expect(audit.includes("warning summary counts"), "audit must mention warning summary counts");
 expect(audit.includes("npm run check:package-readmes"), "audit must mention the package README checker");
 expect(hasPhrase(audit, "package README files shipped in tarballs"), "audit must mention package README tarball proof");
+expect(audit.includes("npm run check:docs"), "audit must mention the docs contract checker");
+expect(
+  hasPhrase(audit, "pre-publication packed-tarball smoke boundary"),
+  "audit must mention the README install-shape boundary proof"
+);
 expect(audit.includes("npm run check:live-rest-boundary"), "audit must mention the live REST boundary checker");
 expect(audit.includes("secrets.N8N_API_KEY"), "audit must mention encrypted GitHub Actions API-key handling");
 expect(audit.includes("docs/live-rest-threat-model.md"), "audit must mention the live REST threat model");
