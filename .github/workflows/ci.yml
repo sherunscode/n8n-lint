@@ -74,6 +74,7 @@ jobs:
           paths: |
             examples/known-http-request-workflow.json
             examples/passing-workflow.json
+            examples/action smoke/passing,100%.json
 
   action-smoke-required:
     name: action-smoke

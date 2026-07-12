@@ -1,6 +1,7 @@
 import { appendFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 interface ValidationIssue {
   severity?: unknown;
@@ -9,7 +10,7 @@ interface ValidationIssue {
   path?: unknown;
 }
 
-const actionRoot = requireEnvironment("GITHUB_ACTION_PATH");
+const actionDist = dirname(fileURLToPath(import.meta.url));
 const workspace = requireEnvironment("GITHUB_WORKSPACE");
 const paths = readInput("PATHS")
   .split(/\r?\n/)
@@ -20,7 +21,7 @@ const n8nVersion = readInput("N8N-VERSION") || "2.29.6";
 
 if (paths.length === 0) fail("paths input must include at least one path, directory, or glob.", 2);
 
-const cliPath = join(actionRoot, "action-dist", "cli", "bin.js");
+const cliPath = join(actionDist, "cli", "bin.js");
 const result = spawnSync(
   process.execPath,
   [cliPath, "check", ...paths, "--source", source, "--n8n-version", n8nVersion, "--json"],
@@ -168,7 +169,7 @@ function markdown(value: string): string {
 }
 
 function escapeProperty(value: string): string {
-  return escapeData(value).replace(/:/g, "%3A").replace(/,/g, "%2C");
+  return escapeData(value).replace(/\\/g, "%5C").replace(/:/g, "%3A").replace(/,/g, "%2C");
 }
 
 function escapeData(value: string): string {

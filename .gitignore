@@ -4,6 +4,8 @@ node_modules/
 !action-dist/node_modules/@n8nproof/core/
 !action-dist/node_modules/@n8nproof/core/**
 dist/
+!action-dist/node_modules/@n8nproof/core/dist/
+!action-dist/node_modules/@n8nproof/core/dist/**
 coverage/
 .env
 .env.*

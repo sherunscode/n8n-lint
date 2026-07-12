@@ -36,6 +36,7 @@ for (const phrase of [
   'readInput("PATHS")',
   'readInput("SOURCE")',
   'readInput("N8N-VERSION")',
+  "fileURLToPath(import.meta.url)",
   '"--json"',
   "emitAnnotations(payload)",
   "writeSummary(payload",
@@ -48,6 +49,11 @@ for (const phrase of [
 
 expect((actionSource.match(/"check"/g) ?? []).length === 1, "action runtime must execute validation exactly once");
 expect(!actionSource.includes("npm"), "action runtime must not invoke npm");
+expect(
+  !actionSource.includes("GITHUB_ACTION_PATH"),
+  "action runtime must resolve its bundled path from import.meta.url"
+);
+expect(actionSource.includes('replace(/\\\\/g, "%5C")'), "annotation properties must escape backslashes");
 
 for (const phrase of [
   "ubuntu-latest",
@@ -56,6 +62,7 @@ for (const phrase of [
   "node-version: 22",
   "node: [22, 24]",
   "uses: ./",
+  "examples/action smoke/passing,100%.json",
   "name: action-smoke"
 ])
   expect(ci.includes(phrase), `CI must include: ${phrase}`);
