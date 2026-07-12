@@ -32,9 +32,56 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: npm run quality
 
-      - name: Dogfood GitHub Action
+  runtime-matrix:
+    name: Runtime (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Verify runtime
+        run: npm run verify:fast
+
+  action-smoke-matrix:
+    name: Action smoke (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.0
+
+      - name: Dogfood packaged GitHub Action
         uses: ./
         with:
           paths: |
             examples/known-http-request-workflow.json
             examples/passing-workflow.json
+
+  action-smoke-required:
+    name: action-smoke
+    if: always()
+    needs: action-smoke-matrix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify cross-platform Action matrix
+        env:
+          RESULT: ${{ needs.action-smoke-matrix.result }}
+        run: test "$RESULT" = "success"

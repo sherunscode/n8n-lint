@@ -136,8 +136,9 @@ same real matrix CLI and JSON output, then checked by
 - Local status and decaying last-verified badge generation from real
   `check --json` output in markdown, JSON, or static SVG format.
 - Human-gated repair patches for schema-proven unknown top-level parameters.
-- Composite GitHub Action in `action.yml`, dogfooded by this repo's CI with
-  newline-safe path parsing.
+- Packaged Node 24 GitHub Action in `action.yml`, dogfooded on Linux, Windows,
+  and macOS with newline-safe path parsing. Consumer jobs do not install or
+  compile this repository.
 - Local quality gates for build, lint, format, fixtures, metadata, security
   hygiene, tests, and production dependency audit.
 - Packed-package install smoke test for the publishable core and CLI workspaces.
@@ -181,6 +182,7 @@ n8n-lint badge <check-result.json> [--kind status|last-verified] [--as-of YYYY-M
 
 ```text
 Usage:
+  n8n-lint --version
   n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0|matrix] [--json|--format github]
   n8n-lint repair <workflow.json> [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0] [--output fix.patch] [--apply --confirm] [--json]
   n8n-lint badge <check-result.json> [--kind status|last-verified] [--as-of YYYY-MM-DD] [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]
@@ -188,6 +190,7 @@ Usage:
 
 | Option                         |    Default | Description                                                                     |
 | ------------------------------ | ---------: | ------------------------------------------------------------------------------- |
+| `--version`                    |         no | Prints the CLI package version and exits.                                       |
 | `--source bundled-n8n-package` |        yes | Uses the checked-in compact schema artifact.                                    |
 | `--source local-placeholder`   |         no | Structure-only validation for adapter testing.                                  |
 | `--n8n-version 2.29.6`         |        yes | Uses the default pinned bundled artifact.                                       |
@@ -234,8 +237,8 @@ See `docs/json-output.md` for the current `--json` output contract.
 See `docs/exit-codes.md` for the executable exit-code contract.
 See `docs/batch-check-design.md` for batch mode behavior, skipped-file rules,
 and exit codes.
-See `docs/ci-setup.md` for GitHub Actions annotation output and current CI
-boundaries, including the composite action.
+See `docs/ci-setup.md` for GitHub Actions annotation output and the packaged
+JavaScript Action boundary.
 See `docs/badge-output.md` for local badge generation from checked output.
 See `docs/schema-matrix.md` for pinned schema artifacts and matrix behavior.
 See `docs/repair.md` for human-gated repair boundaries.
@@ -438,12 +441,12 @@ output SVG is generated from the committed `Zie619/n8n-workflows` report and
 keeps discovered JSON, selected workflow, pass, fail, skipped, failure-category,
 and no-execution/live-REST boundary text aligned.
 
-`npm run check:github-action` proves the composite action metadata, Node/npm
-runtime preflight, newline-safe path parsing, `--format github` invocation,
-last-verified badge summary, CI dogfood step, tool metadata, and Marketplace
-boundary stay aligned. Consumer workflows must provide Node.js `>=18.18.0` and
-npm before `uses: sherunscode/n8n-lint`. For the action's `paths` input, pass
-one path, directory, or glob per line.
+`npm run check:github-action` and `npm run check:action-dist` prove the Node 24
+Action metadata, deterministic bundled runtime, newline-safe path parsing,
+single validation pass, escaped annotations, last-verified badge summary,
+cross-platform CI dogfood, and Marketplace boundary stay aligned. Consumer
+workflows need only check out the files to validate. For the action's `paths`
+input, pass one path, directory, or glob per line.
 
 `npm run check:github-pr-gate-proof` proves the PR merge-gate screenshot is a
 real PNG asset backed by public GitHub metadata for proof-only PR #6, including
@@ -659,9 +662,9 @@ MVP scope:
 - Batch checking for repositories with multiple workflow JSON files.
 - Local static badge generation from real check results.
 - Human-gated repair patches for schema-proven unknown top-level parameters.
-- Composite GitHub Action, with semver tags and Marketplace listing still
-  release-gated, Node.js `>=18.18.0`/npm required before use, and one path,
-  directory, or glob per line in the action input.
+- Packaged Node 24 GitHub Action, with semver tags and Marketplace listing still
+  release-gated, no consumer install/build step, and one path, directory, or
+  glob per line in the action input.
 - Release proof workflow for quality, release-contract checks, package dry-runs,
   and local tarball artifacts without publish authority.
 - Honest docs and benchmark harness.

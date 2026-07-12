@@ -1,18 +1,15 @@
 #!/usr/bin/env node
 import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
-import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { basename, dirname, join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
-const require = createRequire(import.meta.url);
 const repoRoot = dirname(fileURLToPath(new URL("../package.json", import.meta.url)));
 const config = await readBundledSchemaConfig();
 const packageName = config.packageName;
 const nodeMetadataFile = config.nodeMetadataFile;
 const credentialMetadataFile = config.credentialMetadataFile;
-const defaultPackageVersion = config.defaultPackageVersion;
 const selections = config.selections;
 
 const requestedVersions = readRequestedVersions(process.argv.slice(2));
@@ -148,15 +145,6 @@ async function generateArtifact(version) {
 }
 
 async function resolvePackageRoot(version) {
-  if (version === defaultPackageVersion) {
-    const packageJsonPath = require.resolve(`${packageName}/package.json`);
-    return {
-      packageRoot: dirname(packageJsonPath),
-      source: "installed-dev-dependency",
-      async cleanup() {}
-    };
-  }
-
   const workDir = await mkdtemp(join(tmpdir(), "n8n-lint-schema-"));
   const packResult = runCommand(npmExecutable(), ["pack", `${packageName}@${version}`, "--pack-destination", workDir]);
   const tarballName = packResult.stdout
@@ -176,7 +164,7 @@ async function resolvePackageRoot(version) {
 
   return {
     packageRoot: join(extractDir, "package"),
-    source: "npm-pack-tarball",
+    source: "isolated-npm-pack-tarball",
     async cleanup() {
       await rm(workDir, { recursive: true, force: true });
     }

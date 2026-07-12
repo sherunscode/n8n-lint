@@ -88,6 +88,9 @@ function git(args, cwd = process.cwd()) {
 }
 
 function run(command, args, cwd, options = {}) {
+  const label = `${command} ${args.join(" ")}`;
+  const timeout = options.timeoutMs ?? 240_000;
+  process.stderr.write(`[public-source] START ${label} (timeout ${Math.round(timeout / 1000)}s)\n`);
   const resolved = resolveCommand(command, args);
   const result = spawnSync(resolved.executable, resolved.args, {
     cwd,
@@ -99,13 +102,20 @@ function run(command, args, cwd, options = {}) {
       NPM_CONFIG_FUND: "false",
       NPM_CONFIG_PROGRESS: "false"
     },
-    stdio: "pipe"
+    stdio: "pipe",
+    timeout
   });
+
+  if (result.error?.code === "ETIMEDOUT") {
+    throw new Error(`${label} timed out after ${timeout}ms`);
+  }
 
   if (result.status !== 0) {
     const output = [result.stdout, result.stderr].filter(Boolean).join("\n");
     throw new Error(`${command} ${args.join(" ")} failed with exit ${result.status}${output ? `\n${output}` : ""}`);
   }
+
+  process.stderr.write(`[public-source] PASS  ${label}\n`);
 
   if (!options.capture && result.stdout.trim() !== "") {
     process.stdout.write(result.stdout);

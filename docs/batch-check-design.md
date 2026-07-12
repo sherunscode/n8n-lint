@@ -29,7 +29,15 @@ n8n-lint check workflows/a.json workflows/b.json package.json
 
 ## File Classification
 
-Each `.json` file becomes one of:
+Input provenance controls classification. An explicitly named JSON file is an
+assertion that the file is a workflow: malformed or non-workflow content fails
+the command. A JSON file found through a directory or glob may be classified as
+ordinary repository data and skipped. Recursive discovery ignores `.git`,
+`node_modules`, `dist`, `coverage`, `.cache`, `.next`, `.turbo`, `out`, and
+`target`; explicitly naming a file inside one of those directories still checks
+that file.
+
+Each discovered `.json` file becomes one of:
 
 | Status    | Meaning                                                                        |
 | --------- | ------------------------------------------------------------------------------ |
@@ -38,8 +46,10 @@ Each `.json` file becomes one of:
 | `skipped` | File is JSON but is not an n8n workflow object with a top-level `nodes` array. |
 | `error`   | File could not be read or parsed.                                              |
 
-Skipped files are counted and reported, not treated as validation failures by
-default. Parse/read/input errors fail the run.
+Skipped discovered files are counted and reported, not treated as validation
+failures. Explicit malformed/non-workflow files and all read/input errors fail
+the run. Duplicate paths are validated once. Results are deterministically
+sorted after bounded concurrent validation.
 
 ## Human Output
 
@@ -122,7 +132,7 @@ final top-level field:
 
 | Exit | Meaning                                                                              |
 | ---: | ------------------------------------------------------------------------------------ |
-|  `0` | All discovered workflows passed; skipped files are allowed.                          |
+|  `0` | All workflows passed; only discovered ordinary JSON was skipped.                     |
 |  `1` | One or more workflows failed validation, or one or more files had read/parse errors. |
 |  `2` | CLI usage or configuration error.                                                    |
 
@@ -135,8 +145,10 @@ final top-level field:
 
 ## Verified Gates
 
-- `npm run test:cli` covers mixed explicit inputs, JSON summary output, and glob
-  skip behavior.
+- `npm run test:coverage` covers provenance, ignored traversal, deterministic
+  globs, duplicate inputs, and strict option parsing.
+- `npm run test:cli` covers explicit failures, mixed inputs, JSON summary
+  output, and discovered-file skip behavior.
 - `npm run check:cli-output` proves warning counts and final summary ordering
   for human and JSON output.
 - `npm run quality` runs the batch fixture checks through the normal CI gate.

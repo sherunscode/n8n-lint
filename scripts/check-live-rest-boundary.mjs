@@ -6,8 +6,9 @@ import { readFile } from "node:fs/promises";
 
 const failures = [];
 const packageJson = await readJson("package.json");
+const qualityRunner = await readText("scripts/run-quality-group.mjs");
 const tool = await readJson("tool.json");
-const cliSource = await readText("packages/cli/src/bin.ts");
+const cliSource = [await readText("packages/cli/src/bin.ts"), await readText("packages/cli/src/args.ts")].join("\n");
 const schemaSource = await readText("packages/core/src/schema-source.ts");
 
 expect(
@@ -15,8 +16,8 @@ expect(
   "package.json must expose check:live-rest-boundary"
 );
 expect(
-  typeof packageJson.scripts?.quality === "string" &&
-    packageJson.scripts.quality.includes("npm run check:live-rest-boundary"),
+  packageJson.scripts?.quality === "node scripts/run-quality-group.mjs quality" &&
+    qualityRunner.includes('"check:live-rest-boundary"'),
   "package.json quality gate must include check:live-rest-boundary"
 );
 expect(
@@ -87,7 +88,7 @@ await expectDocPhrases("README.md", [
   "npm run check:live-rest-boundary",
   "live REST source boundary stays locked"
 ]);
-await expectDocPhrases("docs/deep-audit-2026-07-08.md", [
+await expectDocPhrases("docs/deep-audit-2026-07-11.md", [
   "npm run check:live-rest-boundary",
   "live REST source boundary stays locked",
   "Live REST schema validation"

@@ -11,10 +11,10 @@ const packageName = readString(config.packageName, "packageName");
 const defaultPackageVersion = readString(config.defaultPackageVersion, "defaultPackageVersion");
 const schemaDirectory = readString(config.schemaDirectory, "schemaDirectory");
 
-if (packageName !== undefined && defaultPackageVersion !== undefined) {
+if (packageName !== undefined) {
   expect(
-    rootPackage.devDependencies?.[packageName] === defaultPackageVersion,
-    `root devDependency ${packageName} must match config defaultPackageVersion ${defaultPackageVersion}`
+    rootPackage.devDependencies?.[packageName] === undefined && rootPackage.dependencies?.[packageName] === undefined,
+    `root package must not install heavy generator input ${packageName}`
   );
 }
 
@@ -64,7 +64,7 @@ console.log(
       packageName,
       selections: Object.keys(selections).sort((left, right) => left.localeCompare(right)),
       checked: [
-        "root devDependency pin",
+        "isolated generator dependency boundary",
         "config selection shape",
         "artifact selection metadata",
         "runtime source has no pinned selection literals",

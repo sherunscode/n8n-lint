@@ -9,15 +9,16 @@ const readme = await readText("README.md");
 const ciSetup = await readText("docs/ci-setup.md");
 const releaseChecklist = await readText("docs/release-checklist.md");
 const releaseCommandPlan = await readText("docs/release-command-plan-v0.1.0.md");
-const deepAudit = await readText("docs/deep-audit-2026-07-08.md");
+const deepAudit = await readText("docs/deep-audit-2026-07-11.md");
+const qualityRunner = await readText("scripts/run-quality-group.mjs");
 
 expect(
   packageJson.scripts?.["check:release-workflow"] === "node scripts/check-release-workflow.mjs",
   "package.json must expose the release workflow checker"
 );
 expect(
-  typeof packageJson.scripts?.quality === "string" &&
-    packageJson.scripts.quality.includes("npm run check:release-workflow"),
+  packageJson.scripts?.quality === "node scripts/run-quality-group.mjs quality" &&
+    qualityRunner.includes('"check:release-workflow"'),
   "quality must include the release workflow checker"
 );
 
@@ -33,11 +34,11 @@ for (const phrase of [
   "runs-on: ubuntu-latest",
   "actions/checkout@v7.0.0",
   "actions/setup-node@v6.4.0",
-  "node-version: 22",
+  "node-version: 24",
   "cache: npm",
   "npm ci",
   "GITHUB_TOKEN: ${{ github.token }}",
-  "npm run quality",
+  "npm run quality:release",
   "npm run check:npm-registry-boundary",
   "npm run check:release-readiness",
   "npm run check:release-notes",
@@ -85,7 +86,7 @@ for (const phrase of [
 for (const phrase of [
   "The release proof workflow is `.github/workflows/release.yml`.",
   "It runs on manual dispatch and `main` pushes.",
-  "It runs `npm run quality`, the release contract checks, package dry-runs, and uploads local tarball artifacts.",
+  "It runs `npm run quality:release`, the release contract checks, package dry-runs, and uploads local tarball artifacts.",
   "It does not request `NPM_TOKEN`, does not use write permissions, does not run `npm publish`, does not push tags, and does not create a GitHub Release.",
   "Actual npm publication, tag push, GitHub Release creation, and public launch posts remain owner-gated."
 ]) {

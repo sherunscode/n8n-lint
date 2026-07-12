@@ -95,9 +95,11 @@ async function expectStrategyCurrentTruth() {
 
   strategyCurrentTruth = "present";
   const requiredPhrases = [
-    "## Current implementation truth (2026-07-08)",
+    "## Current implementation truth (2026-07-11)",
     "Canonical public repo: `sherunscode/n8n-lint`.",
     "Verified schema source: bundled `n8n-nodes-base@2.29.6` plus a pinned",
+    "GitHub Action: deterministic packaged JavaScript Action using Node 24.",
+    "Release blocker: bundled schema artifacts are derived from n8n material",
     "Not claimed yet: npm registry publication, live REST schema validation,"
   ];
 

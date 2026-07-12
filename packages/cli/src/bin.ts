@@ -1,12 +1,10 @@
 #!/usr/bin/env node
-import { readdir, readFile, stat, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { readFile, writeFile } from "node:fs/promises";
 import {
   bundledN8nPackageVersions,
   createBundledN8nPackageSchemaSource,
   createLocalPlaceholderSchemaSource,
   defaultBundledN8nPackageVersion,
-  isBundledN8nPackageVersion,
   validateWorkflow,
   type BundledN8nPackageSelection,
   type BundledN8nPackageVersion,
@@ -15,32 +13,19 @@ import {
   type SchemaSourceKind,
   type ValidationIssue
 } from "@n8nproof/core";
+import {
+  type BadgeFormat,
+  type BadgeKind,
+  type CliSchemaSource,
+  type OutputFormat,
+  type ParsedArgs,
+  parseArgs
+} from "./args.js";
+import { displayPath, inputRequiresBatch, resolveBatchInputs, type InputOrigin } from "./discovery.js";
 
-type CliSchemaSource = Extract<SchemaSourceKind, "bundled-n8n-package" | "local-placeholder">;
 type BatchStatus = "passed" | "failed" | "skipped" | "error";
-type BadgeFormat = "markdown" | "json" | "svg";
-type BadgeKind = "status" | "last-verified";
-type OutputFormat = BadgeFormat | "github";
 type CheckFormat = "human" | "json" | "github";
-type N8nVersionSelection = string;
-
-interface ParsedArgs {
-  command?: string;
-  inputs: string[];
-  source: CliSchemaSource;
-  json: boolean;
-  help: boolean;
-  format: OutputFormat;
-  formatWasSet: boolean;
-  outputPath?: string;
-  label: string;
-  labelWasSet: boolean;
-  badgeKind: BadgeKind;
-  asOfDate?: string;
-  n8nVersion: N8nVersionSelection;
-  apply: boolean;
-  confirm: boolean;
-}
+const cliVersion = "0.0.0";
 
 interface BatchFileResult {
   filePath: string;
@@ -120,7 +105,10 @@ try {
   process.exit(2);
 }
 
-if (parsed.help) {
+if (parsed.version) {
+  console.log(cliVersion);
+  process.exitCode = 0;
+} else if (parsed.help) {
   printHelp();
   process.exitCode = 0;
 } else if (parsed.command === "check" && parsed.inputs.length > 0) {
@@ -180,215 +168,6 @@ if (parsed.help) {
   process.exitCode = 2;
 }
 
-function parseArgs(args: string[]): ParsedArgs {
-  const parsedArgs: ParsedArgs = {
-    inputs: [],
-    source: "bundled-n8n-package",
-    json: false,
-    help: false,
-    format: "markdown",
-    formatWasSet: false,
-    label: "n8n-lint",
-    labelWasSet: false,
-    badgeKind: "status",
-    n8nVersion: defaultBundledN8nPackageVersion,
-    apply: false,
-    confirm: false
-  };
-
-  for (let index = 0; index < args.length; index += 1) {
-    const arg = args[index];
-    if (arg === undefined) {
-      continue;
-    }
-
-    if (arg === "--help" || arg === "-h") {
-      parsedArgs.help = true;
-      continue;
-    }
-
-    if (arg === "--json") {
-      parsedArgs.json = true;
-      if (parsedArgs.command === "badge") {
-        parsedArgs.format = "json";
-      }
-      continue;
-    }
-
-    if (arg === "--apply") {
-      parsedArgs.apply = true;
-      continue;
-    }
-
-    if (arg === "--confirm") {
-      parsedArgs.confirm = true;
-      continue;
-    }
-
-    if (arg === "--n8n-version") {
-      const n8nVersion = args[index + 1];
-      if (n8nVersion === undefined) {
-        throw new Error("--n8n-version requires a pinned version or matrix.");
-      }
-
-      parsedArgs.n8nVersion = parseN8nVersionSelection(n8nVersion);
-      index += 1;
-      continue;
-    }
-
-    if (arg.startsWith("--n8n-version=")) {
-      parsedArgs.n8nVersion = parseN8nVersionSelection(arg.slice("--n8n-version=".length));
-      continue;
-    }
-
-    if (arg === "--format") {
-      const format = args[index + 1];
-      if (format !== "markdown" && format !== "json" && format !== "svg" && format !== "github") {
-        throw new Error("--format must be markdown, json, svg, or github.");
-      }
-
-      parsedArgs.format = format;
-      parsedArgs.formatWasSet = true;
-      index += 1;
-      continue;
-    }
-
-    if (arg.startsWith("--format=")) {
-      const format = arg.slice("--format=".length);
-      if (format !== "markdown" && format !== "json" && format !== "svg" && format !== "github") {
-        throw new Error("--format must be markdown, json, svg, or github.");
-      }
-
-      parsedArgs.format = format;
-      parsedArgs.formatWasSet = true;
-      continue;
-    }
-
-    if (arg === "--output") {
-      const outputPath = args[index + 1];
-      if (outputPath === undefined || outputPath.trim() === "") {
-        throw new Error("--output requires a file path.");
-      }
-
-      parsedArgs.outputPath = outputPath;
-      index += 1;
-      continue;
-    }
-
-    if (arg.startsWith("--output=")) {
-      const outputPath = arg.slice("--output=".length);
-      if (outputPath.trim() === "") {
-        throw new Error("--output requires a file path.");
-      }
-
-      parsedArgs.outputPath = outputPath;
-      continue;
-    }
-
-    if (arg === "--label") {
-      const label = args[index + 1];
-      if (label === undefined || label.trim() === "") {
-        throw new Error("--label requires a non-empty value.");
-      }
-
-      parsedArgs.label = label;
-      parsedArgs.labelWasSet = true;
-      index += 1;
-      continue;
-    }
-
-    if (arg.startsWith("--label=")) {
-      const label = arg.slice("--label=".length);
-      if (label.trim() === "") {
-        throw new Error("--label requires a non-empty value.");
-      }
-
-      parsedArgs.label = label;
-      parsedArgs.labelWasSet = true;
-      continue;
-    }
-
-    if (arg === "--kind") {
-      const kind = args[index + 1];
-      if (kind === undefined) {
-        throw new Error("--kind requires status or last-verified.");
-      }
-
-      parsedArgs.badgeKind = parseBadgeKind(kind);
-      index += 1;
-      continue;
-    }
-
-    if (arg.startsWith("--kind=")) {
-      parsedArgs.badgeKind = parseBadgeKind(arg.slice("--kind=".length));
-      continue;
-    }
-
-    if (arg === "--as-of") {
-      const asOfDate = args[index + 1];
-      if (asOfDate === undefined || asOfDate.trim() === "") {
-        throw new Error("--as-of requires a YYYY-MM-DD date.");
-      }
-
-      parsedArgs.asOfDate = asOfDate;
-      index += 1;
-      continue;
-    }
-
-    if (arg.startsWith("--as-of=")) {
-      const asOfDate = arg.slice("--as-of=".length);
-      if (asOfDate.trim() === "") {
-        throw new Error("--as-of requires a YYYY-MM-DD date.");
-      }
-
-      parsedArgs.asOfDate = asOfDate;
-      continue;
-    }
-
-    if (arg === "--source") {
-      const source = args[index + 1];
-      if (source !== "bundled-n8n-package" && source !== "local-placeholder") {
-        throw new Error("--source must be bundled-n8n-package or local-placeholder.");
-      }
-
-      parsedArgs.source = source;
-      index += 1;
-      continue;
-    }
-
-    if (arg.startsWith("--source=")) {
-      const source = arg.slice("--source=".length);
-      if (source !== "bundled-n8n-package" && source !== "local-placeholder") {
-        throw new Error("--source must be bundled-n8n-package or local-placeholder.");
-      }
-
-      parsedArgs.source = source;
-      continue;
-    }
-
-    if (arg.startsWith("-") && parsedArgs.command !== undefined) {
-      throw new Error(`Unexpected option: ${arg}`);
-    }
-
-    if (parsedArgs.command === undefined) {
-      parsedArgs.command = arg;
-      continue;
-    }
-
-    parsedArgs.inputs.push(arg);
-  }
-
-  return parsedArgs;
-}
-
-function parseBadgeKind(value: string): BadgeKind {
-  if (value === "status" || value === "last-verified") {
-    return value;
-  }
-
-  throw new Error("--kind must be status or last-verified.");
-}
-
 function readCheckFormat(options: ParsedArgs): CheckFormat | undefined {
   if (options.json && options.format === "github") {
     console.error("check cannot combine --json with --format github.");
@@ -430,30 +209,6 @@ function colorEnabled(stream: NodeJS.WriteStream): boolean {
   }
 
   return stream.isTTY;
-}
-
-function parseN8nVersionSelection(value: string): N8nVersionSelection {
-  if (value === "matrix") {
-    return value;
-  }
-
-  if (isBundledN8nPackageVersion(value)) {
-    return value;
-  }
-
-  throw new Error(`--n8n-version must be one of ${bundledN8nPackageVersions.join(", ")} or matrix.`);
-}
-
-async function inputRequiresBatch(input: string): Promise<boolean> {
-  if (hasGlobCharacters(input)) {
-    return true;
-  }
-
-  try {
-    return (await stat(input)).isDirectory();
-  } catch {
-    return false;
-  }
 }
 
 async function runSingleFile(filePath: string, schemaSource: SchemaSource, format: CheckFormat): Promise<number> {
@@ -748,9 +503,11 @@ async function runBatch(inputs: string[], schemaSource: SchemaSource): Promise<B
     });
   }
 
-  for (const filePath of resolved.files) {
-    results.push(await checkBatchFile(filePath, createLoadedSchemaSource(sourceSnapshot)));
-  }
+  results.push(
+    ...(await mapConcurrent(resolved.files, 8, ({ filePath, origin }) =>
+      checkBatchFile(filePath, createLoadedSchemaSource(sourceSnapshot), origin)
+    ))
+  );
 
   const summary = summarizeBatch(results);
   return {
@@ -764,14 +521,18 @@ async function runBatch(inputs: string[], schemaSource: SchemaSource): Promise<B
   };
 }
 
-async function checkBatchFile(filePath: string, schemaSource: SchemaSource): Promise<BatchFileResult> {
+async function checkBatchFile(
+  filePath: string,
+  schemaSource: SchemaSource,
+  origin: InputOrigin
+): Promise<BatchFileResult> {
   const resultPath = displayPath(filePath);
 
   try {
     const raw = await readFile(filePath, "utf8");
     const workflow = JSON.parse(raw) as unknown;
 
-    if (!isWorkflowCandidate(workflow)) {
+    if (!isWorkflowCandidate(workflow) && origin === "discovered") {
       return {
         filePath: resultPath,
         status: "skipped",
@@ -1042,159 +803,6 @@ function escapeGithubProperty(value: string): string {
 
 function escapeGithubData(value: string): string {
   return value.replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A");
-}
-
-async function resolveBatchInputs(inputs: string[]): Promise<{
-  files: string[];
-  errors: Array<{ filePath: string; error: string }>;
-}> {
-  const files = new Set<string>();
-  const errors: Array<{ filePath: string; error: string }> = [];
-
-  for (const input of inputs) {
-    try {
-      const resolvedFiles = hasGlobCharacters(input)
-        ? await resolveGlobInput(input)
-        : await resolveFileOrDirectoryInput(input);
-
-      if (resolvedFiles.length === 0) {
-        errors.push({ filePath: input, error: "No files matched input." });
-        continue;
-      }
-
-      for (const file of resolvedFiles) {
-        files.add(path.resolve(file));
-      }
-    } catch (error) {
-      errors.push({
-        filePath: input,
-        error: error instanceof Error ? error.message : String(error)
-      });
-    }
-  }
-
-  return {
-    files: [...files].sort((left, right) => displayPath(left).localeCompare(displayPath(right))),
-    errors
-  };
-}
-
-async function resolveFileOrDirectoryInput(input: string): Promise<string[]> {
-  const inputStat = await stat(input);
-  if (inputStat.isDirectory()) {
-    return collectJsonFiles(input);
-  }
-
-  if (inputStat.isFile()) {
-    return [input];
-  }
-
-  return [];
-}
-
-async function resolveGlobInput(pattern: string): Promise<string[]> {
-  const baseDirectory = getGlobBase(pattern);
-  const candidates = await collectFiles(baseDirectory);
-  const matcher = globToRegExp(normalizePathForMatch(pattern));
-  const isAbsolutePattern = path.isAbsolute(pattern);
-
-  return candidates.filter((candidate) => {
-    const candidateForMatch = normalizePathForMatch(
-      isAbsolutePattern ? path.resolve(candidate) : path.relative(process.cwd(), candidate)
-    );
-    return matcher.test(candidateForMatch);
-  });
-}
-
-async function collectJsonFiles(directory: string): Promise<string[]> {
-  const files = await collectFiles(directory);
-  return files.filter((file) => file.toLowerCase().endsWith(".json"));
-}
-
-async function collectFiles(directory: string): Promise<string[]> {
-  const entries = await readdir(directory, { withFileTypes: true });
-  const files: string[] = [];
-
-  for (const entry of entries) {
-    const entryPath = path.join(directory, entry.name);
-    if (entry.isDirectory()) {
-      files.push(...(await collectFiles(entryPath)));
-      continue;
-    }
-
-    if (entry.isFile()) {
-      files.push(entryPath);
-    }
-  }
-
-  return files;
-}
-
-function getGlobBase(pattern: string): string {
-  const normalized = normalizePathForMatch(pattern);
-  const wildcardIndex = normalized.search(/[*?]/);
-  if (wildcardIndex === -1) {
-    return path.dirname(pattern);
-  }
-
-  const fixedPrefix = normalized.slice(0, wildcardIndex);
-  const lastSlash = fixedPrefix.lastIndexOf("/");
-  if (lastSlash === -1) {
-    return ".";
-  }
-
-  const base = fixedPrefix.slice(0, lastSlash);
-  return base === "" ? path.parse(process.cwd()).root : path.normalize(base);
-}
-
-function globToRegExp(pattern: string): RegExp {
-  let regex = "^";
-  for (let index = 0; index < pattern.length; index += 1) {
-    const char = pattern[index] as string;
-    const next = pattern[index + 1];
-
-    if (char === "*") {
-      if (next === "*") {
-        const afterNext = pattern[index + 2];
-        if (afterNext === "/") {
-          regex += "(?:.*/)?";
-          index += 2;
-        } else {
-          regex += ".*";
-          index += 1;
-        }
-      } else {
-        regex += "[^/]*";
-      }
-      continue;
-    }
-
-    if (char === "?") {
-      regex += "[^/]";
-      continue;
-    }
-
-    regex += escapeRegExp(char);
-  }
-
-  regex += "$";
-  return new RegExp(regex);
-}
-
-function hasGlobCharacters(input: string): boolean {
-  return /[*?]/.test(input);
-}
-
-function normalizePathForMatch(value: string): string {
-  return value.replace(/\\/g, "/");
-}
-
-function displayPath(filePath: string): string {
-  return normalizePathForMatch(path.relative(process.cwd(), path.resolve(filePath)));
-}
-
-function escapeRegExp(value: string): string {
-  return value.replace(/[\\^$+?.()|[\]{}]/g, "\\$&");
 }
 
 function isWorkflowCandidate(value: unknown): boolean {
@@ -1492,6 +1100,27 @@ function createLoadedSchemaSource(snapshot: Awaited<ReturnType<SchemaSource["loa
   };
 }
 
+async function mapConcurrent<TInput, TOutput>(
+  values: readonly TInput[],
+  concurrency: number,
+  mapper: (value: TInput) => Promise<TOutput>
+): Promise<TOutput[]> {
+  const results = new Array<TOutput>(values.length);
+  let nextIndex = 0;
+
+  const worker = async (): Promise<void> => {
+    while (nextIndex < values.length) {
+      const index = nextIndex;
+      nextIndex += 1;
+      const value = values[index];
+      if (value !== undefined) results[index] = await mapper(value);
+    }
+  };
+
+  await Promise.all(Array.from({ length: Math.min(Math.max(concurrency, 1), values.length) }, () => worker()));
+  return results;
+}
+
 function summarizeBatch(results: BatchFileResult[]): BatchSummary {
   const summary: BatchSummary = {
     totalFiles: results.length,
@@ -1605,6 +1234,7 @@ function printHelp(): void {
   console.log(
     [
       "Usage:",
+      "  n8n-lint --version",
       "  n8n-lint check <workflow.json|directory|glob> [...inputs] [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0|matrix] [--json|--format github]",
       "  n8n-lint repair <workflow.json> [--source bundled-n8n-package|local-placeholder] [--n8n-version 2.29.6|2.30.0] [--output fix.patch] [--apply --confirm] [--json]",
       "  n8n-lint badge <check-result.json> [--kind status|last-verified] [--as-of YYYY-MM-DD] [--format markdown|json|svg] [--label n8n-lint] [--output badge.svg]"

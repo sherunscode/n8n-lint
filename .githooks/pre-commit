@@ -3,7 +3,7 @@ set -u
 
 log_file="${TMPDIR:-/tmp}/n8n-lint-pre-commit-$$.log"
 
-if npm run quality >"$log_file" 2>&1; then
+if npm run verify:fast >"$log_file" 2>&1; then
   rm -f "$log_file"
   exit 0
 else

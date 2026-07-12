@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "files": {
+    "cli/args.js": "8c09ebd3e2a1df94b8d56fc220e5d514f95104798b49a951be85978e6478bc18",
+    "cli/bin.js": "98ac23fa981b7764dab5f2c0edb33738d10be3ffdb77bedbea2ac7f203153635",
+    "cli/discovery.js": "7ef00f39057b8592f76bac07f35a5ffb14ba144f9e2658275ab7fad5cad0188c",
+    "cli/package.json": "3ca9d4afd21425087cf31893b8f9f63c81b0b8408db5e343ca76e5f8aa26ab9a",
+    "index.js": "7c3f81bbd4127c3aee641fcbb48f52706ae732c3520f9af9e2ce120ed2c74edb",
+    "node_modules/@n8nproof/core/dist/index.js": "ad81be3641dbd4e481ae1701c35e09c32ae2e9ec4053af5e9270cf6d9f5a9e96",
+    "node_modules/@n8nproof/core/dist/schema-source.js": "2263c050dd9d140ff62677d259a0253990f724c5bef8f2ef11979cae1b00b6ef",
+    "node_modules/@n8nproof/core/LICENSE": "6e41a5c33f6e526b4ebf144e6bef61c0e7e654063fb3f970784015b9206cd0d4",
+    "node_modules/@n8nproof/core/LICENSE_N8N_SUSTAINABLE_USE.md": "dfcfe142104f828b1d473d8b8e0c901d053a563f8650ce6a3d9392eb830aa593",
+    "node_modules/@n8nproof/core/package.json": "bf7a55a047a4962fbd1a4b42e806efd6c42a75c832264349de550e81d17e0ed3",
+    "node_modules/@n8nproof/core/schema/bundled-n8n-package-2.30.0.json": "7263b8798337e728263a94d46b0002188e31f2632c51d1aa16929f8633e6b2b0",
+    "node_modules/@n8nproof/core/schema/bundled-n8n-package-config.json": "80b76f6ee20d2ef7b3feeaceab7d6398e4c98a137a25d7e14620cac397c8b516",
+    "node_modules/@n8nproof/core/schema/bundled-n8n-package.json": "9e1498881eddfbb81bfe48a41fa6bfa47591a519de0d1e3088c987197610ad54",
+    "node_modules/@n8nproof/core/THIRD_PARTY_NOTICES.md": "9f6c23ff27a7a8099b8f3eb3ed64dccc3d53de4041d265a8dc722290715c22f4",
+    "package.json": "3ca9d4afd21425087cf31893b8f9f63c81b0b8408db5e343ca76e5f8aa26ab9a"
+  }
+}
