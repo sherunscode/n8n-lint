@@ -1,0 +1,353 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/sherunscode/n8n-lint/schemas/check-result.v1.schema.json",
+  "title": "n8n-lint check --json result",
+  "description": "Machine-readable schema for stdout payloads emitted by n8n-lint check --json.",
+  "oneOf": [
+    { "$ref": "#/definitions/singleFileResult" },
+    { "$ref": "#/definitions/batchResult" },
+    { "$ref": "#/definitions/matrixResult" }
+  ],
+  "definitions": {
+    "schemaSource": {
+      "type": "string",
+      "enum": ["bundled-n8n-package", "local-placeholder", "live-rest"]
+    },
+    "checkedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "validationIssue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["severity", "code", "message", "path"],
+      "properties": {
+        "severity": {
+          "type": "string",
+          "enum": ["error", "warning"]
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        }
+      }
+    },
+    "batchSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["totalFiles", "workflows", "passed", "failed", "warnings", "skipped", "errors"],
+      "properties": {
+        "totalFiles": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "workflows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "passed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "warnings": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "skipped": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "errors": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "packageInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "metadataFiles"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "metadataFiles": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["nodes", "credentials"],
+          "properties": {
+            "nodes": {
+              "type": "string",
+              "minLength": 1
+            },
+            "credentials": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "bundledSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["referencePackage", "packageName", "packageVersion", "workflowPackageVersion", "reason"],
+      "properties": {
+        "referencePackage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "packageName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "packageVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "workflowPackageVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "matrixStatus": {
+      "type": "string",
+      "enum": ["passed", "failed", "skipped", "error", "missing"]
+    },
+    "batchFileResult": {
+      "oneOf": [
+        { "$ref": "#/definitions/batchWorkflowResult" },
+        { "$ref": "#/definitions/batchSkippedResult" },
+        { "$ref": "#/definitions/batchErrorResult" }
+      ]
+    },
+    "batchWorkflowResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filePath", "status", "ok", "issues"],
+      "properties": {
+        "filePath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": ["passed", "failed"]
+        },
+        "ok": {
+          "type": "boolean"
+        },
+        "issues": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/validationIssue" }
+        }
+      }
+    },
+    "batchSkippedResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filePath", "status", "ok", "reason"],
+      "properties": {
+        "filePath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "const": "skipped"
+        },
+        "ok": {
+          "type": "boolean",
+          "const": true
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "batchErrorResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filePath", "status", "ok", "error"],
+      "properties": {
+        "filePath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "const": "error"
+        },
+        "ok": {
+          "type": "boolean",
+          "const": false
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "matrixVersionResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["packageVersion", "ok", "summary", "results"],
+      "properties": {
+        "packageVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ok": {
+          "type": "boolean"
+        },
+        "packageInfo": { "$ref": "#/definitions/packageInfo" },
+        "selection": { "$ref": "#/definitions/bundledSelection" },
+        "summary": { "$ref": "#/definitions/batchSummary" },
+        "results": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/batchFileResult" }
+        }
+      }
+    },
+    "matrixDifference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filePath", "statusByVersion", "errorSignaturesByVersion"],
+      "properties": {
+        "filePath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "statusByVersion": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/definitions/matrixStatus" }
+        },
+        "errorSignaturesByVersion": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "singleFileValidationResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filePath", "ok", "checkedAt", "source", "issues", "summary"],
+      "properties": {
+        "filePath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ok": {
+          "type": "boolean"
+        },
+        "checkedAt": { "$ref": "#/definitions/checkedAt" },
+        "source": { "$ref": "#/definitions/schemaSource" },
+        "issues": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/validationIssue" }
+        },
+        "summary": { "$ref": "#/definitions/batchSummary" }
+      }
+    },
+    "singleFileInputErrorResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filePath", "ok", "checkedAt", "source", "error", "summary"],
+      "properties": {
+        "filePath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ok": {
+          "type": "boolean",
+          "const": false
+        },
+        "checkedAt": { "$ref": "#/definitions/checkedAt" },
+        "source": { "$ref": "#/definitions/schemaSource" },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": { "$ref": "#/definitions/batchSummary" }
+      }
+    },
+    "singleFileResult": {
+      "oneOf": [
+        { "$ref": "#/definitions/singleFileValidationResult" },
+        { "$ref": "#/definitions/singleFileInputErrorResult" }
+      ]
+    },
+    "batchResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ok", "checkedAt", "source", "results", "summary"],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "checkedAt": { "$ref": "#/definitions/checkedAt" },
+        "source": { "$ref": "#/definitions/schemaSource" },
+        "packageInfo": { "$ref": "#/definitions/packageInfo" },
+        "selection": { "$ref": "#/definitions/bundledSelection" },
+        "results": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/batchFileResult" }
+        },
+        "summary": { "$ref": "#/definitions/batchSummary" }
+      }
+    },
+    "matrixResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ok", "checkedAt", "source", "versions", "differences", "summary"],
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "checkedAt": { "$ref": "#/definitions/checkedAt" },
+        "source": {
+          "type": "string",
+          "const": "bundled-n8n-package"
+        },
+        "versions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/matrixVersionResult" }
+        },
+        "differences": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/matrixDifference" }
+        },
+        "summary": { "$ref": "#/definitions/batchSummary" }
+      }
+    }
+  }
+}

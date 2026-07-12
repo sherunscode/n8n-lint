@@ -1,0 +1,43 @@
+{
+  "ok": false,
+  "checkedAt": "2026-07-08T00:00:00.000Z",
+  "source": "bundled-n8n-package",
+  "versions": [
+    {
+      "packageVersion": "2.29.6",
+      "ok": false,
+      "summary": {
+        "totalFiles": 1,
+        "workflows": 1,
+        "passed": 0,
+        "failed": 1,
+        "warnings": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "results": []
+    }
+  ],
+  "differences": [
+    {
+      "filePath": "examples/matrix-2-30-parameter-workflow.json",
+      "statusByVersion": {
+        "2.29.6": "broken",
+        "2.30.0": "passed"
+      },
+      "errorSignaturesByVersion": {
+        "2.29.6": [],
+        "2.30.0": []
+      }
+    }
+  ],
+  "summary": {
+    "totalFiles": 1,
+    "workflows": 1,
+    "passed": 0,
+    "failed": 1,
+    "warnings": 0,
+    "skipped": 0,
+    "errors": 0
+  }
+}

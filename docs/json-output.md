@@ -15,6 +15,18 @@ This contract documents the current local MVP. It does not claim npm registry
 installation, live REST schema validation, workflow execution, or hosted
 service behavior.
 
+## Machine-readable JSON Schema
+
+Downstream tools can validate `check --json` payloads against the versioned
+schema at [`schemas/check-result.v1.schema.json`](../schemas/check-result.v1.schema.json).
+The schema covers single-file, batch, and matrix results. Existing fields remain
+backward compatible; optional provenance fields such as `packageInfo` and
+`selection` are additive.
+
+Positive and negative fixtures live in `examples/check-json-schema/`. The
+`npm run check:json-output-schema` quality gate validates those fixtures and
+proves live CLI output still matches the schema.
+
 ## Top-Level Fields
 
 | Field       | Type      | Description                                                                                          |

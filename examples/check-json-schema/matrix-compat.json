@@ -1,0 +1,121 @@
+{
+  "ok": false,
+  "checkedAt": "2026-07-08T00:00:00.000Z",
+  "source": "bundled-n8n-package",
+  "versions": [
+    {
+      "packageVersion": "2.29.6",
+      "ok": false,
+      "packageInfo": {
+        "name": "n8n-nodes-base",
+        "version": "2.29.6",
+        "metadataFiles": {
+          "nodes": "dist/types/nodes.json",
+          "credentials": "dist/types/credentials.json"
+        }
+      },
+      "selection": {
+        "referencePackage": "n8n@2.29.7",
+        "packageName": "n8n-nodes-base",
+        "packageVersion": "2.29.6",
+        "workflowPackageVersion": "2.29.2",
+        "reason": "Pinned to the n8n-nodes-base dependency selected by n8n@2.29.7, instead of the stale-looking n8n-nodes-base latest dist-tag."
+      },
+      "summary": {
+        "totalFiles": 1,
+        "workflows": 1,
+        "passed": 0,
+        "failed": 1,
+        "warnings": 1,
+        "skipped": 0,
+        "errors": 0
+      },
+      "results": [
+        {
+          "filePath": "examples/matrix-2-30-parameter-workflow.json",
+          "status": "failed",
+          "ok": false,
+          "issues": [
+            {
+              "severity": "error",
+              "code": "workflow.node_parameter_unknown",
+              "message": "Unknown or dead parameter \"clearWarning\" for node type \"n8n-nodes-base.dataTable\".",
+              "path": "$.nodes[0].parameters.clearWarning"
+            },
+            {
+              "severity": "warning",
+              "code": "schema_source.warning",
+              "message": "Bundled n8n package metadata is loaded from a compact checked-in artifact; this is not live REST validation.",
+              "path": "$"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "packageVersion": "2.30.0",
+      "ok": true,
+      "packageInfo": {
+        "name": "n8n-nodes-base",
+        "version": "2.30.0",
+        "metadataFiles": {
+          "nodes": "dist/types/nodes.json",
+          "credentials": "dist/types/credentials.json"
+        }
+      },
+      "selection": {
+        "referencePackage": "n8n@2.30.0",
+        "packageName": "n8n-nodes-base",
+        "packageVersion": "2.30.0",
+        "workflowPackageVersion": "2.30.0",
+        "reason": "Pinned to the n8n-nodes-base dependency selected by n8n@2.30.0."
+      },
+      "summary": {
+        "totalFiles": 1,
+        "workflows": 1,
+        "passed": 1,
+        "failed": 0,
+        "warnings": 1,
+        "skipped": 0,
+        "errors": 0
+      },
+      "results": [
+        {
+          "filePath": "examples/matrix-2-30-parameter-workflow.json",
+          "status": "passed",
+          "ok": true,
+          "issues": [
+            {
+              "severity": "warning",
+              "code": "schema_source.warning",
+              "message": "Bundled n8n package metadata is loaded from a compact checked-in artifact; this is not live REST validation.",
+              "path": "$"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "differences": [
+    {
+      "filePath": "examples/matrix-2-30-parameter-workflow.json",
+      "statusByVersion": {
+        "2.29.6": "failed",
+        "2.30.0": "passed"
+      },
+      "errorSignaturesByVersion": {
+        "2.29.6": ["workflow.node_parameter_unknown:$.nodes[0].parameters.clearWarning"],
+        "2.30.0": []
+      }
+    }
+  ],
+  "summary": {
+    "totalFiles": 2,
+    "workflows": 2,
+    "passed": 1,
+    "failed": 1,
+    "warnings": 2,
+    "skipped": 0,
+    "errors": 0
+  }
+}
