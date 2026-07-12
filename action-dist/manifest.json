@@ -5,7 +5,7 @@
     "cli/bin.js": "98ac23fa981b7764dab5f2c0edb33738d10be3ffdb77bedbea2ac7f203153635",
     "cli/discovery.js": "7ef00f39057b8592f76bac07f35a5ffb14ba144f9e2658275ab7fad5cad0188c",
     "cli/package.json": "3ca9d4afd21425087cf31893b8f9f63c81b0b8408db5e343ca76e5f8aa26ab9a",
-    "index.js": "f9b6c35b9ecc558debfbdacbcaf49698a8cd9aafa150f2139d4a7293d40b0c57",
+    "index.js": "05a8853f5cf6d4c8f84a0645395d99da9da3a7b2f36bc0161753088f1fb25a82",
     "node_modules/@n8nproof/core/dist/index.js": "ad81be3641dbd4e481ae1701c35e09c32ae2e9ec4053af5e9270cf6d9f5a9e96",
     "node_modules/@n8nproof/core/dist/schema-source.js": "2263c050dd9d140ff62677d259a0253990f724c5bef8f2ef11979cae1b00b6ef",
     "node_modules/@n8nproof/core/LICENSE": "6e41a5c33f6e526b4ebf144e6bef61c0e7e654063fb3f970784015b9206cd0d4",

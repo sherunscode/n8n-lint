@@ -54,6 +54,7 @@ expect(
   "action runtime must resolve its bundled path from import.meta.url"
 );
 expect(actionSource.includes('replace(/\\\\/g, "%5C")'), "annotation properties must escape backslashes");
+expect(actionSource.includes('replace(/\\|/g, "&#124;")'), "Markdown table values must use HTML entity escaping");
 
 for (const phrase of [
   "ubuntu-latest",

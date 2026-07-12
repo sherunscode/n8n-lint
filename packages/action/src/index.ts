@@ -165,7 +165,13 @@ function readText(value: unknown, fallback: string): string {
 }
 
 function markdown(value: string): string {
-  return value.replace(/\r?\n/g, " ").replace(/\|/g, "\\|");
+  return value
+    .replace(/\r?\n/g, " ")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\|/g, "&#124;")
+    .replace(/`/g, "&#96;");
 }
 
 function escapeProperty(value: string): string {
