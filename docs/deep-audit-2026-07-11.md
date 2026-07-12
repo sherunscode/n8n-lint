@@ -49,7 +49,7 @@ inputs; tracked code and documentation are authoritative.
 | `npm run quality`                                             | PASS in 211.6 seconds                      | Full local gate completed within the five-minute budget.                                                       |
 | `npm run quality:remote`                                      | PASS in 28.5 seconds                       | GitHub, npm, profile, social-preview, security, and branch-control reconciliation.                             |
 | `npm run quality:release`                                     | Required after merge                       | Local, remote, clean-checkout, public-checkout, and release artifact proof within ten minutes.                 |
-| `npm run check:clean-source-checkout`                          | PASS, 172 tracked files                    | Clean install, build, help, success/failure CLI paths, and packed-install smoke from staged repository truth.  |
+| `npm run check:clean-source-checkout`                         | PASS, 172 tracked files                    | Clean install, build, help, success/failure CLI paths, and packed-install smoke from staged repository truth.  |
 
 ## Benchmark Proof
 
@@ -80,6 +80,13 @@ security updates, required `quality`, `action-smoke`, and CodeQL checks, and
 admin enforcement are enabled. GitHub custom social preview configured in
 repository settings uses `docs/assets/social-preview.png`; GraphQL confirms the
 custom Open Graph image is active.
+
+The release-proof workflow intentionally retains a read-only GitHub token. In
+CI, `check:github-repo-settings` proves the public repository identity, custom
+social preview, protected `main` branch, required check contexts, and
+enforcement for everyone. The authenticated local owner run remains the hard
+gate for administrator-only merge, security, and full branch-protection
+settings; a non-CI run without that visibility fails closed.
 
 ## Release Gates
 

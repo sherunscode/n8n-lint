@@ -27,6 +27,7 @@ const expectedTopics = [
   "workflow-automation"
 ];
 const failures = [];
+const ciPublicProof = process.env.CI === "true";
 
 const packageJson = await readJson("package.json");
 const qualityRunner = await readText("scripts/run-quality-group.mjs");
@@ -42,10 +43,10 @@ expect(
   "package.json quality gate must include check:github-repo-settings"
 );
 
-const [restRepo, graphRepo, protection] = await Promise.all([
-  fetchRepoRest(),
+const [restRepo, graphRepo, branch] = await Promise.all([
+  fetchRepoRest(!ciPublicProof),
   fetchRepoGraphql(),
-  fetchJson(`https://api.github.com/repos/${repository}/branches/main/protection`)
+  fetchJson(`https://api.github.com/repos/${repository}/branches/main`, undefined, false)
 ]);
 
 expect(restRepo.full_name === repository, "GitHub REST repo full_name must match canonical repo");
@@ -58,17 +59,10 @@ for (const topic of expectedTopics) {
 }
 expect(topics.length === expectedTopics.length, "GitHub repo topics must match the strategy topic count exactly");
 
-expect(restRepo.delete_branch_on_merge === true, "automatic branch deletion must be enabled");
-expect(restRepo.allow_update_branch === true, "update-branch support must be enabled");
-expect(restRepo.allow_merge_commit === false, "merge commits must be disabled");
-expect(restRepo.allow_squash_merge === true, "squash merging must remain enabled");
 expect(restRepo.has_wiki === false, "unused Wiki must be disabled");
 expect(restRepo.has_projects === false, "unused Projects must be disabled");
 expect(restRepo.has_issues === true, "Issues must remain enabled");
 expect(restRepo.has_discussions === true, "Discussions must remain enabled");
-for (const feature of ["secret_scanning", "secret_scanning_push_protection", "dependabot_security_updates"]) {
-  expect(restRepo.security_and_analysis?.[feature]?.status === "enabled", `${feature} must be enabled`);
-}
 
 expect(graphRepo.nameWithOwner === repository, "GitHub GraphQL repo nameWithOwner must match canonical repo");
 expect(graphRepo.openGraphImageUrl.startsWith("https://"), "Open Graph image URL must resolve");
@@ -78,16 +72,36 @@ expect(
   "deep audit must record the configured social preview"
 );
 
-const requiredContexts = protection.required_status_checks?.contexts ?? [];
+expect(branch.protected === true && branch.protection?.enabled === true, "main must be protected");
+const publicRequiredChecks = branch.protection?.required_status_checks;
+const requiredContexts = publicRequiredChecks?.contexts ?? [];
 for (const context of ["quality", "action-smoke", "Analyze JavaScript and TypeScript"]) {
   expect(requiredContexts.includes(context), `branch protection must require ${context}`);
 }
-expect(protection.required_status_checks?.strict === true, "required checks must use up-to-date branches");
-expect(protection.enforce_admins?.enabled === true, "branch protection must enforce admins");
-expect(protection.required_linear_history?.enabled === true, "linear history must be required");
-expect(protection.required_conversation_resolution?.enabled === true, "conversations must be resolved");
-expect(protection.allow_force_pushes?.enabled === false, "force pushes must be disabled");
-expect(protection.allow_deletions?.enabled === false, "branch deletion must be disabled");
+expect(publicRequiredChecks?.enforcement_level === "everyone", "required checks must apply to everyone");
+
+const adminSettingsVisible = typeof restRepo.delete_branch_on_merge === "boolean";
+if (!ciPublicProof) {
+  expect(adminSettingsVisible, "administrator-only settings require authenticated owner visibility");
+
+  if (adminSettingsVisible) {
+    expect(restRepo.delete_branch_on_merge === true, "automatic branch deletion must be enabled");
+    expect(restRepo.allow_update_branch === true, "update-branch support must be enabled");
+    expect(restRepo.allow_merge_commit === false, "merge commits must be disabled");
+    expect(restRepo.allow_squash_merge === true, "squash merging must remain enabled");
+    for (const feature of ["secret_scanning", "secret_scanning_push_protection", "dependabot_security_updates"]) {
+      expect(restRepo.security_and_analysis?.[feature]?.status === "enabled", `${feature} must be enabled`);
+    }
+
+    const protection = await fetchJson(`https://api.github.com/repos/${repository}/branches/main/protection`);
+    expect(protection.required_status_checks?.strict === true, "required checks must use up-to-date branches");
+    expect(protection.enforce_admins?.enabled === true, "branch protection must enforce admins");
+    expect(protection.required_linear_history?.enabled === true, "linear history must be required");
+    expect(protection.required_conversation_resolution?.enabled === true, "conversations must be resolved");
+    expect(protection.allow_force_pushes?.enabled === false, "force pushes must be disabled");
+    expect(protection.allow_deletions?.enabled === false, "branch deletion must be disabled");
+  }
+}
 
 if (failures.length > 0) {
   throw new Error(`GitHub repo settings check failed:\n${failures.map((failure) => `- ${failure}`).join("\n")}`);
@@ -105,15 +119,17 @@ console.log(
         usesCustomOpenGraphImage: graphRepo.usesCustomOpenGraphImage,
         openGraphImageUrl: graphRepo.openGraphImageUrl
       },
+      adminSettings: ciPublicProof ? "local-owner-gate-required" : "verified",
       checked: [
         "public repository identity",
         "launch description",
         "repository topics",
         "Open Graph image status",
         "custom social preview active",
-        "security and dependency controls",
-        "merge and repository feature policy",
-        "admin-enforced required checks"
+        "public protected-branch contexts",
+        ciPublicProof ? "administrator-only controls deferred to local owner gate" : "security and dependency controls",
+        ciPublicProof ? "read-only CI token boundary" : "merge and repository feature policy",
+        "required checks enforced for everyone"
       ]
     },
     null,
@@ -121,8 +137,8 @@ console.log(
   )
 );
 
-async function fetchRepoRest() {
-  return fetchJson(`https://api.github.com/repos/${repository}`, "application/vnd.github+json");
+async function fetchRepoRest(authenticated) {
+  return fetchJson(`https://api.github.com/repos/${repository}`, "application/vnd.github+json", authenticated);
 }
 
 async function fetchRepoGraphql() {
@@ -161,13 +177,17 @@ async function fetchRepoGraphql() {
   return payload.data?.repository ?? {};
 }
 
-async function fetchJson(url, accept) {
+async function fetchJson(url, accept, authenticated = true) {
+  const headers = {
+    Accept: accept ?? "application/json",
+    "User-Agent": "sherunscode-n8n-lint-repo-settings-check"
+  };
+  if (authenticated) {
+    headers.Authorization = `Bearer ${githubToken()}`;
+  }
+
   const response = await fetch(url, {
-    headers: {
-      Accept: accept ?? "application/json",
-      Authorization: `Bearer ${githubToken()}`,
-      "User-Agent": "sherunscode-n8n-lint-repo-settings-check"
-    }
+    headers
   });
 
   if (!response.ok) {
