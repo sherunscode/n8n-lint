@@ -1,0 +1,29 @@
+{
+  "filePath": "examples/failing-dead-parameter.json",
+  "ok": false,
+  "checkedAt": "2026-07-08T00:00:00.000Z",
+  "source": "bundled-n8n-package",
+  "issues": [
+    {
+      "severity": "error",
+      "code": "workflow.node_parameter_unknown",
+      "message": "Unknown or dead parameter \"notARealParameter\" for node type \"n8n-nodes-base.httpRequest\".",
+      "path": "$.nodes[0].parameters.notARealParameter"
+    },
+    {
+      "severity": "warning",
+      "code": "schema_source.warning",
+      "message": "Bundled n8n package metadata is loaded from a compact checked-in artifact; this is not live REST validation.",
+      "path": "$"
+    }
+  ],
+  "summary": {
+    "totalFiles": 1,
+    "workflows": 1,
+    "passed": 0,
+    "failed": 1,
+    "warnings": 1,
+    "skipped": 0,
+    "errors": 0
+  }
+}

@@ -24,7 +24,11 @@
     "build:action": "npm run build && node scripts/build-action.mjs",
     "typecheck": "tsc -b packages/core packages/cli packages/action",
     "lint": "eslint packages scripts",
+ fix/json-output-schema-review
+    "format:check": "prettier --check package.json package-lock.json tool.json tsconfig.base.json \"packages/*/package.json\" \"packages/*/tsconfig.json\" \"packages/**/*.ts\" \"scripts/**/*.mjs\" \"schemas/**/*.json\" \"examples/check-json-schema/**/*.json\" \".github/**/*.yml\" action.yml",
+
     "format:check": "prettier --check package.json package-lock.json tool.json tsconfig.base.json tsconfig.eslint.json vitest.config.ts \"packages/*/package.json\" \"packages/*/tsconfig.json\" \"packages/**/*.ts\" \"scripts/**/*.mjs\" \".github/**/*.yml\" action.yml",
+ main
     "generate:readme-demo": "node scripts/check-readme-demo.mjs --write",
     "generate:animated-demo": "node scripts/check-animated-demo.mjs --write",
     "generate:terminal-output-demo": "node scripts/check-terminal-output-demo.mjs --write",
@@ -42,6 +46,7 @@
     "check:schema-config": "node scripts/check-schema-config.mjs",
     "check:type-hygiene": "node scripts/check-type-hygiene.mjs",
     "check:cli-output": "node scripts/check-cli-output-contract.mjs",
+    "check:json-output-schema": "node scripts/check-json-output-schema.mjs",
     "check:precommit": "node scripts/check-precommit-hook.mjs",
     "check:precommit-rejection-demo": "node scripts/check-precommit-rejection-demo.mjs",
     "check:community": "node scripts/check-community-readiness.mjs",
@@ -93,17 +98,26 @@
     "test": "npm run test:unit && npm run test:core && npm run test:cli",
     "audit:prod": "npm audit --omit=dev --audit-level=high",
     "smoke:pack": "node scripts/smoke-packed-install.mjs",
+fix/json-output-schema-review
+    "quality": "npm run build && npm run lint && npm run format:check && npm run check:example && npm run check:bundled-schema && npm run check:schema-config && npm run check:type-hygiene && npm run check:cli-output && npm run check:json-output-schema && npm run check:precommit && npm run check:precommit-rejection-demo && npm run check:community && npm run check:npm-registry-boundary && npm run check:release-readiness && npm run check:release-notes && npm run check:release-command-plan && npm run check:release-workflow && npm run check:release-artifact-manifest && npm run check:live-rest-boundary && npm run check:launch-content && npm run check:benchmark-report && npm run check:benchmark-dashboard && npm run check:batch-benchmark-output && npm run check:github-action && npm run check:github-pr-gate-proof && npm run check:strategy-checklist && npm run check:github-rendered-readme && npm run check:github-profile && npm run check:github-repo-settings && npm run check:clean-source-checkout && npm run check:public-source-checkout && npm run check:readme-demo && npm run check:animated-demo && npm run check:terminal-output-demo && npm run check:matrix-demo && npm run check:matrix-gif && npm run check:social-preview && npm run check:architecture-diagram && npm run check:last-verified-badges && npm run check:audit-report && npm run check:status-docs && npm run check:metadata && npm run check:security && npm run check:package-readmes && npm run check:docs && npm run check:pack && npm run check:claims && npm run check:links && npm run check:exit-codes && npm test && npm run audit:prod && npm run smoke:pack",
+
     "verify:fast": "node scripts/run-quality-group.mjs fast",
     "quality": "node scripts/run-quality-group.mjs quality",
     "quality:remote": "node scripts/run-quality-group.mjs remote",
     "quality:release": "node scripts/run-quality-group.mjs release",
+ main
     "benchmark:zie619": "node scripts/benchmark-zie619.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^22.0.0",
+fix/json-output-schema-review
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+
     "@vercel/ncc": "^0.38.4",
     "@vitest/coverage-v8": "^4.1.9",
+ main
     "eslint": "^10.6.0",
     "globals": "^17.7.0",
     "prettier": "^3.9.4",
