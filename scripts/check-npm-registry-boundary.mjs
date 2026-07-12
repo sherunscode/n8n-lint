@@ -12,7 +12,8 @@ const readme = await readText("README.md");
 const releaseChecklist = await readText("docs/release-checklist.md");
 const releaseCommandPlan = await readText("docs/release-command-plan-v0.1.0.md");
 const releaseReadiness = await readText("scripts/check-release-readiness.mjs");
-const audit = await readText("docs/deep-audit-2026-07-08.md");
+const audit = await readText("docs/deep-audit-2026-07-11.md");
+const qualityRunner = await readText("scripts/run-quality-group.mjs");
 
 expect(corePackage.name === "@n8nproof/core", "core package name must stay @n8nproof/core");
 expect(cliPackage.name === "n8n-lint", "CLI package name must stay n8n-lint");
@@ -25,8 +26,8 @@ expect(
   "package.json must expose the npm registry boundary checker"
 );
 expect(
-  typeof packageJson.scripts?.quality === "string" &&
-    packageJson.scripts.quality.includes("npm run check:npm-registry-boundary"),
+  packageJson.scripts?.["quality:remote"] === "node scripts/run-quality-group.mjs remote" &&
+    qualityRunner.includes('"check:npm-registry-boundary"'),
   "quality must include the npm registry boundary checker"
 );
 
@@ -75,7 +76,10 @@ expect(
   "release-readiness checker must enforce registry boundary documentation"
 );
 expect(audit.includes("npm run check:npm-registry-boundary"), "deep audit must mention the registry boundary checker");
-expect(audit.includes("both publishable package names return npm `E404`"), "deep audit must mention both E404 proofs");
+expect(
+  hasPhrase(audit, "both publishable package names return npm `E404`"),
+  "deep audit must mention both E404 proofs"
+);
 
 if (failures.length > 0) {
   throw new Error(`npm registry boundary check failed:\n${failures.map((failure) => `- ${failure}`).join("\n")}`);

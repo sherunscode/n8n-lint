@@ -45,7 +45,7 @@ workflow reaches production.
 - PR merge-gate proof:
   `docs/github-pr-merge-gate-proof.md` and
   `docs/assets/github-pr-merge-gate-proof.png`.
-- Deep audit: `docs/deep-audit-2026-07-08.md`.
+- Deep audit: `docs/deep-audit-2026-07-11.md`.
 
 ## Benchmark
 

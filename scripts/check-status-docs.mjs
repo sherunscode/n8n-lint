@@ -5,8 +5,9 @@ const failures = [];
 
 const gitignore = await readText(".gitignore");
 const buildLoopStatus = await readOptionalText("docs/BUILD_LOOP_STATUS.md");
-const deepAudit = await readText("docs/deep-audit-2026-07-08.md");
+const deepAudit = await readText("docs/deep-audit-2026-07-11.md");
 const packageJson = JSON.parse(await readText("package.json"));
+const qualityRunner = await readText("scripts/run-quality-group.mjs");
 
 expect(
   gitignore.includes("docs/BUILD_LOOP_STATUS.md"),
@@ -19,7 +20,7 @@ if (buildLoopStatus !== null) {
     "BUILD_LOOP_STATUS must explicitly say it is historical only"
   );
   expect(
-    hasPhrase(buildLoopStatus, "Current authority: `docs/deep-audit-2026-07-08.md`"),
+    hasPhrase(buildLoopStatus, "Current authority: `docs/deep-audit-2026-07-11.md`"),
     "BUILD_LOOP_STATUS must point to the current deep audit authority"
   );
   expect(
@@ -52,11 +53,12 @@ expect(
   "deep audit must document the audit-report gate"
 );
 expect(
-  deepAudit.includes("npm publish and registry-backed `npx n8n-lint`"),
+  hasPhrase(deepAudit, "npm publish and registry-backed `npx n8n-lint`"),
   "deep audit must retain current owner-gated npm release blocker"
 );
 expect(
-  typeof packageJson.scripts?.quality === "string" && packageJson.scripts.quality.includes("npm run check:status-docs"),
+  packageJson.scripts?.quality === "node scripts/run-quality-group.mjs quality" &&
+    qualityRunner.includes('"check:status-docs"'),
   "quality script must include status-docs gate"
 );
 

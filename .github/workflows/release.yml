@@ -22,16 +22,16 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6.4.0
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
 
       - name: Install
         run: npm ci
 
-      - name: Quality
+      - name: Release quality
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: npm run quality
+        run: npm run quality:release
 
       - name: Release contract checks
         env:

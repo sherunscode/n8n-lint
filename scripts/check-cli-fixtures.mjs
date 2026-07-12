@@ -67,7 +67,7 @@ const checks = [
       "check",
       "examples/known-http-request-workflow.json",
       "examples/failing-dead-parameter.json",
-      "examples/not-a-workflow.json"
+      "examples/not-a-*.json"
     ],
     exitCode: 1,
     stdoutIncludes: [
@@ -85,11 +85,23 @@ const checks = [
       "check",
       "examples/known-http-request-workflow.json",
       "examples/failing-dead-parameter.json",
-      "examples/not-a-workflow.json",
+      "examples/not-a-*.json",
       "--json"
     ],
     exitCode: 1,
     stdoutIncludes: ['"summary"', '"passed": 1', '"failed": 1', '"warnings": 2', '"skipped": 1', '"status": "skipped"']
+  },
+  {
+    name: "explicit malformed workflow fails in multi-input mode",
+    args: [
+      cliPath,
+      "check",
+      "examples/known-http-request-workflow.json",
+      "examples/failing-missing-nodes.json",
+      "--json"
+    ],
+    exitCode: 1,
+    stdoutIncludes: ['"code": "workflow.nodes_missing"', '"failed": 1', '"skipped": 0']
   },
   {
     name: "batch glob mode can skip ordinary json without failing",
@@ -99,6 +111,24 @@ const checks = [
       "SKIP examples/not-a-workflow.json",
       "Summary: 0 passed, 0 failed, 0 warnings, 1 skipped, 0 errors"
     ]
+  },
+  {
+    name: "version output matches package metadata",
+    args: [cliPath, "--version"],
+    exitCode: 0,
+    stdoutIncludes: ["0.0.0"]
+  },
+  {
+    name: "check rejects repair-only options",
+    args: [cliPath, "check", "examples/passing-workflow.json", "--apply", "--confirm"],
+    exitCode: 2,
+    stderrIncludes: ["check does not support --apply, --confirm."]
+  },
+  {
+    name: "badge rejects schema-source options",
+    args: [cliPath, "badge", "examples/badge-batch-result.json", "--source", "local-placeholder"],
+    exitCode: 2,
+    stderrIncludes: ["badge does not support --source."]
   },
   {
     name: "badge markdown output uses checked json result",

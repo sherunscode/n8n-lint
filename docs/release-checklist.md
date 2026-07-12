@@ -16,6 +16,10 @@ The CLI package depends on `@n8nproof/core` at the same exact version, so publis
 
 - Do not run `npm publish`, create a GitHub release, push tags, or post launch
   copy without owner approval.
+- Do not publish either package until written n8n licensing confirmation covers
+  redistribution of the compact schema artifacts. Owner approval alone does
+  not satisfy this legal gate. If approval is denied, replace bundled artifacts
+  with user-side extraction before release.
 - Confirm npm auth only after owner approval. Do not print tokens or config
   values.
 - If publish happens from GitHub Actions, prefer npm provenance through OIDC.
@@ -46,7 +50,7 @@ Run from `C:\dev\Stars`:
 
 ```powershell
 npm ci
-npm run quality
+npm run quality:release
 npm run check:npm-registry-boundary
 npm run check:release-readiness
 npm run check:release-notes
@@ -59,7 +63,8 @@ npm pack --workspace packages/cli --dry-run
 ```
 
 Inspect the dry-run output. The core package should include only `dist`,
-`schema`, `package.json`, `README.md`, and `LICENSE`; the schema directory
+`schema`, `package.json`, `README.md`, `LICENSE`, `THIRD_PARTY_NOTICES.md`, and
+`LICENSE_N8N_SUSTAINABLE_USE.md`; the schema directory
 should contain the checked-in compact artifacts and
 `bundled-n8n-package-config.json` for the pinned n8n versions. The CLI package
 should include only `dist`, `package.json`, `README.md`, and `LICENSE`. No

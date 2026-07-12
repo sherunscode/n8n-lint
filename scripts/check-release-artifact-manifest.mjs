@@ -8,20 +8,21 @@ import { join } from "node:path";
 const failures = [];
 
 const packageJson = await readJson("package.json");
+const qualityRunner = await readText("scripts/run-quality-group.mjs");
 const workflow = await readText(".github/workflows/release.yml");
 const readme = await readText("README.md");
 const ciSetup = await readText("docs/ci-setup.md");
 const releaseChecklist = await readText("docs/release-checklist.md");
 const releaseCommandPlan = await readText("docs/release-command-plan-v0.1.0.md");
-const deepAudit = await readText("docs/deep-audit-2026-07-08.md");
+const deepAudit = await readText("docs/deep-audit-2026-07-11.md");
 
 expect(
   packageJson.scripts?.["check:release-artifact-manifest"] === "node scripts/check-release-artifact-manifest.mjs",
   "package.json must expose the release artifact manifest checker"
 );
 expect(
-  typeof packageJson.scripts?.quality === "string" &&
-    packageJson.scripts.quality.includes("npm run check:release-artifact-manifest"),
+  packageJson.scripts?.quality === "node scripts/run-quality-group.mjs quality" &&
+    qualityRunner.includes('"check:release-artifact-manifest"'),
   "quality must include the release artifact manifest checker"
 );
 

@@ -4,10 +4,11 @@ import { readFile } from "node:fs/promises";
 const failures = [];
 
 const packageJson = await readJson("package.json");
+const qualityRunner = await readText("scripts/run-quality-group.mjs");
 const strategyPath = process.env.N8N_LINT_STRATEGY_PATH ?? "STRATEGY.md";
 const strategy = await readOptionalText(strategyPath);
 const gitignore = await readText(".gitignore");
-const deepAudit = await readText("docs/deep-audit-2026-07-08.md");
+const deepAudit = await readText("docs/deep-audit-2026-07-11.md");
 const readme = await readText("README.md");
 
 expect(
@@ -15,8 +16,8 @@ expect(
   "package.json must expose check:strategy-checklist"
 );
 expect(
-  typeof packageJson.scripts?.quality === "string" &&
-    packageJson.scripts.quality.includes("npm run check:strategy-checklist"),
+  packageJson.scripts?.quality === "node scripts/run-quality-group.mjs quality" &&
+    qualityRunner.includes('"check:strategy-checklist"'),
   "package.json quality gate must include check:strategy-checklist"
 );
 expect(

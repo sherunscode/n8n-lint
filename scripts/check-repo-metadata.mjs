@@ -7,6 +7,7 @@ const tool = await readJson("tool.json");
 const cliPackage = await readJson("packages/cli/package.json");
 const ciWorkflow = await readText(".github/workflows/ci.yml");
 const githubPrGateProof = await readText("scripts/check-github-pr-gate-proof.mjs");
+const qualityRunner = await readText("scripts/run-quality-group.mjs");
 
 expect(tool.name === cliPackage.name, "tool.json name must match CLI package name");
 expect(tool.version === cliPackage.version, "tool.json version must match CLI package version");
@@ -29,53 +30,31 @@ expect(
   "package.json must expose the Prettier check gate"
 );
 expect(
-  typeof packageJson.scripts?.quality === "string" &&
-    packageJson.scripts.quality.includes("npm run lint") &&
-    packageJson.scripts.quality.includes("npm run format:check") &&
-    packageJson.scripts.quality.includes("npm run check:schema-config") &&
-    packageJson.scripts.quality.includes("npm run check:type-hygiene") &&
-    packageJson.scripts.quality.includes("npm run check:cli-output") &&
-    packageJson.scripts.quality.includes("npm run check:precommit") &&
-    packageJson.scripts.quality.includes("npm run check:precommit-rejection-demo") &&
-    packageJson.scripts.quality.includes("npm run check:community") &&
-    packageJson.scripts.quality.includes("npm run check:npm-registry-boundary") &&
-    packageJson.scripts.quality.includes("npm run check:release-readiness") &&
-    packageJson.scripts.quality.includes("npm run check:release-notes") &&
-    packageJson.scripts.quality.includes("npm run check:release-command-plan") &&
-    packageJson.scripts.quality.includes("npm run check:release-workflow") &&
-    packageJson.scripts.quality.includes("npm run check:release-artifact-manifest") &&
-    packageJson.scripts.quality.includes("npm run check:live-rest-boundary") &&
-    packageJson.scripts.quality.includes("npm run check:launch-content") &&
-    packageJson.scripts.quality.includes("npm run check:benchmark-report") &&
-    packageJson.scripts.quality.includes("npm run check:benchmark-dashboard") &&
-    packageJson.scripts.quality.includes("npm run check:batch-benchmark-output") &&
-    packageJson.scripts.quality.includes("npm run check:github-action") &&
-    packageJson.scripts.quality.includes("npm run check:github-pr-gate-proof") &&
-    packageJson.scripts.quality.includes("npm run check:strategy-checklist") &&
-    packageJson.scripts.quality.includes("npm run check:github-rendered-readme") &&
-    packageJson.scripts.quality.includes("npm run check:github-profile") &&
-    packageJson.scripts.quality.includes("npm run check:github-repo-settings") &&
-    packageJson.scripts.quality.includes("npm run check:clean-source-checkout") &&
-    packageJson.scripts.quality.includes("npm run check:public-source-checkout") &&
-    packageJson.scripts.quality.includes("npm run check:readme-demo") &&
-    packageJson.scripts.quality.includes("npm run check:animated-demo") &&
-    packageJson.scripts.quality.includes("npm run check:terminal-output-demo") &&
-    packageJson.scripts.quality.includes("npm run check:matrix-demo") &&
-    packageJson.scripts.quality.includes("npm run check:matrix-gif") &&
-    packageJson.scripts.quality.includes("npm run check:social-preview") &&
-    packageJson.scripts.quality.includes("npm run check:architecture-diagram") &&
-    packageJson.scripts.quality.includes("npm run check:last-verified-badges") &&
-    packageJson.scripts.quality.includes("npm run check:audit-report") &&
-    packageJson.scripts.quality.includes("npm run check:status-docs") &&
-    packageJson.scripts.quality.includes("npm run check:security") &&
-    packageJson.scripts.quality.includes("npm run check:package-readmes") &&
-    packageJson.scripts.quality.includes("npm run check:docs") &&
-    packageJson.scripts.quality.includes("npm run check:pack") &&
-    packageJson.scripts.quality.includes("npm run check:claims") &&
-    packageJson.scripts.quality.includes("npm run check:links") &&
-    packageJson.scripts.quality.includes("npm run check:exit-codes"),
-  "package.json quality gate must include lint, format, schema config, type hygiene, CLI output, pre-commit, pre-commit rejection demo, community readiness, npm registry boundary, release readiness, release notes, release command plan, release workflow, release artifact manifest, live REST boundary, launch content, benchmark report, benchmark dashboard, batch benchmark output, GitHub Action, GitHub PR gate proof, strategy checklist, GitHub-rendered README, GitHub profile, GitHub repo settings, clean source-checkout, public source-checkout, README demo, animated demo, terminal output demo, matrix demo, matrix GIF, social preview, architecture diagram, last-verified badges, audit report, status docs, security hygiene, package README, docs contract, package content, claims hygiene, markdown link, and exit-code checks"
+  packageJson.scripts?.quality === "node scripts/run-quality-group.mjs quality" &&
+    packageJson.scripts?.["quality:remote"] === "node scripts/run-quality-group.mjs remote" &&
+    packageJson.scripts?.["quality:release"] === "node scripts/run-quality-group.mjs release",
+  "package.json must expose deterministic local, remote, and release quality groups"
 );
+for (const script of [
+  "verify:fast",
+  "check:schema-config",
+  "check:cli-output",
+  "check:action-dist",
+  "check:github-action",
+  "check:release-readiness",
+  "check:license",
+  "check:pack",
+  "check:claims",
+  "check:exit-codes",
+  "audit:prod",
+  "smoke:pack",
+  "check:community",
+  "check:github-repo-settings",
+  "check:clean-source-checkout",
+  "check:public-source-checkout"
+]) {
+  expect(qualityRunner.includes(`\"${script}\"`), `quality runner must schedule ${script}`);
+}
 expect(ciWorkflow.includes("npm run quality"), "CI workflow must run the full quality gate");
 expect(ciWorkflow.includes("contents: read"), "CI workflow must keep contents read permission");
 expect(ciWorkflow.includes("discussions: read"), "CI workflow must allow community discussion proof reads");

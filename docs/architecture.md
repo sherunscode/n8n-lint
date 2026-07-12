@@ -10,30 +10,36 @@ rendered from `package.json`, `tool.json`, and
 
 ## Packages
 
-| Package          | Role                                                |
-| ---------------- | --------------------------------------------------- |
-| `@n8nproof/core` | Loads schema snapshots and validates workflow JSON. |
-| `n8n-lint`       | CLI wrapper around the core validator.              |
+| Package                  | Role                                                      |
+| ------------------------ | --------------------------------------------------------- |
+| `@n8nproof/core`         | Loads schema snapshots and validates workflow JSON.       |
+| `n8n-lint`               | CLI, argument, discovery, output, badge, and repair.      |
+| `@n8nproof/action-build` | Build-only source for the packaged Node 24 GitHub Action. |
 
 The root package is private and exists only to coordinate workspace scripts,
 tests, and packaging.
 
 ## Runtime Flow
 
-1. The CLI reads one workflow JSON file, or resolves a batch of files from
-   explicit paths, directories, and simple globs.
-2. The selected schema source loads one schema snapshot, or matrix mode loads
+1. The CLI classifies each input as explicit or discovered, then resolves files
+   from explicit paths, directories, and simple globs. Explicit malformed or
+   non-workflow JSON fails; discovered ordinary JSON may be skipped.
+2. Recursive discovery excludes `.git`, `node_modules`, `dist`, `coverage`,
+   and common build/cache directories. An explicitly named file is never
+   excluded by that traversal policy.
+3. The selected schema source loads one schema snapshot, or matrix mode loads
    all pinned bundled snapshots.
-3. The core validator checks structure, node type names, credential type names,
+4. The core validator checks structure, node type names, credential type names,
    top-level node parameter names, structured nested collection/fixedCollection/filter
    parameter keys, and trigger graph/type-version shape.
-4. The CLI prints human or JSON output.
-5. Optional badge generation consumes real `check --json` output and renders
+5. The CLI validates files with bounded concurrency, sorts results
+   deterministically, and prints human, JSON, or GitHub output.
+6. Optional badge generation consumes real `check --json` output and renders
    markdown, JSON, or static SVG.
-6. Optional repair mode uses validator issues to emit a patch for safe,
+7. Optional repair mode uses validator issues to emit a patch for safe,
    schema-proven fixes. It does not mutate files unless `--apply --confirm` is
    passed.
-7. The process exit code becomes the CI/pre-commit gate.
+8. The process exit code becomes the CI/pre-commit gate.
 
 ## Schema Sources
 
@@ -54,7 +60,9 @@ Pinned package selections are centralized in
 `packages/core/schema/bundled-n8n-package-config.json`. Both the runtime source
 and `scripts/generate-bundled-schema.mjs` read from that config, and
 `npm run check:schema-config` fails if the selected versions, artifact metadata,
-or root generator dependency drift.
+or isolated generator contract drift. The generator downloads the pinned npm
+tarball into a temporary directory and extracts metadata without installing or
+executing the upstream package; `n8n-nodes-base` is not a root dependency.
 
 The bundled artifact stores compact metadata only:
 
@@ -66,6 +74,20 @@ The bundled artifact stores compact metadata only:
 
 It does not bundle n8n runtime code, integration clients, workflow contents,
 credentials, or API responses.
+
+The generated schema artifacts are derived from `n8n-nodes-base` and retain
+the upstream Sustainable Use License boundary documented in
+`THIRD_PARTY_NOTICES.md` and `packages/core/LICENSE_N8N_SUSTAINABLE_USE.md`.
+The repository's original code is MIT licensed; npm publication remains blocked
+until written licensing confirmation is recorded.
+
+## Packaged Action
+
+`packages/action/src/index.ts` is bundled into the committed `action-dist/`
+runtime. The consumer action uses `runs.using: node24`, contains the built CLI,
+core runtime, schema artifacts, and third-party notices, and performs one
+validation pass. CI rebuilds the Action and fails if its manifest or files are
+stale. Consumer workflows do not install this workspace or compile source.
 
 ## Why Bundled Metadata First
 

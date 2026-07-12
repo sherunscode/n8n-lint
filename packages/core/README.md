@@ -15,6 +15,12 @@ keys, and trigger graph/type-version shape. Current pinned artifacts cover
 centralized in `schema/bundled-n8n-package-config.json`. It does not execute
 workflows and does not claim live REST validation.
 
+The schema artifacts are modified metadata derived from `n8n-nodes-base`.
+Original repository code is MIT licensed; the derived artifacts retain the
+n8n Sustainable Use License boundary. See `THIRD_PARTY_NOTICES.md` and
+`LICENSE_N8N_SUSTAINABLE_USE.md`. npm publication is blocked pending written
+n8n licensing confirmation.
+
 After owner-approved npm publication, install the CLI package for normal use:
 
 ```bash

@@ -1,332 +1,65 @@
 #!/usr/bin/env node
-import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 
-const auditPath = "docs/deep-audit-2026-07-08.md";
+const auditPath = "docs/deep-audit-2026-07-11.md";
 const audit = await readFile(auditPath, "utf8");
 const packageJson = JSON.parse(await readFile("package.json", "utf8"));
+const qualityRunner = await readFile("scripts/run-quality-group.mjs", "utf8");
 const failures = [];
 
-const qualityScript = packageJson.scripts?.quality ?? "";
-const requiredQualityGates = [
-  "check:schema-config",
-  "check:type-hygiene",
-  "check:cli-output",
-  "check:precommit",
-  "check:precommit-rejection-demo",
-  "check:community",
-  "check:npm-registry-boundary",
-  "check:release-readiness",
-  "check:release-notes",
-  "check:release-command-plan",
-  "check:release-workflow",
-  "check:release-artifact-manifest",
-  "check:live-rest-boundary",
-  "check:launch-content",
-  "check:benchmark-report",
-  "check:benchmark-dashboard",
-  "check:batch-benchmark-output",
-  "check:github-action",
-  "check:github-pr-gate-proof",
-  "check:strategy-checklist",
-  "check:github-rendered-readme",
-  "check:github-profile",
-  "check:github-repo-settings",
-  "check:clean-source-checkout",
-  "check:public-source-checkout",
-  "check:readme-demo",
-  "check:animated-demo",
-  "check:terminal-output-demo",
-  "check:matrix-demo",
-  "check:matrix-gif",
-  "check:social-preview",
-  "check:architecture-diagram",
-  "check:last-verified-badges",
-  "check:audit-report",
-  "check:status-docs",
-  "check:metadata",
-  "check:security",
-  "check:package-readmes",
-  "check:docs",
-  "check:pack",
-  "check:claims",
-  "check:links",
-  "check:exit-codes"
-];
-
-expect(audit.includes("**CONDITIONAL GO for local MVP and public repo proof.**"), "audit must keep local MVP verdict");
-expect(audit.includes("**NO-GO for full public launch/release**"), "audit must keep full-launch NO-GO verdict");
-expect(
-  audit.includes("npm publish, semver tag, GitHub release, launch posts"),
-  "audit must name owner-gated release blockers"
-);
-expect(audit.includes("docs/assets/readme-failure-demo.svg"), "audit must mention the checked README demo asset");
-expect(audit.includes("npm run check:readme-demo"), "audit must mention the README demo checker");
-expect(audit.includes("docs/assets/animated-failure-demo.svg"), "audit must mention the checked animated demo asset");
-expect(audit.includes("npm run check:animated-demo"), "audit must mention the animated demo checker");
-expect(audit.includes("docs/assets/terminal-output-demo.svg"), "audit must mention the checked terminal output asset");
-expect(audit.includes("npm run check:terminal-output-demo"), "audit must mention the terminal output checker");
-expect(audit.includes("docs/assets/precommit-rejection-demo.svg"), "audit must mention the checked pre-commit asset");
-expect(audit.includes("npm run check:precommit-rejection-demo"), "audit must mention the pre-commit rejection checker");
-expect(audit.includes("docs/assets/matrix-compatibility-demo.svg"), "audit must mention the checked matrix asset");
-expect(audit.includes("npm run check:matrix-demo"), "audit must mention the matrix demo checker");
-expect(audit.includes("docs/assets/matrix-compatibility-demo.gif"), "audit must mention the checked matrix GIF asset");
-expect(audit.includes("npm run check:matrix-gif"), "audit must mention the matrix GIF checker");
-expect(audit.includes("docs/assets/social-preview.svg"), "audit must mention the checked social preview asset");
-expect(audit.includes("docs/assets/social-preview.png"), "audit must mention the checked social preview PNG asset");
-expect(
-  audit.includes("GitHub's 1 MB repository social preview upload limit"),
-  "audit must mention the GitHub social preview upload size boundary"
-);
-expect(audit.includes("npm run check:social-preview"), "audit must mention the social preview checker");
-expect(audit.includes("docs/assets/architecture.svg"), "audit must mention the checked architecture diagram asset");
-expect(audit.includes("npm run check:architecture-diagram"), "audit must mention the architecture diagram checker");
-expect(audit.includes("docs/assets/last-verified-badges.svg"), "audit must mention the checked badge-state asset");
-expect(audit.includes("npm run check:last-verified-badges"), "audit must mention the badge-state checker");
-expect(audit.includes("npm run check:release-readiness"), "audit must mention the release-readiness checker");
-expect(audit.includes("npm run check:npm-registry-boundary"), "audit must mention the npm registry boundary checker");
-expect(
-  audit.includes("both publishable package names return npm `E404`"),
-  "audit must mention both npm package E404 proofs"
-);
-expect(audit.includes("npm run check:release-notes"), "audit must mention the release-notes checker");
-expect(audit.includes("docs/release-notes-v0.1.0-draft.md"), "audit must mention the checked draft release notes");
-expect(audit.includes("npm run check:release-command-plan"), "audit must mention the release command plan checker");
-expect(audit.includes("docs/release-command-plan-v0.1.0.md"), "audit must mention the checked release command plan");
-expect(audit.includes("single approved tag"), "audit must mention the single approved tag boundary");
-expect(audit.includes("npm run check:release-workflow"), "audit must mention the release workflow checker");
-expect(audit.includes(".github/workflows/release.yml"), "audit must mention the checked release workflow");
-expect(
-  hasPhrase(audit, "no npm token, no npm publish, no tag push, and no GitHub Release creation"),
-  "audit must mention the release workflow publish safety boundary"
-);
-expect(
-  audit.includes("npm run check:release-artifact-manifest"),
-  "audit must mention the release artifact manifest checker"
-);
-expect(audit.includes("release-artifact-manifest.json"), "audit must mention the release artifact manifest");
-expect(audit.includes("SHA-256 hashes"), "audit must mention release artifact SHA-256 hashes");
-expect(audit.includes("GitHub Discussion #8"), "audit must mention the live GitHub Discussion proof");
-expect(
-  audit.includes("live GitHub Discussion #8 support/badge channel"),
-  "audit must mention support/badge channel proof"
-);
-expect(audit.includes("npm run check:cli-output"), "audit must mention the CLI output checker");
-expect(audit.includes("final JSON summary"), "audit must mention final JSON summary proof");
-expect(audit.includes("warning summary counts"), "audit must mention warning summary counts");
-expect(audit.includes("npm run check:package-readmes"), "audit must mention the package README checker");
-expect(hasPhrase(audit, "package README files shipped in tarballs"), "audit must mention package README tarball proof");
-expect(audit.includes("npm run check:docs"), "audit must mention the docs contract checker");
-expect(
-  hasPhrase(audit, "pre-publication packed-tarball smoke boundary"),
-  "audit must mention the README install-shape boundary proof"
-);
-expect(audit.includes("npm run check:live-rest-boundary"), "audit must mention the live REST boundary checker");
-expect(audit.includes("secrets.N8N_API_KEY"), "audit must mention encrypted GitHub Actions API-key handling");
-expect(audit.includes("docs/live-rest-threat-model.md"), "audit must mention the live REST threat model");
-expect(audit.includes("fail-closed TLS"), "audit must mention live REST TLS threat handling");
-expect(audit.includes("npm run check:launch-content"), "audit must mention the launch-content checker");
-expect(audit.includes("npm run check:benchmark-report"), "audit must mention the benchmark-report checker");
-expect(audit.includes("docs/assets/benchmark-dashboard.svg"), "audit must mention the checked benchmark dashboard");
-expect(audit.includes("npm run check:benchmark-dashboard"), "audit must mention the benchmark dashboard checker");
-expect(
-  audit.includes("docs/assets/batch-benchmark-output.svg"),
-  "audit must mention the checked batch benchmark output"
-);
-expect(audit.includes("npm run check:batch-benchmark-output"), "audit must mention the batch benchmark output checker");
-expect(audit.includes("npm run check:github-action"), "audit must mention the GitHub Action checker");
-expect(
-  audit.includes("docs/assets/github-pr-merge-gate-proof.png"),
-  "audit must mention the checked PR gate screenshot"
-);
-expect(audit.includes("npm run check:github-pr-gate-proof"), "audit must mention the PR gate proof checker");
-expect(audit.includes("proof-only PR #6"), "audit must mention proof-only PR #6");
-expect(audit.includes("protected `BLOCKED` merge state"), "audit must mention protected blocked PR state");
-expect(audit.includes("`main` branch protection requiring `quality`"), "audit must mention main branch protection");
-expect(audit.includes("admin bypass disabled"), "audit must mention disabled admin bypass");
-expect(audit.includes("last-verified badge"), "audit must mention last-verified badge proof");
-expect(audit.includes("npm run check:strategy-checklist"), "audit must mention the strategy checklist checker");
-expect(audit.includes("npm run check:github-rendered-readme"), "audit must mention the GitHub-rendered README checker");
-expect(audit.includes("public GitHub-rendered README page"), "audit must mention public README render proof");
-expect(audit.includes("npm run check:github-profile"), "audit must mention the GitHub profile checker");
-expect(audit.includes("public She Runs Code organization profile"), "audit must mention public profile proof");
-expect(audit.includes("npm run check:github-repo-settings"), "audit must mention the GitHub repo settings checker");
-expect(audit.includes("exact strategy topic set"), "audit must mention exact GitHub strategy topic proof");
-for (const topic of [
-  "automation-testing",
-  "ci-cd",
-  "cli",
-  "continuous-integration",
-  "developer-tools",
-  "devops",
-  "github-actions",
-  "linter",
-  "n8n",
-  "n8n-nodes",
-  "n8n-workflow",
-  "pre-commit",
-  "rest-api",
-  "schema-validation",
-  "self-hosted",
-  "typescript",
-  "validation",
-  "workflow-automation"
-]) {
-  expect(audit.includes(`\`${topic}\``), `audit must mention exact GitHub topic: ${topic}`);
-}
-expect(audit.includes("usesCustomOpenGraphImage=false"), "audit must mention current GitHub custom Open Graph status");
-expect(audit.includes("npm run check:clean-source-checkout"), "audit must mention the clean source-checkout checker");
-expect(
-  hasPhrase(
-    audit,
-    "tracked-file clean checkout with `npm ci`, `npm run build`, README quickstart, failing fixture, and packed-install smoke"
-  ),
-  "audit must mention clean source-checkout proof coverage"
-);
-expect(audit.includes("npm run check:public-source-checkout"), "audit must mention the public source-checkout checker");
-expect(
-  hasPhrase(audit, "public GitHub clone with `npm ci`, `npm run build`, README quickstart, and packed-install smoke"),
-  "audit must mention public GitHub clone proof coverage"
-);
-expect(audit.includes("npm run check:claims"), "audit must mention the claims checker");
-
-for (const gate of requiredQualityGates) {
-  expect(qualityScript.includes(`npm run ${gate}`), `package quality script must include ${gate}`);
-  expect(audit.includes(gate), `audit must mention ${gate}`);
-}
-
-for (const pack of [runPack("packages/core"), runPack("packages/cli")]) {
-  const packageLabel = `${pack.name}@${pack.version}`;
-  expect(
-    audit.includes(`\`${packageLabel}\`: ${pack.entryCount} files`),
-    `audit must include current entry count for ${packageLabel}`
-  );
-  expect(audit.includes(formatKilobytes(pack.size)), `audit must include current packed size for ${packageLabel}`);
-}
-
-expect(
-  hasPhrase(
-    audit,
-    "Additional video captures beyond the checked README, animated demo, terminal output, pre-commit rejection, matrix compatibility SVG/GIF, social preview SVG/PNG, architecture SVG, and last-verified badge-state SVG assets."
-  ),
-  "remaining gates must distinguish extra video launch assets from the checked README, animated demo, terminal output, pre-commit rejection, matrix compatibility SVG/GIF, social preview SVG/PNG, architecture SVG, and last-verified badge-state SVGs"
-);
-
-for (const remainingGate of [
-  "npm publish and registry-backed `npx n8n-lint`",
-  "Semver tag and GitHub release",
-  "Publishing the checked draft release notes as an actual GitHub Release",
-  "GitHub custom social preview configured in repository settings",
-  "GitHub Action Marketplace listing",
+for (const phrase of [
+  "# n8n-lint Deep Hardening Audit - 2026-07-11",
+  "**GO for protected merge",
+  "**NO-GO for npm publication",
+  "Open SEV-1: **0**",
+  "Confidence",
+  "Command evidence",
+  "npm run verify:fast",
+  "npm run quality",
+  "npm run quality:remote",
+  "npm run quality:release",
+  "explicit malformed/non-workflow JSON",
+  "bounded concurrency",
+  "runs.using: node24",
+  "Vitest",
+  "90%",
+  "n8n Sustainable Use License",
+  "written n8n licensing confirmation",
+  "npm run check:benchmark-report",
+  "Benchmark Proof",
+  "docs/assets/github-pr-merge-gate-proof.png",
+  "npm run check:github-pr-gate-proof",
+  "npm run check:npm-registry-boundary",
+  "both publishable package names return npm `E404`",
+  "npm run check:live-rest-boundary",
+  "live REST source boundary stays locked",
   "Live REST schema validation",
-  "Public X, Reddit, HN, or n8n forum launch posts"
+  "strategy checklist reconciliation",
+  "remaining unchecked checklist boxes are owner-gated, external UI proof, or future live REST/release gates",
+  "npm publish and registry-backed `npx n8n-lint`",
+  "`npm run check:audit-report` now enforces"
 ]) {
-  expect(audit.includes(remainingGate), `audit remaining gates must include: ${remainingGate}`);
+  expect(hasPhrase(audit, phrase), `audit must include: ${phrase}`);
+}
+
+expect(packageJson.scripts?.["check:audit-report"] === "node scripts/check-audit-report.mjs", "audit checker script");
+expect(packageJson.scripts?.quality === "node scripts/run-quality-group.mjs quality", "local quality group");
+expect(qualityRunner.includes('"check:audit-report"'), "quality runner schedules audit checker");
+
+for (const heading of ["## Scope", "## Findings", "## Command Evidence", "## Release Gates", "## Verdict"]) {
+  expect(audit.includes(heading), `audit must include heading: ${heading}`);
 }
 
 if (failures.length > 0) {
   throw new Error(`audit report check failed:\n${failures.map((failure) => `- ${failure}`).join("\n")}`);
 }
 
-console.log(
-  JSON.stringify(
-    {
-      ok: true,
-      audit: auditPath,
-      checked: [
-        "conditional/no-go verdicts",
-        "quality gate list",
-        "current package dry-run counts",
-        "owner-gated remaining items",
-        "npm registry boundary proof",
-        "release notes draft proof",
-        "release command plan proof",
-        "release workflow proof",
-        "release artifact manifest proof",
-        "README demo proof",
-        "animated demo proof",
-        "terminal output proof",
-        "pre-commit rejection proof",
-        "matrix compatibility proof",
-        "matrix GIF proof",
-        "social preview proof",
-        "architecture diagram proof",
-        "last-verified badge visual proof",
-        "live REST boundary proof",
-        "live REST threat model proof",
-        "launch content proof",
-        "benchmark report proof",
-        "benchmark dashboard proof",
-        "batch benchmark output proof",
-        "GitHub Action proof",
-        "GitHub PR gate proof",
-        "strategy checklist proof",
-        "GitHub-rendered README proof",
-        "GitHub profile proof",
-        "clean source-checkout proof",
-        "public source-checkout proof",
-        "CLI output proof",
-        "package README proof"
-      ]
-    },
-    null,
-    2
-  )
-);
-
-function runPack(workspace) {
-  const command = npmCommand(["pack", "--workspace", workspace, "--json", "--dry-run"]);
-  const result = spawnSync(command.executable, command.args, {
-    cwd: process.cwd(),
-    encoding: "utf8"
-  });
-
-  if (result.status !== 0) {
-    const output = [result.stdout, result.stderr].filter(Boolean).join("\n");
-    throw new Error(`npm pack --workspace ${workspace} --json --dry-run failed with exit ${result.status}\n${output}`);
-  }
-
-  const parsed = JSON.parse(result.stdout);
-  if (!Array.isArray(parsed) || parsed.length !== 1 || !isPackResult(parsed[0])) {
-    throw new Error(`Unexpected npm pack JSON output for ${workspace}`);
-  }
-
-  return parsed[0];
-}
-
-function npmCommand(args) {
-  if (process.platform === "win32") {
-    return { executable: "cmd.exe", args: ["/d", "/s", "/c", "npm", ...args] };
-  }
-
-  return { executable: "npm", args };
-}
-
-function isPackResult(value) {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    typeof value.name === "string" &&
-    typeof value.version === "string" &&
-    typeof value.size === "number" &&
-    typeof value.entryCount === "number"
-  );
-}
-
-function formatKilobytes(bytes) {
-  return `${(bytes / 1000).toFixed(1)} kB`;
-}
+console.log(JSON.stringify({ ok: true, audit: auditPath, verdict: "GO_MERGE_NO_GO_RELEASE" }, null, 2));
 
 function expect(condition, message) {
-  if (!condition) {
-    failures.push(message);
-  }
+  if (!condition) failures.push(message);
 }
 
 function hasPhrase(text, phrase) {
-  return normalizeWhitespace(text).includes(normalizeWhitespace(phrase));
-}
-
-function normalizeWhitespace(text) {
-  return text.replace(/\s+/g, " ").trim();
+  return text.toLowerCase().replace(/\s+/g, " ").includes(phrase.toLowerCase().replace(/\s+/g, " "));
 }

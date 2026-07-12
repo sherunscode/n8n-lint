@@ -11,6 +11,7 @@ const plan = await readText("docs/release-command-plan-v0.1.0.md");
 const releaseChecklist = await readText("docs/release-checklist.md");
 const releaseReadiness = await readText("scripts/check-release-readiness.mjs");
 const readme = await readText("README.md");
+const qualityRunner = await readText("scripts/run-quality-group.mjs");
 
 expect(corePackage.name === "@n8nproof/core", "release plan expects @n8nproof/core package");
 expect(cliPackage.name === "n8n-lint", "release plan expects n8n-lint package");
@@ -25,8 +26,8 @@ expect(
   "package.json must expose the npm registry boundary checker"
 );
 expect(
-  typeof packageJson.scripts?.quality === "string" &&
-    packageJson.scripts.quality.includes("npm run check:release-command-plan"),
+  packageJson.scripts?.quality === "node scripts/run-quality-group.mjs quality" &&
+    qualityRunner.includes('"check:release-command-plan"'),
   "quality must include the release command plan checker"
 );
 
@@ -61,7 +62,7 @@ for (const command of [
   "npm view @n8nproof/core version",
   "npm view n8n-lint version",
   "npm ci",
-  "npm run quality",
+  "npm run quality:release",
   "npm run check:npm-registry-boundary",
   "npm run check:release-readiness",
   "npm run check:release-notes",

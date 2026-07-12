@@ -6,7 +6,7 @@
   "repository": "https://github.com/sherunscode/n8n-lint",
   "license": "MIT",
   "runtime": {
-    "node": ">=18.18.0"
+    "node": ">=22.0.0"
   },
   "commands": [
     {
