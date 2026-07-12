@@ -14,9 +14,10 @@ const assetPath = "docs/assets/github-pr-merge-gate-proof.png";
 const proofPath = "docs/github-pr-merge-gate-proof.md";
 
 const packageJson = await readJson("package.json");
+const qualityRunner = await readText("scripts/run-quality-group.mjs");
 const proofDoc = await readText(proofPath);
 const readme = await readText("README.md");
-const deepAudit = await readText("docs/deep-audit-2026-07-08.md");
+const deepAudit = await readText("docs/deep-audit-2026-07-11.md");
 const launchContentPack = await readText("docs/launch-content-pack.md");
 const screenshot = await readFile(assetPath);
 
@@ -25,8 +26,8 @@ expect(
   "package.json must expose check:github-pr-gate-proof"
 );
 expect(
-  typeof packageJson.scripts?.quality === "string" &&
-    packageJson.scripts.quality.includes("npm run check:github-pr-gate-proof"),
+  packageJson.scripts?.["quality:remote"] === "node scripts/run-quality-group.mjs remote" &&
+    qualityRunner.includes('"check:github-pr-gate-proof"'),
   "package.json quality gate must include check:github-pr-gate-proof"
 );
 

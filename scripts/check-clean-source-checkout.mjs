@@ -106,6 +106,9 @@ function copyTrackedFiles(files) {
 }
 
 function run(command, args, cwd, options = {}) {
+  const label = `${command} ${args.join(" ")}`;
+  const timeout = options.timeoutMs ?? 240_000;
+  process.stderr.write(`[clean-source] START ${label} (timeout ${Math.round(timeout / 1000)}s)\n`);
   const resolved = resolveCommand(command, args);
   const result = spawnSync(resolved.executable, resolved.args, {
     cwd,
@@ -117,9 +120,14 @@ function run(command, args, cwd, options = {}) {
       NPM_CONFIG_FUND: "false",
       NPM_CONFIG_PROGRESS: "false"
     },
-    stdio: "pipe"
+    stdio: "pipe",
+    timeout
   });
   const expectedStatus = options.expectedStatus ?? 0;
+
+  if (result.error?.code === "ETIMEDOUT") {
+    throw new Error(`${label} timed out after ${timeout}ms`);
+  }
 
   if (result.status !== expectedStatus) {
     const output = [result.stdout, result.stderr].filter(Boolean).join("\n");
@@ -127,6 +135,8 @@ function run(command, args, cwd, options = {}) {
       `${command} ${args.join(" ")} exited ${result.status}, expected ${expectedStatus}${output ? `\n${output}` : ""}`
     );
   }
+
+  process.stderr.write(`[clean-source] PASS  ${label}\n`);
 
   return {
     stdout: result.stdout ?? "",

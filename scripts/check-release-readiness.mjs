@@ -21,7 +21,6 @@ const ownerGatedBlockers = [
   "owner approval for tag push and GitHub release",
   "owner approval for public launch posts",
   "clean-machine registry install proof after publish",
-  "GitHub custom social preview configuration",
   "live REST endpoint proof before live validation claims",
   "GitHub Marketplace listing after semver release"
 ];
@@ -230,7 +229,6 @@ console.log(
         "release command plan owner gates",
         "release workflow owner gates",
         "launch content owner gates",
-        "GitHub custom social preview owner/external gate",
         "animated demo freshness gate",
         "terminal output demo freshness gate",
         "pre-commit rejection demo freshness gate",

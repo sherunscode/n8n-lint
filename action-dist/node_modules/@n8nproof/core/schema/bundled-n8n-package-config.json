@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "packageName": "n8n-nodes-base",
+  "nodeMetadataFile": "dist/types/nodes.json",
+  "credentialMetadataFile": "dist/types/credentials.json",
+  "schemaDirectory": "packages/core/schema",
+  "defaultPackageVersion": "2.29.6",
+  "selections": {
+    "2.29.6": {
+      "referencePackage": "n8n@2.29.7",
+      "packageName": "n8n-nodes-base",
+      "packageVersion": "2.29.6",
+      "workflowPackageVersion": "2.29.2",
+      "artifactFile": "bundled-n8n-package.json",
+      "reason": "Pinned to the n8n-nodes-base dependency selected by n8n@2.29.7, instead of the stale-looking n8n-nodes-base latest dist-tag."
+    },
+    "2.30.0": {
+      "referencePackage": "n8n@2.30.0",
+      "packageName": "n8n-nodes-base",
+      "packageVersion": "2.30.0",
+      "workflowPackageVersion": "2.30.0",
+      "artifactFile": "bundled-n8n-package-2.30.0.json",
+      "reason": "Pinned to the n8n-nodes-base dependency selected by n8n@2.30.0."
+    }
+  }
+}

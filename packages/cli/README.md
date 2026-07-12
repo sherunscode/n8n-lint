@@ -32,6 +32,7 @@ and does not claim live REST validation.
 See the repository README for full setup, packed-install smoke tests, benchmark
 methodology, and release boundaries.
 
-The repository also includes a composite GitHub Action at the repo root. The
-action is dogfooded by CI, but semver tag usage and Marketplace listing remain
-release-gated.
+The repository also includes a packaged Node 24 GitHub Action at the repo root.
+Consumer jobs do not install or compile this workspace. The Action is
+dogfooded across Linux, Windows, and macOS, while semver tag usage and
+Marketplace listing remain release-gated.

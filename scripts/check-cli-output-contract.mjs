@@ -71,7 +71,7 @@ const checks = [
       "check",
       "examples/known-http-request-workflow.json",
       "examples/failing-dead-parameter.json",
-      "examples/not-a-workflow.json"
+      "examples/not-a-*.json"
     ],
     exitCode: 1,
     stdoutLastLine: "Summary: 1 passed, 1 failed, 2 warnings, 1 skipped, 0 errors",
@@ -84,7 +84,7 @@ const checks = [
       "check",
       "examples/known-http-request-workflow.json",
       "examples/failing-dead-parameter.json",
-      "examples/not-a-workflow.json",
+      "examples/not-a-*.json",
       "--json"
     ],
     exitCode: 1,

@@ -10,7 +10,7 @@
   <g font-family="Consolas, Menlo, Monaco, 'Liberation Mono', monospace">
   <text x="28" y="78" fill="#67e8f9" font-size="15">$ git commit -m &quot;demo failing workflow&quot;</text>
   <text x="28" y="100" fill="#e5e7eb" font-size="15"></text>
-  <text x="28" y="122" fill="#e5e7eb" font-size="15">&gt; quality</text>
+  <text x="28" y="122" fill="#e5e7eb" font-size="15">&gt; verify:fast</text>
   <text x="28" y="144" fill="#e5e7eb" font-size="15">&gt; node quality-fail.mjs</text>
   <text x="28" y="166" fill="#e5e7eb" font-size="15"></text>
   <text x="28" y="188" fill="#f87171" font-size="15">FAIL examples/failing-dead-parameter.json</text>

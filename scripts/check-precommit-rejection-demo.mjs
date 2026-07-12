@@ -15,7 +15,7 @@ const plainOutput = stripAnsi(demo.output);
 
 expect(demo.commit.status !== 0, "demo git commit must be rejected by the pre-commit hook");
 expect(demo.head.status !== 0, "demo repository must not create a commit after hook rejection");
-expect(plainOutput.includes("> quality"), "demo output must show npm running the quality script");
+expect(plainOutput.includes("> verify:fast"), "demo output must show npm running the fast verification script");
 expect(
   plainOutput.includes("FAIL examples/failing-dead-parameter.json"),
   "demo output must include a failing workflow"
@@ -60,7 +60,7 @@ console.log(
       checked: [
         "real temporary git commit attempt",
         "real .githooks/pre-commit execution",
-        "quality failure replayed to stderr",
+        "fast verification failure replayed to stderr",
         "commit rejected before history changed",
         "checked pre-commit rejection SVG asset"
       ]
@@ -85,7 +85,7 @@ async function runDemoCommit() {
           private: true,
           type: "module",
           scripts: {
-            quality: "node quality-fail.mjs"
+            "verify:fast": "node quality-fail.mjs"
           }
         },
         null,

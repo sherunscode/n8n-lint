@@ -24,10 +24,12 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "schema"
+    "schema",
+    "THIRD_PARTY_NOTICES.md",
+    "LICENSE_N8N_SUSTAINABLE_USE.md"
   ],
   "engines": {
-    "node": ">=18.18.0"
+    "node": ">=22.0.0"
   },
   "publishConfig": {
     "access": "public"

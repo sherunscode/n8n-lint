@@ -5,11 +5,13 @@ const expectations = [
   {
     workspace: "packages/core",
     name: "@n8nproof/core",
-    maxSize: 230_000,
-    maxUnpackedSize: 1_600_000,
+    maxSize: 240_000,
+    maxUnpackedSize: 1_620_000,
     expectedFiles: [
       "LICENSE",
+      "LICENSE_N8N_SUSTAINABLE_USE.md",
       "README.md",
+      "THIRD_PARTY_NOTICES.md",
       "dist/index.d.ts",
       "dist/index.js",
       "dist/index.js.map",
@@ -26,8 +28,21 @@ const expectations = [
     workspace: "packages/cli",
     name: "n8n-lint",
     maxSize: 25_000,
-    maxUnpackedSize: 100_000,
-    expectedFiles: ["LICENSE", "README.md", "dist/bin.d.ts", "dist/bin.js", "dist/bin.js.map", "package.json"]
+    maxUnpackedSize: 110_000,
+    expectedFiles: [
+      "LICENSE",
+      "README.md",
+      "dist/args.d.ts",
+      "dist/args.js",
+      "dist/args.js.map",
+      "dist/bin.d.ts",
+      "dist/bin.js",
+      "dist/bin.js.map",
+      "dist/discovery.d.ts",
+      "dist/discovery.js",
+      "dist/discovery.js.map",
+      "package.json"
+    ]
   }
 ];
 

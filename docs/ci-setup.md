@@ -37,7 +37,7 @@ The public workflow is `.github/workflows/ci.yml`.
 The release proof workflow is `.github/workflows/release.yml`. It runs on
 manual dispatch and `main` pushes.
 
-It runs `npm run quality`, the release contract checks, package dry-runs, and
+It runs `npm run quality:release`, the release contract checks, package dry-runs, and
 uploads local tarball artifacts. It does not request `NPM_TOKEN`, does not use
 write permissions, does not run `npm publish`, does not push tags, and does not
 create a GitHub Release.
@@ -50,18 +50,18 @@ freshly packed local tarballs.
 Actual npm publication, tag push, GitHub Release creation, and public launch
 posts remain owner-gated.
 
-## Composite GitHub Action
+## Packaged GitHub Action
 
-The repo ships a composite action at `action.yml`. It builds the action runtime
-from the checked-out action repository, then runs the CLI with
-`--format github`. The action writes a GitHub job summary with the checked
-paths, schema source, version selector, a decaying last-verified badge generated
-from the same check JSON, and the last 200 lines of CLI output, while
-preserving the CLI exit code as the merge gate.
+The repo ships a packaged JavaScript Action at `action.yml` using the Node 24
+runtime in `action-dist/`. It invokes the bundled CLI once with JSON output,
+then derives annotations, proof output, the decaying last-verified badge, and
+the Markdown job summary from that single result while preserving the CLI exit
+code as the merge gate.
 
-Because the current composite action builds the checked-out action runtime, the
-job must provide Node.js `>=18.18.0` and npm before `uses:
-sherunscode/n8n-lint`. The examples below use `actions/setup-node`.
+Consumer jobs do not run `npm ci`, compile TypeScript, or require
+`actions/setup-node`. They only check out the workflow files before invoking
+the Action. `npm run check:action-dist` verifies that the committed runtime
+matches a deterministic fresh build.
 
 For the action's `paths` input, pass one path, directory, or glob per line. The
 action intentionally parses newline-delimited values instead of splitting on
@@ -81,9 +81,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.0
-      - uses: actions/setup-node@v6.4.0
-        with:
-          node-version: 22
       - uses: sherunscode/n8n-lint@<commit-sha>
         with:
           paths: |
@@ -106,7 +103,7 @@ node packages/cli/dist/bin.js check "examples/*.json" --format github
 
 Failures are emitted as `::error` annotations, warnings as `::warning`
 annotations, and skipped non-workflow JSON files as `::notice` annotations.
-The composite action also writes a Markdown job summary for reviewers, including
+The packaged Action also writes a Markdown job summary for reviewers, including
 the same `last verified` badge that can be rendered in a README.
 Exit codes remain the same as normal check mode:
 

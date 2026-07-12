@@ -24,7 +24,7 @@ export default tseslint.config(
     languageOptions: {
       globals: globals.node,
       parserOptions: {
-        project: ["./packages/core/tsconfig.json", "./packages/cli/tsconfig.json"],
+        project: ["./tsconfig.eslint.json"],
         tsconfigRootDir: import.meta.dirname
       }
     },

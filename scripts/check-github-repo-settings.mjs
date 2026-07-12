@@ -27,23 +27,27 @@ const expectedTopics = [
   "workflow-automation"
 ];
 const failures = [];
+const ciPublicProof = process.env.CI === "true";
 
 const packageJson = await readJson("package.json");
-const readme = await readText("README.md");
-const audit = await readText("docs/deep-audit-2026-07-08.md");
-const releaseReadiness = await readText("scripts/check-release-readiness.mjs");
+const qualityRunner = await readText("scripts/run-quality-group.mjs");
+const audit = await readText("docs/deep-audit-2026-07-11.md");
 
 expect(
   packageJson.scripts?.["check:github-repo-settings"] === "node scripts/check-github-repo-settings.mjs",
   "package.json must expose check:github-repo-settings"
 );
 expect(
-  typeof packageJson.scripts?.quality === "string" &&
-    packageJson.scripts.quality.includes("npm run check:github-repo-settings"),
+  packageJson.scripts?.["quality:remote"] === "node scripts/run-quality-group.mjs remote" &&
+    qualityRunner.includes('"check:github-repo-settings"'),
   "package.json quality gate must include check:github-repo-settings"
 );
 
-const [restRepo, graphRepo] = await Promise.all([fetchRepoRest(), fetchRepoGraphql()]);
+const [restRepo, graphRepo, branch] = await Promise.all([
+  fetchRepoRest(!ciPublicProof),
+  fetchRepoGraphql(),
+  fetchJson(`https://api.github.com/repos/${repository}/branches/main`, undefined, false)
+]);
 
 expect(restRepo.full_name === repository, "GitHub REST repo full_name must match canonical repo");
 expect(restRepo.visibility === "public" && restRepo.private === false, "GitHub repo must be public");
@@ -55,27 +59,48 @@ for (const topic of expectedTopics) {
 }
 expect(topics.length === expectedTopics.length, "GitHub repo topics must match the strategy topic count exactly");
 
-expect(graphRepo.nameWithOwner === repository, "GitHub GraphQL repo nameWithOwner must match canonical repo");
-expect(
-  graphRepo.openGraphImageUrl.startsWith("https://opengraph.githubassets.com/"),
-  "Open Graph image URL must resolve"
-);
-expect(typeof graphRepo.usesCustomOpenGraphImage === "boolean", "GraphQL must expose custom Open Graph image status");
+expect(restRepo.has_wiki === false, "unused Wiki must be disabled");
+expect(restRepo.has_projects === false, "unused Projects must be disabled");
+expect(restRepo.has_issues === true, "Issues must remain enabled");
+expect(restRepo.has_discussions === true, "Discussions must remain enabled");
 
-const socialPreviewStatus = graphRepo.usesCustomOpenGraphImage ? "custom" : "default";
-if (!graphRepo.usesCustomOpenGraphImage) {
-  expect(
-    hasPhrase(readme, "external UI checks"),
-    "README must preserve external UI launch gate wording while custom social preview is not configured"
-  );
-  expect(
-    hasPhrase(audit, "GitHub custom social preview configured in repository settings"),
-    "deep audit remaining gates must include custom GitHub social preview setup"
-  );
-  expect(
-    hasPhrase(releaseReadiness, "GitHub custom social preview configuration"),
-    "release-readiness owner/external blockers must include custom social preview configuration"
-  );
+expect(graphRepo.nameWithOwner === repository, "GitHub GraphQL repo nameWithOwner must match canonical repo");
+expect(graphRepo.openGraphImageUrl.startsWith("https://"), "Open Graph image URL must resolve");
+expect(graphRepo.usesCustomOpenGraphImage === true, "custom Open Graph image must be active");
+expect(
+  hasPhrase(audit, "GitHub custom social preview configured in repository settings"),
+  "deep audit must record the configured social preview"
+);
+
+expect(branch.protected === true && branch.protection?.enabled === true, "main must be protected");
+const publicRequiredChecks = branch.protection?.required_status_checks;
+const requiredContexts = publicRequiredChecks?.contexts ?? [];
+for (const context of ["quality", "action-smoke", "Analyze JavaScript and TypeScript"]) {
+  expect(requiredContexts.includes(context), `branch protection must require ${context}`);
+}
+expect(publicRequiredChecks?.enforcement_level === "everyone", "required checks must apply to everyone");
+
+const adminSettingsVisible = typeof restRepo.delete_branch_on_merge === "boolean";
+if (!ciPublicProof) {
+  expect(adminSettingsVisible, "administrator-only settings require authenticated owner visibility");
+
+  if (adminSettingsVisible) {
+    expect(restRepo.delete_branch_on_merge === true, "automatic branch deletion must be enabled");
+    expect(restRepo.allow_update_branch === true, "update-branch support must be enabled");
+    expect(restRepo.allow_merge_commit === false, "merge commits must be disabled");
+    expect(restRepo.allow_squash_merge === true, "squash merging must remain enabled");
+    for (const feature of ["secret_scanning", "secret_scanning_push_protection", "dependabot_security_updates"]) {
+      expect(restRepo.security_and_analysis?.[feature]?.status === "enabled", `${feature} must be enabled`);
+    }
+
+    const protection = await fetchJson(`https://api.github.com/repos/${repository}/branches/main/protection`);
+    expect(protection.required_status_checks?.strict === true, "required checks must use up-to-date branches");
+    expect(protection.enforce_admins?.enabled === true, "branch protection must enforce admins");
+    expect(protection.required_linear_history?.enabled === true, "linear history must be required");
+    expect(protection.required_conversation_resolution?.enabled === true, "conversations must be resolved");
+    expect(protection.allow_force_pushes?.enabled === false, "force pushes must be disabled");
+    expect(protection.allow_deletions?.enabled === false, "branch deletion must be disabled");
+  }
 }
 
 if (failures.length > 0) {
@@ -90,16 +115,21 @@ console.log(
       visibility: restRepo.visibility,
       topics: expectedTopics,
       socialPreview: {
-        status: socialPreviewStatus,
+        status: "custom",
         usesCustomOpenGraphImage: graphRepo.usesCustomOpenGraphImage,
         openGraphImageUrl: graphRepo.openGraphImageUrl
       },
+      adminSettings: ciPublicProof ? "local-owner-gate-required" : "verified",
       checked: [
         "public repository identity",
         "launch description",
         "repository topics",
         "Open Graph image status",
-        "custom social preview remaining gate"
+        "custom social preview active",
+        "public protected-branch contexts",
+        ciPublicProof ? "administrator-only controls deferred to local owner gate" : "security and dependency controls",
+        ciPublicProof ? "read-only CI token boundary" : "merge and repository feature policy",
+        "required checks enforced for everyone"
       ]
     },
     null,
@@ -107,8 +137,8 @@ console.log(
   )
 );
 
-async function fetchRepoRest() {
-  return fetchJson(`https://api.github.com/repos/${repository}`, "application/vnd.github+json");
+async function fetchRepoRest(authenticated) {
+  return fetchJson(`https://api.github.com/repos/${repository}`, "application/vnd.github+json", authenticated);
 }
 
 async function fetchRepoGraphql() {
@@ -147,13 +177,17 @@ async function fetchRepoGraphql() {
   return payload.data?.repository ?? {};
 }
 
-async function fetchJson(url, accept) {
+async function fetchJson(url, accept, authenticated = true) {
+  const headers = {
+    Accept: accept ?? "application/json",
+    "User-Agent": "sherunscode-n8n-lint-repo-settings-check"
+  };
+  if (authenticated) {
+    headers.Authorization = `Bearer ${githubToken()}`;
+  }
+
   const response = await fetch(url, {
-    headers: {
-      Accept: accept ?? "application/json",
-      Authorization: `Bearer ${githubToken()}`,
-      "User-Agent": "sherunscode-n8n-lint-repo-settings-check"
-    }
+    headers
   });
 
   if (!response.ok) {

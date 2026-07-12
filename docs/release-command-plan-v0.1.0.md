@@ -29,9 +29,11 @@ Stop immediately if any of these are true:
 - `git status --short --branch` is not clean before publish.
 - Local `HEAD` does not equal `origin/main` before publish.
 - The latest required GitHub `quality` check is not green for the exact commit.
+- Written n8n licensing confirmation for redistribution of the bundled schema
+  artifacts is missing.
 - `npm view @n8nproof/core version` or `npm view n8n-lint version` returns an
   existing version before the first public publish attempt.
-- `npm run quality` fails.
+- `npm run quality:release` fails.
 - `npm run check:npm-registry-boundary`, `npm run check:release-readiness`,
   `npm run check:release-notes`, `npm run check:release-command-plan`, or
   `npm run check:release-workflow` fails.
@@ -98,7 +100,7 @@ Required PR checks:
 
 ```powershell
 npm ci
-npm run quality
+npm run quality:release
 npm run check:npm-registry-boundary
 npm run check:release-readiness
 npm run check:release-notes
@@ -119,7 +121,7 @@ git rev-parse HEAD
 git rev-parse origin/main
 gh run list --repo sherunscode/n8n-lint --branch main --limit 5 --json databaseId,workflowName,status,conclusion,headSha,url
 npm ci
-npm run quality
+npm run quality:release
 npm run check:npm-registry-boundary
 npm run check:release-readiness
 npm run check:release-notes

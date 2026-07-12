@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 
 const failures = [];
 const packageJson = await readJson("package.json");
+const qualityRunner = await readText("scripts/run-quality-group.mjs");
 const tool = await readJson("tool.json");
 const benchmark = await readJson("docs/benchmark-zie619-report.json");
 const launchContentPack = await readText("docs/launch-content-pack.md");
@@ -14,8 +15,8 @@ expect(
   "package.json must expose check:launch-content"
 );
 expect(
-  typeof packageJson.scripts?.quality === "string" &&
-    packageJson.scripts.quality.includes("npm run check:launch-content"),
+  packageJson.scripts?.quality === "node scripts/run-quality-group.mjs quality" &&
+    qualityRunner.includes('"check:launch-content"'),
   "package.json quality gate must include check:launch-content"
 );
 

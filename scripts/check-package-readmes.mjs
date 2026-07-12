@@ -10,14 +10,15 @@ const tool = await readJson("tool.json");
 const rootReadme = await readText("README.md");
 const coreReadme = await readText("packages/core/README.md");
 const cliReadme = await readText("packages/cli/README.md");
+const qualityRunner = await readText("scripts/run-quality-group.mjs");
 
 expect(
   packageJson.scripts?.["check:package-readmes"] === "node scripts/check-package-readmes.mjs",
   "package.json must expose the package README checker"
 );
 expect(
-  typeof packageJson.scripts?.quality === "string" &&
-    packageJson.scripts.quality.includes("npm run check:package-readmes"),
+  packageJson.scripts?.quality === "node scripts/run-quality-group.mjs quality" &&
+    qualityRunner.includes('"check:package-readmes"'),
   "quality must include the package README checker"
 );
 expect(corePackage.name === "@n8nproof/core", "core package name must stay @n8nproof/core");

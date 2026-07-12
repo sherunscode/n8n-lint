@@ -46,7 +46,7 @@ expect(
   hasPhrase(notes, "GitHub Discussion #8"),
   "draft notes must mention the live community support discussion proof"
 );
-expect(hasPhrase(notes, "docs/deep-audit-2026-07-08.md"), "draft notes must point to the current deep audit");
+expect(hasPhrase(notes, "docs/deep-audit-2026-07-11.md"), "draft notes must point to the current deep audit");
 expect(hasPhrase(notes, "docs/release-checklist.md"), "draft notes must point to the owner-gated release checklist");
 expect(
   hasPhrase(notes, "clean-machine registry install proof"),
