@@ -50,7 +50,7 @@ for (const phrase of [
   "npm pack --workspace packages/core --pack-destination release-artifacts",
   "npm pack --workspace packages/cli --pack-destination release-artifacts",
   "node scripts/write-release-artifact-manifest.mjs release-artifacts",
-  "actions/upload-artifact@v4.6.2",
+  "actions/upload-artifact@v7.0.1",
   "name: n8n-lint-release-proof-packages",
   "path: |",
   "release-artifacts/*.tgz",

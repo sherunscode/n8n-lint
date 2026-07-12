@@ -56,7 +56,7 @@ jobs:
           node scripts/write-release-artifact-manifest.mjs release-artifacts
 
       - name: Upload local tarball artifacts
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: n8n-lint-release-proof-packages
           path: |
